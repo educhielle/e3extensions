@@ -18,7 +18,6 @@ In the /test/ directory, do:
 
 ```
 ./preprocess main/main.cpp
-
 ```
 
 ### Compiling
