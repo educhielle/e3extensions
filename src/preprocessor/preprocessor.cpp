@@ -28,6 +28,11 @@
 	#include "../preprocessor/sensitive_information.h"
 #endif
 
+#ifndef UTIL_INCLUDED
+	#define UTIL_INCLUDED
+	#include "util.h"
+#endif
+
 using namespace std;
 
 #define NUMBER_OF_CS_PARAMETERS 7
@@ -39,6 +44,7 @@ SensitiveInformation sinfo;
 
 string calcNewParamsCS(string);
 string calcNewParamsSI(string);
+void createFile(const string &, const SensitiveInformation &);
 const vector<string> explode(const string &, const char &);
 int findClosingBracket(const string &, int);
 string findObjectNameBefore(const string &, int);
@@ -61,6 +67,10 @@ int main(int argc, char *argv[])
 
 		int dot = filename.find(".");
 		string filenameOut = filename.substr(0,dot) + "_T" + filename.substr(dot);
+		string filenameCS = filename.substr(0,dot) + "_CS.txt";
+		
+		ofstream out;
+		out.open(filenameCS, ofstream::out);
 
 		ifstream in;
 		stringstream buffer;
@@ -82,7 +92,7 @@ int main(int argc, char *argv[])
 				{
 					int csf = findClosingBracket(code, csi+1);
 					string line = code.substr(csd, csf-csd+1);
-
+					//cout << "CSD: " << csd << "\tCSI: " << csi << "\tSC: " << semicolon << "\tCSF: " << csf << "\tline: " << line << "\tsubstr: " << code.substr(1733, 4) << "\n";
 					string objName = code.substr(csd, csi-csd);
 					int cso = objName.find_first_of(" \t");
 					if (cso > 0) objName = objName.substr(cso);
@@ -94,7 +104,8 @@ int main(int argc, char *argv[])
 					string newParams = calcNewParamsCS(params);
 					code = code.replace(csi, csf-csi, newParams);
 					cout << "Object name: " << (objName.empty() ? "(no name)" : objName) << "\nParameters: " << newParams << "\n";
-					csd = csf;
+					semicolon = code.find(";", csd);
+					csd = csi + newParams.length();
 
 					if (params.compare(newParams))
 					{
@@ -102,6 +113,7 @@ int main(int argc, char *argv[])
 						{
 							csList.push_back(objName);
 							sinfoList.push_back(sinfo);
+							out << objName << ";" << sinfo.fkf() << ";" << sinfo.access_g() << "\n";
 						}
 						Unumber f = sinfo.fkf();
 						cout << "The fkf of '" << objName << "' is " << f.str() << ". Use it in the G function.\n";
@@ -131,13 +143,15 @@ int main(int argc, char *argv[])
 					string params = code.substr(sii, sif-sii);
 					string newParams = calcNewParamsSI(params);
 					code = code.replace(sii, sif-sii, newParams);
-					sid = sif;
+					semicolon = code.find(";", sid);
+					sid = sii + newParams.length();
 					cout << "Object name: " << (objName.empty() ? "(no name)" : objName) << "\nParameters: " << newParams << "\n\n";
 				}
 			}
 		}
-	
-		ofstream out;
+		
+		out.close();
+		//ofstream out;
 		out.open(filenameOut, ofstream::out);
 		out << code;
 		out.close();
@@ -228,6 +242,13 @@ string calcNewParamsSI(string params)
 	catch (std::exception & e) { }
 	
 	return params;
+}
+
+void createFile(const string & name, const SensitiveInformation & si)
+{
+	ofstream outputFile(name);
+	outputFile << si.fkf() << ";" << si.access_g();
+	outputFile.close();
 }
 
 const vector<string> explode(const string& s, const char& c)
@@ -394,9 +415,9 @@ Unumber prime()
 	return Unumber(13);
 }
 
-Unumber random(Unumber from, Unumber to)
+Unumber random(Unumber from, Unumber n)
 {
-	return from;
+	return invertibleRandom(from, n);
 }
 
 void trim(string & s)

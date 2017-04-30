@@ -63,7 +63,7 @@ int main()
 	Cryptosystem cs("143","3","13347","19750","9694", libgDir, "g"), aaa;
 	SecureInt a("16344",cs), b("2044",cs), c[20];
 
-	aaa = Cryptosystem("169","5","15864","27524","26048", libgDir, "g");
+	aaa = Cryptosystem("169","5","10817","1","339", libgDir, "g");
 	//a = SecureInt(__N(11)__,aaa); b = SecureInt(__N(3)__,aaa);
 	
 	c[0] = a+b;	cout << "0\n";

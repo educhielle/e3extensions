@@ -185,7 +185,6 @@ void SensitiveInformation::init()
 	xp2 = n * (tpmax + 1);
 
 	/* what does congruence do? */
-	if (rnd.iszero()) std::cout << "ZERRRRRRROOOOOOOOOOO\n";
 	rnd = (rnd.iszero() ? invertibleRandom() : congruence(rnd, n));
 	k = congruence(k, n);
 
