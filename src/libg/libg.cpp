@@ -15,7 +15,7 @@
 
 #ifndef SENSITIVE_INFORMATION_INCLUDED
 	#define SENSITIVE_INFORMATION_INCLUDED	
-	#include "../treat/sensitive_information.h"
+	#include "../preprocessor/sensitive_information.h"
 #endif
 
 #define BETA 3

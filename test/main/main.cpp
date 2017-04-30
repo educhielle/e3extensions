@@ -5,7 +5,7 @@
 
 #ifndef SENSITIVE_INFORMATION_INCLUDED
 	#define SENSITIVE_INFORMATION_INCLUDED
-	#include "../../src/treat/sensitive_information.h"
+	#include "../../src/preprocessor/sensitive_information.h"
 #endif
 
 #ifndef STDIO_INCLUDED

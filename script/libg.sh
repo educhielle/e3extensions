@@ -1,5 +1,5 @@
 lib="../lib"
-obj="../bin"
+obj="../obj"
 src="../src"
 
 obj_ligc="$obj/ligb"
