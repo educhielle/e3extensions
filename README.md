@@ -10,7 +10,7 @@ To be done. Inshallah!
 
 Follow examples in /test/
 
-### Preprocessing code
+### Preprocessing
 
 If instead of hardcoding the arguments for the Cryptosystem and SecureInt objects, you decide to use the preprocessor capabilitities (as in /test/main/main.cpp), you must to pass your code through the preprocessor.
 
@@ -21,3 +21,17 @@ In the /test/ directory:
 
 ```
 
+### Compiling
+
+aaa
+
+### Running
+
+In the application directory (e.g. /test/main/) do:
+```
+./main
+```
+
+## MoMAlab
+
+[Click here](http://sites.nyuad.nyu.edu/moma/) for more.
