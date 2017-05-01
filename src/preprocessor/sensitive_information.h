@@ -65,6 +65,8 @@ class SensitiveInformation
 	Unumber getN() const;
 	Unumber getN2() const;
 	Unumber getTwoToBeta() const;
+	Unumber getXp1() const;
+	Unumber getXp2() const;
 	Unumber invertibleRandom() const;
         bool isrnd() const { return !rnd.iszero(); }
 	bool leq(const Unumber) const;
@@ -157,7 +159,7 @@ void SensitiveInformation::init()
 	sneak = 1;
 
 	//implement method similar to init(Unumber n) but calculating n inside the method
-	n = p * q;
+	n = p * q; // n = p * q * z;
 	n2 = n * n;
 	
 	/* initialize high_bit_posN and high_bit_posN2 */
@@ -192,6 +194,7 @@ void SensitiveInformation::init()
 	rndN.pow(n, n2);
 	
 	phi = (p - 1) * (q - 1);
+	// (p - 1) * (q - 1) * (z - 1);
 
 	//skipped is not prime test
 
@@ -353,6 +356,16 @@ Unumber SensitiveInformation::getN2() const
 Unumber SensitiveInformation::getTwoToBeta() const
 {
 	return twoToBeta;
+}
+
+Unumber SensitiveInformation::getXp1() const
+{
+	return xp1;
+}
+
+Unumber SensitiveInformation::getXp2() const
+{
+	return xp2;
 }
 
 /* Invertible Random */

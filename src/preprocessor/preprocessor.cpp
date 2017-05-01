@@ -1,6 +1,6 @@
-#ifndef UNUMBER_INCLUDED
-	#define UNUMBER_INCLUDED
-	#include "../unumber/unumberg.h"
+#ifndef FSTREAM_INCLUDED
+	#define FSTREAM_INCLUDED
+	#include <fstream>
 #endif
 
 #ifndef IOSTREAM_INCLUDED
@@ -8,19 +8,9 @@
 	#include <iostream>
 #endif
 
-#ifndef FSTREAM_INCLUDED
-	#define FSTREAM_INCLUDED
-	#include <fstream>
-#endif
-
 #ifndef REGEX_INCLUDED
 	#define REGEX_INCLUDED	
 	#include <regex>
-#endif
-
-#ifndef VECTOR_INCLUDED
-	#define VECTOR_INCLUDED	
-	#include <vector>
 #endif
 
 #ifndef SENSITIVE_INFORMATION_INCLUDED
@@ -28,9 +18,19 @@
 	#include "../preprocessor/sensitive_information.h"
 #endif
 
+#ifndef UNUMBER_INCLUDED
+	#define UNUMBER_INCLUDED
+	#include "../unumber/unumberg.h"
+#endif
+
 #ifndef UTIL_INCLUDED
 	#define UTIL_INCLUDED
 	#include "util.h"
+#endif
+
+#ifndef VECTOR_INCLUDED
+	#define VECTOR_INCLUDED	
+	#include <vector>
 #endif
 
 using namespace std;
@@ -67,7 +67,9 @@ int main(int argc, char *argv[])
 
 		int dot = filename.find(".");
 		string filenameOut = filename.substr(0,dot) + "_T" + filename.substr(dot);
-		string filenameCS = filename.substr(0,dot) + "_CS.txt";
+
+		int lastSlash = filename.find_last_of("/\\");
+		string filenameCS = filename.substr(0,lastSlash+1) + "CS.txt";
 		
 		ofstream out;
 		out.open(filenameCS, ofstream::out);
@@ -113,7 +115,7 @@ int main(int argc, char *argv[])
 						{
 							csList.push_back(objName);
 							sinfoList.push_back(sinfo);
-							out << objName << ";" << sinfo.fkf() << ";" << sinfo.access_g() << "\n";
+							out << objName << ";" << sinfo.fkf() << ";" << sinfo.access_g() << ";" << sinfo.getN() << ";" << sinfo.getXp1() << ";" << sinfo.getXp2() << "\n";
 						}
 						Unumber f = sinfo.fkf();
 						cout << "The fkf of '" << objName << "' is " << f.str() << ". Use it in the G function.\n";

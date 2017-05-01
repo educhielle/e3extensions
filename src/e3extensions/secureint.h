@@ -1,6 +1,6 @@
 /*******************************************
 * New York University in Abu Dhabi (NYUAD) *
-* MoMA lab                                 *
+* MoMAlab                                  *
 * Author: Eduardo Chielle                  *
 * eduardo.chielle@nyu.edu        2016-2017 *
 ********************************************/
