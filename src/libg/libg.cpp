@@ -125,14 +125,23 @@ void loadCryptosystemParams()
 	semicolon[2] = text.find(";", semicolon[1]) + 1;
 	semicolon[3] = text.find(";", semicolon[2]) + 1;
 	semicolon[4] = text.find(";", semicolon[3]) + 1;
+	semicolon[5] = text.find(";", semicolon[4]) + 1;
+	semicolon[6] = text.find(";", semicolon[5]) + 1;
+	semicolon[7] = text.find(";", semicolon[6]) + 1;
 	int newLine = text.find("\n") + 1;
 
-	string strFKF = text.substr(semicolon[0], semicolon[1]-semicolon[0]-1);
-	string strG   = text.substr(semicolon[1], semicolon[2]-semicolon[1]-1);
-	string strN   = text.substr(semicolon[2], semicolon[3]-semicolon[2]-1);
-	string strXp1 = text.substr(semicolon[3], semicolon[4]-semicolon[3]-1);
-	string strXp2 = text.substr(semicolon[4], newLine     -semicolon[4]-1);
+	//string strP   = text.substr(semicolon[0], semicolon[1]-semicolon[0]-1);
+	//string strQ   = text.substr(semicolon[1], semicolon[2]-semicolon[1]-1);
+	//string strK   = text.substr(semicolon[2], semicolon[3]-semicolon[2]-1);
+	string strFKF = text.substr(semicolon[3], semicolon[4]-semicolon[3]-1);
+	string strG   = text.substr(semicolon[4], semicolon[5]-semicolon[4]-1);
+	string strN   = text.substr(semicolon[5], semicolon[6]-semicolon[5]-1);
+	string strXp1 = text.substr(semicolon[6], semicolon[7]-semicolon[6]-1);
+	string strXp2 = text.substr(semicolon[7], newLine     -semicolon[7]-1);
 
+	//p = Unumber(strP);
+	//q = Unumber(strQ);
+	//k = Unumber(strK);
 	fkf = Unumber(strFKF);
 	_g = Unumber(strG);
 	n = Unumber(strN);

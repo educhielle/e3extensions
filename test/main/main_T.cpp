@@ -1,3 +1,8 @@
+#ifndef IOSTREAM_INCLUDED
+	#define IOSTREAM_INCLUDED
+	#include <iostream>
+#endif
+
 #ifndef SECUREINT_INCLUDED
 	#define SECUREINT_INCLUDED
 	#include "../../src/e3extensions/secureint.h"
@@ -11,11 +16,6 @@
 #ifndef STDIO_INCLUDED
 	#define STDIO_INCLUDED
 	#include <stdio.h>
-#endif
-
-#ifndef IOSTREAM_INCLUDED
-	#define IOSTREAM_INCLUDED
-	#include <iostream>
 #endif
 
 using namespace std;
@@ -35,9 +35,7 @@ int main()
 
 	//SensitiveInformation (p,q,k,rnd);
 	//SensitiveInformation si ("104947","105613","3","2");
-	//SensitiveInformation si ("13","11","2","2");
-	//si.setBeta(3);
-	SensitiveInformation si ("13","11","2","2");
+	SensitiveInformation si ("13","11","3","2");
 	
 	Unumber udecA(11), udecB(3);
 
@@ -51,19 +49,10 @@ int main()
 
 	/* SecureInt and Cryptosystem test area */
 
-	//Cryptosystem cs(un,g,rndN);
-	//SecureInt a(uencA,cs), b(uencB,cs), c[20];
+	Cryptosystem cs("143","3","4724","15739","1091", libgDir, "g"), aaa;
+	SecureInt a("14439",cs), b("13745",cs), c[20];
 
-	//Cryptosystem cs(__PQ(p)(q)(k)(rnd)__, 64, __2TOBETA__, __ENC0__, __ENC1__, "./libg.so", "g");	
-	//Cryptosystem ms("143","3","10981","18918","5768", "./libg.so", "g");
-	
-	//Cryptosystem cs("104947","105613","2","2", "./libg.so", "g");
-	//Cryptosystem cs(__PQ(13)(11)(2)(2)__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, "./libg.so", "g"), aaa;
-	//Cryptosystem cs(__PQ(104947)(105613)(3)(2)__, 3, __2TOBETA__, __ENC0__, __ENC1__, "./libg.so", "g"), aaa;
-	Cryptosystem cs("143","3","13347","19750","9694", libgDir, "g"), aaa;
-	SecureInt a("16344",cs), b("2044",cs), c[20];
-
-	aaa = Cryptosystem("169","5","25180","2198","17408", libgDir, "g");
+	aaa = Cryptosystem("608477","16","102875904762","313641890182","201972543924", libgDir, "g");
 	//a = SecureInt(__N(11)__,aaa); b = SecureInt(__N(3)__,aaa);
 	
 	c[0] = a+b;	cout << "0\n";

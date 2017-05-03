@@ -97,7 +97,13 @@ class Unumber
         friend bool operator<(const Unumber & n1, const Unumber & n2)
         { return 0 != cless(&n1.z, &n2.z); }
 
+        friend bool operator<=(const Unumber & n1, const Unumber & n2)
+	{ return ((n1 < n2) || (n1 == n2)); }
+
         friend bool operator>(const Unumber & n1, const Unumber & n2) { return n2 < n1; }
+
+	friend bool operator>=(const Unumber & n1, const Unumber & n2)
+	{ return ((n1 > n2) || (n1 == n2)); }
 
         friend bool operator!=(const Unumber & n1, const Unumber & n2)
         { return !(n1 == n2); }

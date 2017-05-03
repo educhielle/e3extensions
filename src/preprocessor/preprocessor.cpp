@@ -37,6 +37,8 @@ using namespace std;
 
 #define NUMBER_OF_CS_PARAMETERS 7
 #define NUMBER_OF_SI_PARAMETERS 2
+#define PRIME_FROM "11"
+#define PRIME_TO "1000"
 
 vector<string> csList;
 vector<SensitiveInformation> sinfoList;
@@ -56,7 +58,7 @@ bool isSecureIntPrecompilerTag(const string &);
 bool isValidPQ(const string &);
 SensitiveInformation mountSensitiveInformation(string &);
 Unumber prime();
-Unumber random(Unumber, Unumber);
+//Unumber random(Unumber, Unumber);
 void trim(string &);
 
 int main(int argc, char *argv[])
@@ -115,7 +117,7 @@ int main(int argc, char *argv[])
 						{
 							csList.push_back(objName);
 							sinfoList.push_back(sinfo);
-							out << objName << ";" << sinfo.fkf() << ";" << sinfo.access_g() << ";" << sinfo.getN() << ";" << sinfo.getXp1() << ";" << sinfo.getXp2() << "\n";
+							out << objName << ";" << sinfo.getP() << ";" << sinfo.getQ() << ";" << sinfo.getK() << ";" << sinfo.fkf() << ";" << sinfo.access_g() << ";" << sinfo.getN() << ";" << sinfo.getXp1() << ";" << sinfo.getXp2() << "\n";
 						}
 						Unumber f = sinfo.fkf();
 						cout << "The fkf of '" << objName << "' is " << f.str() << ". Use it in the G function.\n";
@@ -414,14 +416,21 @@ SensitiveInformation mountSensitiveInformation(string & pqkrnd)
 
 Unumber prime()
 {
-	return Unumber(13);
-}
+	Unumber p;
 
+	do
+	{
+		p = oddRandom(Unumber(PRIME_FROM), Unumber(PRIME_TO));
+	} while (!millerRabin(p));
+	
+	return p;
+}
+/*
 Unumber random(Unumber from, Unumber n)
 {
 	return invertibleRandom(from, n);
 }
-
+*/
 void trim(string & s)
 {
 	size_t p = s.find_first_not_of(" \t\n");

@@ -1,3 +1,8 @@
+#ifndef FSTREAM_INCLUDED
+	#define FSTREAM_INCLUDED
+	#include <fstream>
+#endif
+
 #ifndef IOSTREAM_INCLUDED
 	#define IOSTREAM_INCLUDED
 	#include <iostream>
@@ -18,10 +23,14 @@
 	#include <stdio.h>
 #endif
 
+#define FILENAME "CS.txt"
+
 using namespace std;
 
 string libgDir = "../../lib/libg.so";
+Unumber p, q, k;
 
+void loadCryptosystemParams();
 void printPair(const Unumber, const Unumber);
 
 /*
@@ -31,30 +40,13 @@ void printPair(const Unumber, const Unumber);
 
 int main()
 {
-	/* Using SensitiveInformation to test SecureInt */
-
-	//SensitiveInformation (p,q,k,rnd);
-	//SensitiveInformation si ("104947","105613","3","2");
-	SensitiveInformation si ("13","11","3","2");
-	
-	Unumber udecA(11), udecB(3);
-
-	Unumber uencA = si.encrypt(udecA);
-	Unumber uencB = si.encrypt(udecB);
-
-	cout << "Inputs:\n";
-
-	printPair(udecA, uencA);
-	printPair(udecB, uencB);
-
 	/* SecureInt and Cryptosystem test area */
+	loadCryptosystemParams();
+	SensitiveInformation si(p,q,k);
 
-	Cryptosystem cs(__PQ(13)(11)(3)()__, 3, __2TOBETA__, __ENC0__, __ENC1__, libgDir, "g"), aaa;
+	Cryptosystem cs(__PQ()()()()__, 3, __2TOBETA__, __ENC0__, __ENC1__, libgDir, "g");
 	SecureInt a(__N(11)__,cs), b(__N(3)__,cs), c[20];
-
-	aaa = Cryptosystem(__PQ()()()()__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, libgDir, "g");
-	//a = SecureInt(__N(11)__,aaa); b = SecureInt(__N(3)__,aaa);
-	
+		
 	c[0] = a+b;	cout << "0\n";
 	c[1] = a-b;	cout << "1\n";
 	c[2] = a==b;	cout << "2\n";
@@ -80,7 +72,7 @@ int main()
 	
 	cout << "\nOutputs:\n";
 
-	Unumber R, udecC[20];
+	Unumber R, udecA, udecB, udecC[20];
 	
 	udecA = si.decrypt(a.getX(), &R);
 	udecB = si.decrypt(b.getX(), &R);
@@ -96,6 +88,49 @@ int main()
 	}
 
 	return 0;
+}
+
+void loadCryptosystemParams()
+{
+	ifstream in;
+	in.open(FILENAME, ifstream::in);
+	stringstream buffer;
+	buffer << in.rdbuf();
+	string text = buffer.str();
+	in.close();
+
+	int semicolon[5];
+	semicolon[0] = text.find(";") + 1;
+	semicolon[1] = text.find(";", semicolon[0]) + 1;
+	semicolon[2] = text.find(";", semicolon[1]) + 1;
+	semicolon[3] = text.find(";", semicolon[2]) + 1;
+	semicolon[4] = text.find(";", semicolon[3]) + 1;
+	semicolon[5] = text.find(";", semicolon[4]) + 1;
+	semicolon[6] = text.find(";", semicolon[5]) + 1;
+	semicolon[7] = text.find(";", semicolon[6]) + 1;
+	int newLine = text.find("\n") + 1;
+
+	string strP   = text.substr(semicolon[0], semicolon[1]-semicolon[0]-1);
+	string strQ   = text.substr(semicolon[1], semicolon[2]-semicolon[1]-1);
+	string strK   = text.substr(semicolon[2], semicolon[3]-semicolon[2]-1);
+	string strFKF = text.substr(semicolon[3], semicolon[4]-semicolon[3]-1);
+	string strG   = text.substr(semicolon[4], semicolon[5]-semicolon[4]-1);
+	string strN   = text.substr(semicolon[5], semicolon[6]-semicolon[5]-1);
+	string strXp1 = text.substr(semicolon[6], semicolon[7]-semicolon[6]-1);
+	string strXp2 = text.substr(semicolon[7], newLine     -semicolon[7]-1);
+
+	p = Unumber(strP);
+	q = Unumber(strQ);
+	k = Unumber(strK);
+	/*fkf = Unumber(strFKF);
+	_g = Unumber(strG);
+	n = Unumber(strN);
+	xp1 = Unumber(strXp1);
+	xp2 = Unumber(strXp2);
+	n2 = n*n;*/
+
+	//cout << text << " [T]\n";
+	cout << "PQK -> " << p.str() << " " << q.str() << " " << k.str() << "\n";
 }
 
 void printPair(const Unumber dec, const Unumber enc)

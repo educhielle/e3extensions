@@ -46,14 +46,15 @@ class SensitiveInformation
     private:
 	Unumber congruence(Unumber x, const Unumber & n);
 	void init();
-	void next_rnd();
+	//void next_rnd();
 	void setB2Beta(unsigned);
 
     /* Public functions */
     public:
 	Unumber decrypt(Unumber a, Unumber * R);
 	Unumber encrypt(Unumber x, Unumber R);
-	Unumber encrypt(Unumber x) { return encryptRN(x, random()); }
+	//Unumber encrypt(Unumber x) { return encryptRN(x, random()); }
+	Unumber encrypt(Unumber x) { return encrypt(x, invertibleRandom()); }
 	Unumber encryptRN(Unumber x, Unumber rN);
         Unumber access_g() const { return g; }
         Unumber access_Nm1() const { return Nm1; }
@@ -62,17 +63,20 @@ class SensitiveInformation
         Unumber fkf() const;
 	Unumber getBeta() const;
 	unsigned getHighBitPosN() const;
+	Unumber getK() const;	
 	Unumber getN() const;
 	Unumber getN2() const;
+	Unumber getP() const;
+	Unumber getQ() const;
 	Unumber getTwoToBeta() const;
 	Unumber getXp1() const;
 	Unumber getXp2() const;
 	Unumber invertibleRandom() const;
         bool isrnd() const { return !rnd.iszero(); }
 	bool leq(const Unumber) const;
-        Unumber random() { next_rnd(); return rndN; }
+        //Unumber random() { next_rnd(); return rndN; }
 	void setBeta(unsigned);
-	Unumber peek_rndN() const { return rndN; }
+	//Unumber peek_rndN() const { return rndN; }
 };
 
 SensitiveInformation::SensitiveInformation(const string & p, const string & q, const string & k)
@@ -239,7 +243,7 @@ void SensitiveInformation::init()
 		else setB2Beta(nbit - 1);
 	}
 }
-
+/*
 void SensitiveInformation::next_rnd()
 {
 	if (rndN.iszero()) throw "Rnd used, but not initialised: set random seed";
@@ -248,7 +252,7 @@ void SensitiveInformation::next_rnd()
 	rndN = rndN.mul(rndN, n2); // for rnd need N, for rndN need N2
 	//cout << "\trndN = " << rndN.to_ull() << "\n";
 }
-
+*/
 void SensitiveInformation::setB2Beta(unsigned b)
 {
 	beta = b;
@@ -343,6 +347,11 @@ Unumber SensitiveInformation::getBeta() const
 	return beta;
 }
 
+Unumber SensitiveInformation::getK() const
+{
+	return k;
+}
+
 Unumber SensitiveInformation::getN() const
 {
 	return n;
@@ -351,6 +360,16 @@ Unumber SensitiveInformation::getN() const
 Unumber SensitiveInformation::getN2() const
 {
 	return n2;
+}
+
+Unumber SensitiveInformation::getP() const
+{
+	return p;
+}
+
+Unumber SensitiveInformation::getQ() const
+{
+	return q;
 }
 
 Unumber SensitiveInformation::getTwoToBeta() const
