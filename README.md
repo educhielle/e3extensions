@@ -2,7 +2,7 @@
 
 TODO: project description
 
-[TL;DL](#TL;DL)
+[TL;DL](#tldr)
 
 ## Usage
 
