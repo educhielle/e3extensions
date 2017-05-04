@@ -143,9 +143,9 @@ void loadCryptosystemParams()
 	semicolon[2] = text.find(";", semicolon[1]) + 1;
 	semicolon[3] = text.find(";", semicolon[2]) + 1;
 
-	string strP   = text.substr(semicolon[0], semicolon[1]-semicolon[0]-1);
-	string strQ   = text.substr(semicolon[1], semicolon[2]-semicolon[1]-1);
-	string strK   = text.substr(semicolon[2], semicolon[3]-semicolon[2]-1);
+	string strP = text.substr(semicolon[0], semicolon[1]-semicolon[0]-1);
+	string strQ = text.substr(semicolon[1], semicolon[2]-semicolon[1]-1);
+	string strK = text.substr(semicolon[2], semicolon[3]-semicolon[2]-1);
 
 	p = Unumber(strP);
 	q = Unumber(strQ);
