@@ -2,7 +2,7 @@
 
 TODO: project description
 
-[TL;DL](README.md#tldr)
+[TL;DL](#tldr)
 
 ## Usage
 
@@ -38,7 +38,7 @@ In the application directory (e.g. /test/main/), do:
 ./main
 ```
 
-## TL;DL
+## TL;DR
 
 a
 
