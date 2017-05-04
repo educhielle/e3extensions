@@ -1,8 +1,3 @@
-#ifndef UNUMBER_INCLUDED
-	#define UNUMBER_INCLUDED
-	#include "../unumber/unumberg.h"
-#endif
-
 #ifndef IOSTREAM_INCLUDED
 	#define IOSTREAM_INCLUDED
 	#include <iostream>
@@ -11,6 +6,11 @@
 #ifndef RANDOM_INCLUDED
 	#define RANDOM_INCLUDED
 	#include <random>
+#endif
+
+#ifndef UNUMBER_INCLUDED
+	#define UNUMBER_INCLUDED
+	#include "../unumber/unumberg.h"
 #endif
 
 class SensitiveInformation

@@ -40,7 +40,136 @@ In the application directory (e.g. /test/main/), do:
 
 ## TL;DR
 
-a
+Let us create a program that performs a simple mathematical equation (1+15*10-7). First, create a directory in /test/.
+````
+cd test/
+mkdir simple
+cd simple/
+````
+Create a C++ file (simple.cpp).
+````
+#include <iostream>
+#include <fstream>
+#include "../../src/e3extensions/secureint.h"
+
+using namespace std;
+
+string libgDir = "../../lib/libg.so";
+string gFunctionName = "g";
+
+int main()
+{
+	cout << "Creating Cryptosystem\n";
+	Cryptosystem cs(__PQ()()()()__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, libgDir, gFunctionName);
+	cout << "Instantiating SecureInts\n";
+	SecureInt a(__N(1)__,cs), b(__N(15)__,cs), c(__N(10)__,cs), d(__N(7)__,cs);
+	cout << "Performing mathematical equation (it may take a while)\n";
+	SecureInt r = a+b*c-d;
+	cout << "Writing output file\n";
+	ofstream out;
+	out.open("output.txt", ofstream::out);
+	out << r.str();
+	out.close();
+
+	return 0;
+}
+
+````
+Then, following script to preprocess and compile the code above (file: preprocessAndCompile.sh):
+````
+cd ..
+./preprocess simple/simple.cpp && ./compile simple/simple_T.cpp
+cd simple
+````
+Now, test the application:
+````
+./preprocessAndCompile.sh && ./main
+````
+It creates a file called output.txt with the encrypted result and shows the following messages during the run:
+````
+Creating Cryptosystem
+Instantiating SecureInts
+Performing mathematical equation (it may take a while)
+Writing output file
+````
+If you check the output.txt, you will see an encrypted value. To see the unencrypted result, let us make another program (file: decrypt.cpp).
+````
+#include <fstream>
+#include <iostream>
+#include "../../src/preprocessor/sensitive_information.h"
+
+#define FILENAME "CS.txt"
+
+using namespace std;
+
+Unumber p, q, k;
+
+void loadCryptosystemParams();
+
+int main()
+{
+	cout << "Loading Cryptosystem parameters\n";
+	loadCryptosystemParams();
+	cout << "Instantiating SensitiveInformation (to decrypt)\n";
+	SensitiveInformation si(p,q,k);
+	cout << "Reading encrypted value from output.txt\n";
+	ifstream in;
+	in.open("output.txt", ifstream::in);
+	stringstream buffer;
+	buffer << in.rdbuf();
+	string strEncValue = buffer.str();
+	in.close();
+	Unumber encValue(strEncValue);
+	cout << "Decrypting\n";
+	Unumber R, result;
+	result = si.decrypt(encValue, &R);
+	cout << "Result: " << result.str() << " (encrypted value: " << encValue.str() << ")\n";
+
+	return 0;
+}
+
+void loadCryptosystemParams()
+{
+	ifstream in;
+	in.open(FILENAME, ifstream::in);
+	stringstream buffer;
+	buffer << in.rdbuf();
+	string text = buffer.str();
+	in.close();
+
+	int semicolon[4];
+	semicolon[0] = text.find(";") + 1;
+	semicolon[1] = text.find(";", semicolon[0]) + 1;
+	semicolon[2] = text.find(";", semicolon[1]) + 1;
+	semicolon[3] = text.find(";", semicolon[2]) + 1;
+
+	string strP   = text.substr(semicolon[0], semicolon[1]-semicolon[0]-1);
+	string strQ   = text.substr(semicolon[1], semicolon[2]-semicolon[1]-1);
+	string strK   = text.substr(semicolon[2], semicolon[3]-semicolon[2]-1);
+
+	p = Unumber(strP);
+	q = Unumber(strQ);
+	k = Unumber(strK);
+}
+
+````
+Then compile it (if unumber is not compiled, run unumber.sh in the script directory):
+````
+g++ -Wall -O2 -std=c++14 -fno-strict-aliasing decrypt.cpp ../../obj/unumber/unumberg.o ../../obj/unumber/cunmber_4096_m.o ../../obj/unumber/ma_invert_m.o -o decrypt
+````
+Now, test it:
+````
+./decrypt
+````
+You should get the following (the encrypted value may change):
+````
+Loading Cryptosystem parameters
+Instantiating SensitiveInformation (to decrypt)
+Reading encrypted value from output.txt
+Decrypting
+Result: 144 (encrypted value: 3268181710)
+````
+It shows 144 as the result, which is correct. Yahoo!
 
 ## MoMAlab
 

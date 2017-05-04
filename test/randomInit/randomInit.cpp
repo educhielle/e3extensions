@@ -135,6 +135,6 @@ void loadCryptosystemParams()
 
 void printPair(const Unumber dec, const Unumber enc)
 {
-	cout << "m: " << dec.str() << "\tx: " << enc << "\n";
+	cout << "m: " << dec.str() << "\tx: " << enc.str() << "\n";
 }
 
