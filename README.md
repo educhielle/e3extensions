@@ -2,7 +2,7 @@
 
 TODO: project description
 
-[TLDR](#tldr)
+[TL;DR](#tldr)
 
 ## Usage
 
@@ -38,7 +38,7 @@ In the application directory (e.g. /test/main/), do:
 ./main
 ```
 
-## TLDR
+## TL;DR
 
 a
 
