@@ -2,7 +2,7 @@
 
 TODO: project description
 
-[TL;DL](#tldr)
+[TL;DL](README.md#tldr)
 
 ## Usage
 
