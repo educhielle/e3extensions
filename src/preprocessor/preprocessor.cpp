@@ -1,3 +1,8 @@
+#ifndef BIG_RANDOM_INCLUDED
+	#define BIG_RANDOM_INCLUDED
+	#include "big_random.h"
+#endif
+
 #ifndef FSTREAM_INCLUDED
 	#define FSTREAM_INCLUDED
 	#include <fstream>
@@ -15,7 +20,7 @@
 
 #ifndef SENSITIVE_INFORMATION_INCLUDED
 	#define SENSITIVE_INFORMATION_INCLUDED	
-	#include "../preprocessor/sensitive_information.h"
+	#include "sensitive_information.h"
 #endif
 
 #ifndef UNUMBER_INCLUDED
@@ -46,21 +51,13 @@ SensitiveInformation sinfo;
 
 string calcNewParamsCS(string);
 string calcNewParamsSI(string);
-void createFile(const string &, const SensitiveInformation &);
-const vector<string> explode(const string &, const char &);
 int findClosingBracket(const string &, int);
 string findObjectNameBefore(const string &, int);
-int indexOf(vector<string>, const string &);
-bool isBlockComment(const string &, const int);
-bool isComment(const string &, const int);
-bool isLineComment(const string &, const int);
 bool isSecureIntPrecompilerTag(const string &);
 bool isValidPQ(const string &);
 SensitiveInformation mountSensitiveInformation(string &);
-Unumber prime();
-//Unumber random(Unumber, Unumber);
-void trim(string &);
 
+/* Transform Cryptosystem values, then encrypt SecureInt values */
 int main(int argc, char *argv[])
 {
 	while (argc-- > 1)
@@ -164,6 +161,7 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
+/* Calculate the new parameters for a Cryptosystem */
 string calcNewParamsCS(string params)
 {
 	Unumber p,q,k,rnd;
@@ -215,6 +213,7 @@ string calcNewParamsCS(string params)
 	return params;
 }
 
+/* Calculate the new parameters for a SecureInt */
 string calcNewParamsSI(string params)
 {
 	vector<string> v{explode(params,',')};
@@ -248,28 +247,7 @@ string calcNewParamsSI(string params)
 	return params;
 }
 
-void createFile(const string & name, const SensitiveInformation & si)
-{
-	ofstream outputFile(name);
-	outputFile << si.fkf() << ";" << si.access_g();
-	outputFile.close();
-}
-
-const vector<string> explode(const string& s, const char& c)
-{
-	string buff{""};
-	vector<string> v;
-	
-	for(auto n:s)
-	{
-		if(n != c) buff+=n; else
-		if(n == c && buff != "") { v.push_back(buff); buff = ""; }
-	}
-	if(buff != "") v.push_back(buff);
-	
-	return v;
-}
-
+/* Find the bracket that closes a sequence of nested brackets */
 int findClosingBracket(const string & code, int init)
 {
 	int countOpen = 1, countClose = 0;
@@ -297,6 +275,7 @@ int findClosingBracket(const string & code, int init)
 	return posClose;
 }
 
+/* Find the object name that is located before posF */
 string findObjectNameBefore(const string & code, int posF)
 {
 	int posI = code.rfind(";", posF);
@@ -313,43 +292,7 @@ string findObjectNameBefore(const string & code, int posF)
 	return str;
 }
 
-int indexOf(vector<string> v, const string & elem)
-{
-	for (int i = 0; (unsigned) i < v.size(); i++)
-	{
-		if (elem.compare(v[i]) == 0) return i;
-	}
-
-	return -1;
-}
-
-bool isBlockComment(const string & code, const int pos)
-{
-	int blockCommentStartBefore = code.rfind("/*", pos);
-	int blockCommentEndBefore = code.rfind("*/", pos);
-	if (blockCommentStartBefore <= blockCommentEndBefore) return false;
-	
-	return true;
-}
-
-bool isComment(const string & code, const int pos)
-{
-	return (isLineComment(code, pos) || isBlockComment(code, pos));
-}
-
-bool isLineComment(const string & code, const int pos)
-{
-	int newLineBefore = code.rfind("\n", pos) + 1;
-	int newLineAfter = code.find("\n", pos);
-
-	string line;
-	if (newLineAfter == -1) code.substr(newLineBefore);
-	else line = code.substr(newLineBefore, newLineAfter - newLineBefore);
-	int lineComment = line.find("//");
-	
-	return ((lineComment != -1) && (lineComment < newLineBefore));
-}
-
+/* Check if the string is a tag of a SecureInt value */
 bool isSecureIntPrecompilerTag(const string & str)
 {
 	std::regex re("__N\\([0-9]+\\)__");
@@ -357,6 +300,7 @@ bool isSecureIntPrecompilerTag(const string & str)
 	return std::regex_match(str.c_str(), m, re);
 }
 
+/* Check if tag __PQ...__ in the code is valid  */
 bool isValidPQ(const string & pqkrnd)
 {
 	try
@@ -374,6 +318,8 @@ bool isValidPQ(const string & pqkrnd)
 	return false;
 }
 
+/* Create a SensitiveInformation object based on a string in the format __PQ(p)(q)(k)(r)__ */
+/* p, q, k, and r are optional */
 SensitiveInformation mountSensitiveInformation(string & pqkrnd)
 {
 	try
@@ -398,12 +344,16 @@ SensitiveInformation mountSensitiveInformation(string & pqkrnd)
 		trim(strQ);
 		trim(strK);
 		trim(strRnd);
+		
+		Unumber primeFrom (PRIME_FROM);
+		Unumber primeTo (PRIME_TO);
 
-		Unumber p   = (  strP.empty() ? prime()       : Unumber(strP));
-		Unumber q   = (  strQ.empty() ? prime()       : Unumber(strQ));
+		Unumber p   = (  strP.empty() ? prime(primeFrom, primeTo) : Unumber(strP));
+		Unumber q   = (  strQ.empty() ? prime(primeFrom, primeTo) : Unumber(strQ));
+		while (p == q) q = prime(primeFrom, primeTo);
 		Unumber pq = p*q;
-		Unumber k   = (  strK.empty() ? random(2, pq) : Unumber(strK));
-		Unumber rnd = (strRnd.empty() ? random(2, pq) : Unumber(strRnd));
+		Unumber k   = (  strK.empty() ? invertibleRandom(2, pq)   : Unumber(strK));
+		Unumber rnd = (strRnd.empty() ? invertibleRandom(2, pq)   : Unumber(strRnd));
 
 		cout << "P: " << p.str() << "\tQ: " << q.str() << "\tK: " << k.str() << "\tRND: " << rnd.str() << "\n";
 
@@ -414,30 +364,4 @@ SensitiveInformation mountSensitiveInformation(string & pqkrnd)
 	return SensitiveInformation();
 }
 
-Unumber prime()
-{
-	Unumber p;
-
-	do
-	{
-		p = oddRandom(Unumber(PRIME_FROM), Unumber(PRIME_TO));
-	} while (!millerRabin(p));
-	
-	return p;
-}
-/*
-Unumber random(Unumber from, Unumber n)
-{
-	return invertibleRandom(from, n);
-}
-*/
-void trim(string & s)
-{
-	size_t p = s.find_first_not_of(" \t\n");
-	s.erase(0, p);
-
-	p = s.find_last_not_of(" \t");
-	if (string::npos != p)
-		s.erase(p+1);
-}
 

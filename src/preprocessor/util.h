@@ -1,144 +1,87 @@
-#ifndef UNUMBER_INCLUDED
-	#define UNUMBER_INCLUDED
-	#include "../unumber/unumberg.h"
+#ifndef IOSTREAM_INCLUDED
+	#define IOSTREAM_INCLUDED
+	#include <iostream>
 #endif
 
-#ifndef RANDOM_INCLUDED
-	#define RANDOM_INCLUDED
-	#include <random>
+#ifndef VECTOR_INCLUDED
+	#define VECTOR_INCLUDED	
+	#include <vector>
 #endif
 
-Unumber invertibleRandom(const Unumber &, const Unumber &);
-bool millerRabin(const Unumber &, int);
-Unumber oddRandom(const Unumber &, const Unumber &);
-Unumber random(const Unumber &, const Unumber &);
+using namespace std;
 
-/* Generate a random number in the range [from,n-1] that has no common divisor with n */
-Unumber invertibleRandom(const Unumber & from, const Unumber & n)
+const vector<string> explode(const string &, const char &);
+int indexOf(vector<string>, const string &);
+bool isBlockComment(const string &, const int);
+bool isComment(const string &, const int);
+bool isLineComment(const string &, const int);
+void trim(string &);
+
+/* Split string into vector elements */
+const vector<string> explode(const string& s, const char& c)
 {
-	unsigned high_bit_posN = 0;
-	Unumber x = n - 1;
-	while (x != 0) { x >>= 1; high_bit_posN++; }
-	high_bit_posN--;
-
-	std::random_device rd;
-	std::mt19937_64 mt64(rd());
+	string buff{""};
+	vector<string> v;
 	
-	Unumber number(0);
-
-	while (true)
+	for(auto n:s)
 	{
-		number = 0;
-		unsigned count = 0;
-		while (count < high_bit_posN)
-		{
-			count += 64;
-			number <<= 64;
-			number += mt64();
-		}
-
-		/* "count - high_bit_posN - 1" guarantees random numbers [1,n-1].
-		 * However, any random number > (n-1) needs to be ignored.
-		 * If "count - high_bit_posN" is used instead,
-		 * the range of random numbers is [1,x], where x < (n-1),
-		 * but it is faster. */
-		unsigned shift = count - high_bit_posN - 1;
-		number >>= shift;
-
-		/* the number is valid if it is a number in the range [from,n-1]
-		 * and its gcd with n is one */
-		if ((number < n) && (ma::gcd(number, n) == 1) && (from <= number)) break;
+		if(n != c) buff+=n; else
+		if(n == c && buff != "") { v.push_back(buff); buff = ""; }
 	}
-
-	return number;
-
-
-	/* another option (more modular, lower performance)
-	Unumber number;
-	do
-		number = random(from, n);
-	while (ma::gcd(number, n) =! 1);
-	return number;
-	*/
+	if(buff != "") v.push_back(buff);
+	
+	return v;
 }
 
-/* Miller-Rabin prime test */
-bool millerRabin(Unumber p, int iteration=64)
+/* find the index of a element in a vector */
+int indexOf(vector<string> v, const string & elem)
 {
-	if ((p < 2) || (p != 2 && p % 2 == 0)) return false;
-	
-	Unumber s = p - 1;
-    	while (s % 2 == 0) s /= 2;
-	
-	for (int i = 0; i < iteration; i++)
+	for (int i = 0; (unsigned) i < v.size(); i++)
 	{
-		Unumber mod = random(2, p-1) % (p - 1) + 1, temp = s;
-//		Unumber mod (a);
-		mod.pow(temp, p);
-		while (temp != p - 1 && mod != 1 && mod != p - 1)
-		{
-			mod.mul(mod, p);
-			temp *= 2;
-		}
+		if (elem.compare(v[i]) == 0) return i;
+	}
 
-		if (mod != p - 1 && temp % 2 == 0)
-		{
-			return false;
-		}
-    	}
+	return -1;
+}
 
+/* Return true if the character at pos is inside of a block comment */
+bool isBlockComment(const string & code, const int pos)
+{
+	int blockCommentStartBefore = code.rfind("/*", pos);
+	int blockCommentEndBefore = code.rfind("*/", pos);
+	if (blockCommentStartBefore <= blockCommentEndBefore) return false;
+	
 	return true;
 }
 
-Unumber oddRandom(const Unumber & from, const Unumber & n)
+/* Return true if the character at pos is inside of a comment */
+bool isComment(const string & code, const int pos)
 {
-	//return (random(from,n) || 1); // || not implemented
-	Unumber number = random(from,n);
-
-	if (number % 2 == 0)
-	{
-		number -= 1;
-		if (number < from) number += 2;
-	}
-
-	return number;
+	return (isLineComment(code, pos) || isBlockComment(code, pos));
 }
 
-Unumber random(const Unumber & from, const Unumber & n)
+/* Return true if the character at pos is inside of a line comment */
+bool isLineComment(const string & code, const int pos)
 {
-	unsigned high_bit_posN = 0;
-	Unumber x = n - 1;
-	while (x != 0) { x >>= 1; high_bit_posN++; }
-	high_bit_posN--;
+	int newLineBefore = code.rfind("\n", pos) + 1;
+	int newLineAfter = code.find("\n", pos);
 
-	std::random_device rd;
-	std::mt19937_64 mt64(rd());
+	string line;
+	if (newLineAfter == -1) code.substr(newLineBefore);
+	else line = code.substr(newLineBefore, newLineAfter - newLineBefore);
+	int lineComment = line.find("//");
 	
-	Unumber number(0);
+	return ((lineComment != -1) && (lineComment < newLineBefore));
+}
 
-	while (true)
-	{
-		number = 0;
-		unsigned count = 0;
-		while (count < high_bit_posN)
-		{
-			count += 64;
-			number <<= 64;
-			number += mt64();
-		}
+/* Remove the leading and trailing spaces */
+void trim(string & s)
+{
+	size_t p = s.find_first_not_of(" \t\n");
+	s.erase(0, p);
 
-		/* "count - high_bit_posN - 1" guarantees random numbers [1,n-1].
-		 * However, any random number > (n-1) or < (from) needs to be ignored.
-		 * If "count - high_bit_posN" is used instead,
-		 * the range of random numbers is [from,x], where x < (n-1),
-		 * but it is faster. */
-		unsigned shift = count - high_bit_posN - 1;
-		number >>= shift;
-
-		/* the number is valid if it is a number in the range [from,n-1] */
-		if ((number < n) && (from <= number)) break;
-	}
-
-	return number;
+	p = s.find_last_not_of(" \t");
+	if (string::npos != p)
+		s.erase(p+1);
 }
 

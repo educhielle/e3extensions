@@ -5,9 +5,9 @@
 * eduardo.chielle@nyu.edu        2016-2017 *
 ********************************************/
 
-#ifndef UNUMBER_INCLUDED
-	#define UNUMBER_INCLUDED
-	#include "../unumber/unumberg.h"
+#ifndef DLFCN_INCLUDED
+	#define DLFCN_INCLUDED	
+	#include <dlfcn.h>
 #endif
 
 #ifndef IOSTREAM_INCLUDED
@@ -20,19 +20,9 @@
 	#include <random>
 #endif
 
-#ifndef STDIO_INCLUDED
-	#define STDIO_INCLUDED	
-	#include <stdio.h>
-#endif
-
-#ifndef STDLIB_INCLUDED
-	#define STDLIB_INCLUDED	
-	#include <stdlib.h>
-#endif
-
-#ifndef DLFCN_INCLUDED
-	#define DLFCN_INCLUDED	
-	#include <dlfcn.h>
+#ifndef UNUMBER_INCLUDED
+	#define UNUMBER_INCLUDED
+	#include "../unumber/unumberg.h"
 #endif
 
 class Cryptosystem
@@ -41,8 +31,7 @@ class Cryptosystem
 
     /* Variables */
     private:
-	Unumber n, n2, beta, twoToBeta, zero, one; //, xp1, xp2; //-- leq test removed
-	//Unumber a2, b2;
+	Unumber n, n2, beta, twoToBeta, zero, one;
 	unsigned high_bit_posN; //, high_bit_posN2;
 	Unumber rndN;
 
@@ -50,7 +39,6 @@ class Cryptosystem
 	void* libgHandle;
 	libG_t externG;
 	
-
     /* Constructors */
     public:	
 	Cryptosystem() {}
@@ -61,9 +49,7 @@ class Cryptosystem
 
     /* Private functions */
     private:
-	//Unumber congruence(Unumber, const Unumber &) const;
 	void init();
-	void next_rnd();
 
     /* Public functions */
     public:
@@ -76,17 +62,8 @@ class Cryptosystem
 	Unumber getTwoToBeta() const;
 	Unumber getZero() const;
 	Unumber invertibleRandom() const;
-	//bool leq(Unumber) const;
-        Unumber random() { next_rnd(); return rndN; }
 	Unumber reencrypt(const Unumber) const;
 };
-
-/*******************************************
- *     STATIC VARIABLES INITIALIZATION     *
- *******************************************/
-
-//Unumber Cryptosystem::rndN = 0;
-
 
 /************************
  *     CONSTRUCTORS     *
@@ -96,13 +73,10 @@ inline
 Cryptosystem::Cryptosystem(const Cryptosystem & param)
 {
 	this->n = param.n;
-//	this->n2 = param.n2;
 	this->beta = param.beta;
 	this->twoToBeta = param.twoToBeta;
 	this->zero = param.zero;
 	this->one = param.one;
-//	this->xp1 = param.xp1;
-//	this->xp2 = param.xp2;
 	this->libgFilename = param.libgFilename;
 	this->libgFunction = param.libgFunction;
 	//this->libgInit = param.libgInit;
@@ -114,13 +88,10 @@ inline
 Cryptosystem::Cryptosystem(const string & n, const string & beta, const string & twoToBeta, const string & zero, const string & one, const string & libgFilename, const string & libgFunction)
 {
 	this->n = Unumber(n);
-//	this->n2 = Unumber(n2);
 	this->beta = Unumber(beta);
 	this->twoToBeta = Unumber(twoToBeta);
 	this->zero = Unumber(zero);
 	this->one = Unumber(one);
-//	this->xp1 = Unumber(xp1);
-//	this->xp2 = Unumber(xp2);
 	this->libgFilename = libgFilename;
 	this->libgFunction = libgFunction;
 	//this->libgInit = libgInit;
@@ -132,13 +103,10 @@ inline
 Cryptosystem::Cryptosystem(const Unumber n, const Unumber beta, const Unumber twoToBeta, const Unumber zero, const Unumber one, const string & libgFilename, const string & libgFunction)
 {
 	this->n = n;
-//	this->n2 = n2;
 	this->beta = beta;
 	this->twoToBeta = twoToBeta;
 	this->zero = zero;
 	this->one = one;
-//	this->xp1 = xp1;
-//	this->xp2 = xp2;
 	this->libgFilename = libgFilename;
 	this->libgFunction = libgFunction;
 	//this->libgInit = libgInit;
@@ -150,13 +118,10 @@ inline
 Cryptosystem::Cryptosystem(unsigned long long n, unsigned long long beta, unsigned long long twoToBeta, unsigned long long zero, unsigned long long one, const string & libgFilename, const string & libgFunction)
 {
 	this->n = Unumber(n);
-//	this->n2 = Unumber(n2);
 	this->beta = Unumber(beta);
 	this->twoToBeta = Unumber(twoToBeta);
 	this->zero = Unumber(zero);
 	this->one = Unumber(one);
-//	this->xp1 = Unumber(xp1);
-//	this->xp2 = Unumber(xp2);
 	this->libgFilename = libgFilename;
 	this->libgFunction = libgFunction;
 	//this->libgInit = libgInit;
@@ -168,12 +133,6 @@ Cryptosystem::Cryptosystem(unsigned long long n, unsigned long long beta, unsign
 /*****************************
  *     PRIVATE FUNCTIONS     *
  *****************************/
-
-void Cryptosystem::next_rnd()
-{
-	if (rndN.iszero()) throw "Rnd used, but not initialised: set random seed";
-	rndN = rndN.mul(rndN, n2); // for rnd need N, for rndN need N2
-}
 
 /* Initialize */
 /* Find the high bit position of (n-1) */
@@ -301,19 +260,11 @@ Unumber Cryptosystem::invertibleRandom() const
 	return number;
 }
 
-/* Leq test */
-/* Return true if an open value x is less or equal than zeor */
-/*bool Cryptosystem::leq(Unumber x) const
-{
-	return ((x < xp1) || (xp2 < x));
-}*/
-
 /* Reencrypt a cyphertext with a random invertible number */
 /* Following the equation x' = (r^N * x) % N2 */
 Unumber Cryptosystem::reencrypt(const Unumber x) const
 {
 	Unumber y = invertibleRandom();
-	//Unumber y = random();
 	y.pow(n,n2);
 	y = y.mul(x,n2);
 	return y;

@@ -11,6 +11,11 @@
         use it only for testing purpose    *
 ********************************************/
 
+#ifndef BIG_RANDOM_INCLUDED
+	#define BIG_RANDOM_INCLUDED
+	#include "../preprocessor/big_random.h"
+#endif
+
 #ifndef FSTREAM_INCLUDED
 	#define FSTREAM_INCLUDED
 	#include <fstream>
@@ -21,34 +26,17 @@
 	#include <iostream>
 #endif
 
-/*
-#ifndef SENSITIVE_INFORMATION_INCLUDED
-	#define SENSITIVE_INFORMATION_INCLUDED	
-	#include "../preprocessor/sensitive_information.h"
-#endif
-*/
-
 #ifndef UNUMBER_INCLUDED
 	#define UNUMBER_INCLUDED
 	#include "../unumber/unumberg.h"
-#endif
-
-#ifndef UTIL_INCLUDED
-	#define UTIL_INCLUDED
-	#include "../preprocessor/util.h"
 #endif
 
 #define FILENAME "CS.txt"
 
 using namespace std;
 
-//SensitiveInformation sinfo("104947","105613","3","2");
-//SensitiveInformation sinfo("13","11","2","2");
-//Unumber n = sinfo.getN(), n2 = sinfo.getN2();
-
 Unumber fkf, _g, n, n2, xp1, xp2;
 bool loaded = false;
-bool sinfoReady = false;
 
 Unumber congruence(Unumber, const Unumber &);
 Unumber encrypt(const Unumber &);
@@ -56,25 +44,27 @@ bool leq(const Unumber);
 void loadCryptosystemParams();
 Unumber reencrypt(const Unumber &);
 
+/* G function */
+/* if the unencryption of x is less or equal zero
+ * 	return the encryption of zero
+ * else return the reencryption of y */	
 extern "C" Unumber g(Unumber x, Unumber y)
 {
 	if (!loaded) loadCryptosystemParams();
 	
-	//fkf = sinfo.fkf();
 	Unumber ox = Unumber(x);
 	ox.pow(fkf, n2);
 
-	//Unumber zero = sinfo.encrypt(0);
 	Unumber zero = encrypt(0);
 	Unumber _y = reencrypt(y);
 
-	//if (sinfo.leq(ox)) return zero;
 	if (leq(ox)) return zero;
 
 	return _y;
 }
 
-/* x % n */
+/* Return (x % n) */
+/* It is used to make sure x < n */
 Unumber congruence(Unumber x, const Unumber & n)
 {
 	if ( n.iszero() ) return x;
@@ -91,25 +81,29 @@ Unumber congruence(Unumber x, const Unumber & n)
 	return nn;
 }
 
+/* Encrypt following equation x = r^N * (1 + N*k*m) % N2 */
 Unumber encrypt(const Unumber & m)
 {
 	Unumber rN = invertibleRandom(2,n);
-	rN.pow(n, n2);
+	rN.pow(n, n2); //r^N
+
 	Unumber gm = _g;
-	gm.pow(congruence(m, n), n2);
-	//gm.pow(m, n2);
-	Unumber x = rN.mul(gm, n2);
+	// gm.pow(congruence(m, n), n2); // g^m % N2 -- replaced by the next line
+	gm = (congruence(m, n) * (gm - 1) + 1) % n2; // (1 + N*k*m) % N2
+
+	Unumber x = rN.mul(gm, n2); // r^N * (1 + N*k*m) % N2
 	
 	return x;
 }
 
 /* Leq test */
-/* Return true if an open value x is less or equal than zeor */
+/* Return true if an open value x is less or equal than zero */
 bool leq(const Unumber x)
 {
 	return ((x < xp1) || (xp2 < x));
 }
 
+/* Load Cryptosystem parameters from CS.txt file */
 void loadCryptosystemParams()
 {
 	ifstream in;
@@ -119,7 +113,7 @@ void loadCryptosystemParams()
 	string text = buffer.str();
 	in.close();
 
-	int semicolon[5];
+	int semicolon[8];
 	semicolon[0] = text.find(";") + 1;
 	semicolon[1] = text.find(";", semicolon[0]) + 1;
 	semicolon[2] = text.find(";", semicolon[1]) + 1;
@@ -148,9 +142,6 @@ void loadCryptosystemParams()
 	xp1 = Unumber(strXp1);
 	xp2 = Unumber(strXp2);
 	n2 = n*n;
-
-	//cout << text << " [T]\n";
-	//cout << fkf.str() << " " << _g.str() << " " << n.str() << " " << xp1.str() << " " << xp2.str() << " " << n2.str() << "\n";
 	
 	loaded = true;
 }

@@ -49,10 +49,10 @@ int main()
 
 	/* SecureInt and Cryptosystem test area */
 
-	Cryptosystem cs("143","3","4724","15739","1091", libgDir, "g"), aaa;
-	SecureInt a("14439",cs), b("13745",cs), c[20];
+	Cryptosystem cs("143","3","13991","1939","17180", libgDir, "g"), aaa;
+	SecureInt a("13525",cs), b("13238",cs), c[20];
 
-	aaa = Cryptosystem("608477","16","102875904762","313641890182","201972543924", libgDir, "g");
+	aaa = Cryptosystem("107257","14","1059313095","4341343322","10031246018", libgDir, "g");
 	//a = SecureInt(__N(11)__,aaa); b = SecureInt(__N(3)__,aaa);
 	
 	c[0] = a+b;	cout << "0\n";

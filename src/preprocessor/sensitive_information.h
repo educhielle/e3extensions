@@ -46,16 +46,13 @@ class SensitiveInformation
     private:
 	Unumber congruence(Unumber x, const Unumber & n);
 	void init();
-	//void next_rnd();
 	void setB2Beta(unsigned);
 
     /* Public functions */
     public:
 	Unumber decrypt(Unumber a, Unumber * R);
 	Unumber encrypt(Unumber x, Unumber R);
-	//Unumber encrypt(Unumber x) { return encryptRN(x, random()); }
 	Unumber encrypt(Unumber x) { return encrypt(x, invertibleRandom()); }
-	Unumber encryptRN(Unumber x, Unumber rN);
         Unumber access_g() const { return g; }
         Unumber access_Nm1() const { return Nm1; }
         Unumber access_p1Nk1N() const { return p1Nk1N; }
@@ -74,10 +71,13 @@ class SensitiveInformation
 	Unumber invertibleRandom() const;
         bool isrnd() const { return !rnd.iszero(); }
 	bool leq(const Unumber) const;
-        //Unumber random() { next_rnd(); return rndN; }
 	void setBeta(unsigned);
-	//Unumber peek_rndN() const { return rndN; }
 };
+
+
+/************************
+ *     CONSTRUCTORS     *
+ ************************/
 
 SensitiveInformation::SensitiveInformation(const string & p, const string & q, const string & k)
 {
@@ -139,8 +139,13 @@ SensitiveInformation::SensitiveInformation(unsigned long long p, unsigned long l
 	init();
 }
 
-/* Private functions */
 
+/*****************************
+ *     PRIVATE FUNCTIONS     *
+ *****************************/
+
+/* Return (x % n) */
+/* It is used to make sure x < n */
 Unumber SensitiveInformation::congruence(Unumber x, const Unumber & n)
 {
 	if ( n.iszero() ) return x;
@@ -243,16 +248,8 @@ void SensitiveInformation::init()
 		else setB2Beta(nbit - 1);
 	}
 }
-/*
-void SensitiveInformation::next_rnd()
-{
-	if (rndN.iszero()) throw "Rnd used, but not initialised: set random seed";
 
-	//cout << "next_rnd(): rndN = " << rndN.to_ull() << "\tN2 = " << n2.to_ull();
-	rndN = rndN.mul(rndN, n2); // for rnd need N, for rndN need N2
-	//cout << "\trndN = " << rndN.to_ull() << "\n";
-}
-*/
+/* Set ~2^Beta */
 void SensitiveInformation::setB2Beta(unsigned b)
 {
 	beta = b;
@@ -262,14 +259,17 @@ void SensitiveInformation::setB2Beta(unsigned b)
 	twoToBeta = encrypt(twoToBeta);
 }
 
-/* Public functions */
+/****************************
+ *     PUBLIC FUNCTIONS     *
+ ****************************/
 
+/* Decrypt */
+/* a is the encrypted value */
+/* R is the return of the random seed */
 Unumber SensitiveInformation::decrypt(Unumber a, Unumber * R)
 {
 	Unumber x(fkf());
 	Unumber mp1(1);
-
-	//cout << "decrypt: x = " << x.to_ull() << "\ta = " << a.to_ull() << "\t";
 
 	Unumber auxA (a);
 	while (x != 0)
@@ -313,22 +313,21 @@ Unumber SensitiveInformation::decrypt(Unumber a, Unumber * R)
     	return m;
 }
 
-Unumber SensitiveInformation::encrypt(Unumber x, Unumber r)
+/* Encrypt following equation x = r^N * (1 + N*k*m) % N2 */
+Unumber SensitiveInformation::encrypt(Unumber m, Unumber r)
 {
-	r.pow(n, n2);
-	return encryptRN(x, r);
-}
+	r.pow(n, n2); //r^N
 
-Unumber SensitiveInformation::encryptRN(Unumber ix, Unumber rN)
-{
-	//Unumber rN = random(); // M.random returns r^N, so no powering required
-	Unumber gm = access_g();
-	gm.pow(congruence(ix, n), n2);
-	Unumber x = rN.mul(gm, n2);
+	Unumber gm = g;
+	// gm.pow(congruence(m, n), n2); // g^m % N2 -- replaced by the next line
+	gm = (congruence(m, n) * (gm - 1) + 1) % n2; // (1 + N*k*m) % N2
 
+	Unumber x = r.mul(gm, n2); // r^N * (1 + N*k*m) % N2
+	
 	return x;
 }
 
+/* Return the fkf, used for decryption */
 Unumber SensitiveInformation::fkf() const
 {
     if ( n2.iszero() ) return n2;
@@ -337,51 +336,61 @@ Unumber SensitiveInformation::fkf() const
     return phi.mul(pn, Nphi);
 }
 
+/* Return the high bit position of N */
 unsigned SensitiveInformation::getHighBitPosN() const
 {
 	return high_bit_posN;
 }
 
+/* Return beta */
 Unumber SensitiveInformation::getBeta() const
 {
 	return beta;
 }
 
+/* Return k */
 Unumber SensitiveInformation::getK() const
 {
 	return k;
 }
 
+/* Return N */
 Unumber SensitiveInformation::getN() const
 {
 	return n;
 }
 
+/* Return N2 */
 Unumber SensitiveInformation::getN2() const
 {
 	return n2;
 }
 
+/* Return p */
 Unumber SensitiveInformation::getP() const
 {
 	return p;
 }
 
+/* Return q */
 Unumber SensitiveInformation::getQ() const
 {
 	return q;
 }
 
+/* Return ~2^Beta */
 Unumber SensitiveInformation::getTwoToBeta() const
 {
 	return twoToBeta;
 }
 
+/* Return the lower boundary for the leq test */
 Unumber SensitiveInformation::getXp1() const
 {
 	return xp1;
 }
 
+/* Return the upper boundary for the leq test */
 Unumber SensitiveInformation::getXp2() const
 {
 	return xp2;
@@ -430,6 +439,7 @@ bool SensitiveInformation::leq(const Unumber x) const
 	return ((x < xp1) || (xp2 < x));
 }
 
+/* set Beta */
 void SensitiveInformation::setBeta(unsigned b)
 {
 	if (beta && b > beta)
