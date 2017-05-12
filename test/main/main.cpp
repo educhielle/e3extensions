@@ -22,7 +22,7 @@
 
 using namespace std;
 
-string libgDir = "../../lib/libg.so";
+string libgDir = "";
 
 void printPair(const Unumber, const Unumber);
 

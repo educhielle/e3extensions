@@ -27,7 +27,7 @@
 
 using namespace std;
 
-string libgDir = "../../lib/libg.so";
+string libgDir = "./libg.so";
 Unumber p, q, k;
 
 void loadCryptosystemParams();
@@ -44,8 +44,8 @@ int main()
 	loadCryptosystemParams();
 	SensitiveInformation si(p,q,k);
 
-	Cryptosystem cs("485869","3","128471477792","68251731685","7991874664", libgDir, "g");
-	SecureInt a("102748101154",cs), b("116640587020",cs), c[20];
+	Cryptosystem cs("20081","3","23917821","48789966","206697970", libgDir, "libg");
+	SecureInt a("23097693",cs), b("233439219",cs), c[20];
 		
 	c[0] = a+b;	cout << "0\n";
 	c[1] = a-b;	cout << "1\n";
@@ -135,6 +135,6 @@ void loadCryptosystemParams()
 
 void printPair(const Unumber dec, const Unumber enc)
 {
-	cout << "m: " << dec.str() << "\tx: " << enc << "\n";
+	cout << "m: " << dec.str() << "\tx: " << enc.str() << "\n";
 }
 

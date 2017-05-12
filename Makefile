@@ -42,7 +42,7 @@ clean:
 	rm -f $(LIB)/*
 	rm -f $(OBJ_UNUMBER)/*
 
-compile: ## Compile code. Usage: make compile CODE=path/to/code OUT=path/to/output
+compile: ## Compile code. Usage: make compile CODE=path/to/code OUT=path/to/output [LDFLAGS=-ldl]
 	$(CXX) $(CXXFLAGS) $(CODE) $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(OUT) $(LDFLAGS)
 
 compile-preprocessor: ## Compile Preprocessor
@@ -62,8 +62,8 @@ preprocess: ## Preprocess code. Usage: make preprocessor CODE=path/to/code
 	$(BIN)/preprocessor $(CODE)
 
 run: ## Run program. Usage: make run FILE=path/to/file
-	cp $(LIB)/libg.so $(FILE_DIR)
+	cp -f $(LIB)/libg.so $(FILE_DIR)
 	cd $(FILE_DIR); ls; ./$(FILENAME)
-	# cd $(LOCAL_DIR)
-	rm -f $(FILE_DIR)/libg.so
+#	cd $(LOCAL_DIR)
+#	rm -f $(FILE_DIR)libg.so
 

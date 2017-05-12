@@ -2,7 +2,15 @@
 
 TODO: project description
 
+[Install](#install)
 [TL;DR](#tldr)
+
+## Install
+
+In the e3extensions base directory:
+````
+make install
+````
 
 ## Usage
 
@@ -54,8 +62,8 @@ Create a C++ file (simple.cpp).
 
 using namespace std;
 
-string libgDir = "../../lib/libg.so";
-string gFunctionName = "g";
+string libgDir = "./libg.so";
+string gFunctionName = "libg";
 
 int main()
 {
@@ -75,15 +83,17 @@ int main()
 }
 
 ````
-Then, following script to preprocess and compile the code above (file: preprocessAndCompile.sh):
+Then, from the e3extensions directory, let us use the makefile to preprocess the code:
 ````
-cd ..
-./preprocess simple/simple.cpp && ./compile simple/simple_T.cpp
-cd simple
+make preprocess CODE=test/simple/simple.cpp
 ````
-Now, test the application:
+Now, compile the program:
 ````
-./preprocessAndCompile.sh && ./main
+make compile CODE=test/simple/simple_T.cpp OUT=test/simple/simple.elf LDFLAGS=-ldl
+````
+Run the application:
+````
+make run FILE=test/simple/simple.elf
 ````
 It creates a file called output.txt with the encrypted result and shows the following messages during the run:
 ````
@@ -153,13 +163,13 @@ void loadCryptosystemParams()
 }
 
 ````
-Then compile it (if unumber is not compiled, run unumber.sh in the script directory):
+Then compile it:
 ````
-g++ -Wall -O2 -std=c++14 -fno-strict-aliasing decrypt.cpp ../../obj/unumber/unumberg.o ../../obj/unumber/cunmber_4096_m.o ../../obj/unumber/ma_invert_m.o -o decrypt
+make compile CODE=test/simple/decrypt.cpp OUT=test/simple/decrypt.elf
 ````
 Now, test it:
 ````
-./decrypt
+make run FILE=test/simple/decrypt.elf
 ````
 You should get the following (the encrypted value may change):
 ````

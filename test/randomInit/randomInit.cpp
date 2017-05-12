@@ -27,7 +27,7 @@
 
 using namespace std;
 
-string libgDir = "../../lib/libg.so";
+string libgDir = "./libg.so";
 Unumber p, q, k;
 
 void loadCryptosystemParams();
@@ -44,7 +44,7 @@ int main()
 	loadCryptosystemParams();
 	SensitiveInformation si(p,q,k);
 
-	Cryptosystem cs(__PQ()()()()__, 3, __2TOBETA__, __ENC0__, __ENC1__, libgDir, "g");
+	Cryptosystem cs(__PQ()()()()__, 3, __2TOBETA__, __ENC0__, __ENC1__, libgDir, "libg");
 	SecureInt a(__N(11)__,cs), b(__N(3)__,cs), c[20];
 		
 	c[0] = a+b;	cout << "0\n";
