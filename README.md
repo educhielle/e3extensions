@@ -2,8 +2,8 @@
 
 TODO: project description
 
-[Install](#install)
-[TL;DR](#tldr)
+* [Install](#install)
+* [TL;DR](#tldr)
 
 ## Install
 
