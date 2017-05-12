@@ -1,3 +1,5 @@
+#define STATIC_LIBG
+
 #ifndef IOSTREAM_INCLUDED
 	#define IOSTREAM_INCLUDED
 	#include <iostream>
@@ -47,12 +49,28 @@ int main()
 	printPair(udecA, uencA);
 	printPair(udecB, uencB);
 
+        cout << "g: " << si.access_g().str() << "\n";
+        cout << "Nm1: " << si.access_Nm1().str() << "\n";
+        cout << "p1Nk1N: " << si.access_p1Nk1N().str() << "\n";
+        cout << "phi: " << si.access_phi().str() << "\n";
+        cout << "fkf: " << si.fkf().str() << "\n";
+        cout << "B: " << si.getBeta().str() << "\n";
+        cout << "highBitPosN: " << si.getHighBitPosN() << "\n";
+        cout << "K: " << si.getK().str() << "\n";
+        cout << "N: " << si.getN().str() << "\n";
+        cout << "N2: " << si.getN2().str() << "\n";
+        cout << "P: " << si.getP().str() << "\n";
+        cout << "Q: " << si.getQ().str() << "\n";
+        cout << "~2^B: " << si.getTwoToBeta().str() << "\n";
+        cout << "Xp1: " << si.getXp1().str() << "\n";
+        cout << "Xp2: " << si.getXp2().str() << "\n";
+
 	/* SecureInt and Cryptosystem test area */
 
-	Cryptosystem cs("143","3","13991","1939","17180", libgDir, "g"), aaa;
-	SecureInt a("13525",cs), b("13238",cs), c[20];
+	Cryptosystem cs("143","3","19597","3629","15045", libgDir, "g");
+	SecureInt a("20206",cs), b("16964",cs), c[20];
 
-	aaa = Cryptosystem("107257","14","1059313095","4341343322","10031246018", libgDir, "g");
+	//aaa = Cryptosystem(__PQ()()()()__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, libgDir, "g");
 	//a = SecureInt(__N(11)__,aaa); b = SecureInt(__N(3)__,aaa);
 	
 	c[0] = a+b;	cout << "0\n";

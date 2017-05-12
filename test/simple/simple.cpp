@@ -4,8 +4,8 @@
 
 using namespace std;
 
-string libgDir = "../../lib/libg.so";
-string gFunctionName = "g";
+string libgDir = "./libg.so";
+string gFunctionName = "libg";
 
 int main()
 {

@@ -4,15 +4,15 @@
 
 using namespace std;
 
-string libgDir = "../../lib/libg.so";
-string gFunctionName = "g";
+string libgDir = "./libg.so";
+string gFunctionName = "libg";
 
 int main()
 {
 	cout << "Creating Cryptosystem\n";
-	Cryptosystem cs("223609","15","34896776909","10672121536","1363186336", libgDir, gFunctionName);
+	Cryptosystem cs("32293","12","431139774","551046301","292906477", libgDir, gFunctionName);
 	cout << "Instantiating SecureInts\n";
-	SecureInt a("13487715926",cs), b("21144370402",cs), c("18944911666",cs), d("12857354039",cs);
+	SecureInt a("537140728",cs), b("351644484",cs), c("539273510",cs), d("858291674",cs);
 	cout << "Performing mathematical equation (it may take a while)\n";
 	SecureInt r = a+b*c-d;
 	cout << "Writing output file\n";

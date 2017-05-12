@@ -319,8 +319,8 @@ Unumber SensitiveInformation::encrypt(Unumber m, Unumber r)
 	r.pow(n, n2); //r^N
 
 	Unumber gm = g;
-	// gm.pow(congruence(m, n), n2); // g^m % N2 -- replaced by the next line
-	gm = (congruence(m, n) * (gm - 1) + 1) % n2; // (1 + N*k*m) % N2
+	gm.pow(congruence(m, n), n2); // g^m % N2 -- replaced by the next line
+	//gm = (congruence(m, n) * (gm - 1) + 1) % n2; // (1 + N*k*m) % N2
 
 	Unumber x = r.mul(gm, n2); // r^N * (1 + N*k*m) % N2
 	

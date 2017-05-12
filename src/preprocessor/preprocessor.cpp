@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
 		int dot = filename.find(".");
 		string filenameOut = filename.substr(0,dot) + "_T" + filename.substr(dot);
-
+		cout << filenameOut;
 		int lastSlash = filename.find_last_of("/\\");
 		string filenameCS = filename.substr(0,lastSlash+1) + "CS.txt";
 		

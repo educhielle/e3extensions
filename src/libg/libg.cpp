@@ -35,8 +35,13 @@
 
 using namespace std;
 
-Unumber fkf, _g, n, n2, xp1, xp2;
-bool loaded = false;
+#ifdef STATIC_LIBG
+	bool loaded = true;
+#else
+	bool loaded = false;
+#endif
+
+Unumber fkf(3480), _g(430), n(143), n2(20449), xp1(144), xp2(18304);
 
 Unumber congruence(Unumber, const Unumber &);
 Unumber encrypt(const Unumber &);
@@ -48,7 +53,7 @@ Unumber reencrypt(const Unumber &);
 /* if the unencryption of x is less or equal zero
  * 	return the encryption of zero
  * else return the reencryption of y */	
-extern "C" Unumber g(Unumber x, Unumber y)
+extern "C" Unumber libg(Unumber x, Unumber y)
 {
 	if (!loaded) loadCryptosystemParams();
 	
@@ -132,6 +137,8 @@ void loadCryptosystemParams()
 	string strN   = text.substr(semicolon[5], semicolon[6]-semicolon[5]-1);
 	string strXp1 = text.substr(semicolon[6], semicolon[7]-semicolon[6]-1);
 	string strXp2 = text.substr(semicolon[7], newLine     -semicolon[7]-1);
+
+	cout << text << "\n";
 
 	//p = Unumber(strP);
 	//q = Unumber(strQ);

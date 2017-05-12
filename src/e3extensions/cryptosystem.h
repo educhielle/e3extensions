@@ -5,9 +5,16 @@
 * eduardo.chielle@nyu.edu        2016-2017 *
 ********************************************/
 
+#ifndef STATIC_LIBG
 #ifndef DLFCN_INCLUDED
 	#define DLFCN_INCLUDED	
 	#include <dlfcn.h>
+#endif
+#else
+#ifndef LIBG_INCLUDED
+	#define LIBG_INCLUDED
+	#include "../libg/libg.cpp"
+#endif
 #endif
 
 #ifndef IOSTREAM_INCLUDED
@@ -27,7 +34,9 @@
 
 class Cryptosystem
 {
+#ifndef STATIC_LIBG
 	typedef Unumber (*libG_t)(Unumber, Unumber);
+#endif
 
     /* Variables */
     private:
@@ -36,8 +45,10 @@ class Cryptosystem
 	Unumber rndN;
 
 	string libgFilename, libgFunction, libgInit;
+#ifndef STATIC_LIBG
 	void* libgHandle;
-	libG_t externG;
+	libG_t libg;
+#endif
 	
     /* Constructors */
     public:	
@@ -151,9 +162,11 @@ void Cryptosystem::init()
 	high_bit_posN2--;*/
 
 	/* loading external G function */
+#ifndef STATIC_LIBG
 	using std::cerr;
  
 	// Find library and associate to handle
+	
 	libgHandle = dlopen(libgFilename.c_str(), RTLD_NOW);
 	if (!libgHandle)
 	{
@@ -163,7 +176,7 @@ void Cryptosystem::init()
 	dlerror();
 
 	// Find G function and link it
-	externG = (libG_t) dlsym(libgHandle, libgFunction.c_str());
+	libg = (libG_t) dlsym(libgHandle, libgFunction.c_str());
 	const char *dlsym_error = dlerror();
 	if (dlsym_error)
 	{
@@ -171,6 +184,7 @@ void Cryptosystem::init()
 		dlclose(libgHandle);
 		exit(1);
 	}
+#endif
 }
 
 /****************************
@@ -179,13 +193,15 @@ void Cryptosystem::init()
 
 void Cryptosystem::close()
 {
+#ifndef STATIC_LIBG
 	dlclose(libgHandle);
+#endif
 }
 
 /* G function */
 Unumber Cryptosystem::g(Unumber x, Unumber y) const
 {
-	return externG(x, y);
+	return libg(x, y);
 }
 
 /* Return Beta */
