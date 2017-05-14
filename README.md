@@ -2,9 +2,13 @@
 
 TODO: project description
 
+## Contents
+
 * [Install](#install)
+* [Usage](#usage)
 * [TL;DR](#tldr)
 * [Static vs Dynamic LibG](#static-vs-dynamic-libg)
+* [Supported Operations](#supported-operations)
 * [Cross Compiling](#cross-compiling)
 
 ## Install
@@ -15,8 +19,6 @@ make install
 ````
 
 ## Usage
-
-To be done. Inshallah!
 
 ### Coding
 
@@ -198,11 +200,32 @@ The Cryptosystem supports dynamic (shared object) or static (include) loading of
 * *#include "path/to/your/libg"* before including *secureint.h*
 * name your G function in your libg file as *libg* (see *src/libg/libg.cpp*)
 
+## Supported Operations
+
+To help explaining the operators, SecureInt objects a and b containing encrypted values and k containing an unsigned integer are used.
+Note: a ~ before a number means the encryption of that number and a _ before a variable means the decryption of that variable.
+
+* == \[usage a==b\] returns ~1 if a is equal to b is true, and ~0 otherwise
+* != \(usage a!=b\) returns ~1 if a is different from b is true, and ~0 otherwise
+* + (unary, usage +a) returns a
+* + (binary, a+b) returns an encrypted number that, if decrypted, is equivalent to the sum of _a and _b
+* += (a+=b) same as above, but the returned value is automatically attributed to a
+* - (unary, usage -a) returns the inverse of a, which, if decrypted, is equivalent to -(_a)
+* - (binary, usage a-b) returns an encrypted number that, is decrypted, is equivalent to subtracting b from a
+* -= (a-=b) same as above, but the returned value is automatically attributed to a
+* \* (a*b) return an encrypted number that (if decrypted) is equivalent to the multiplication of _a and _b
+* \*= (a\*=b) same as above, but the returned value is automatically attributed to a
+* << (a<<k) returns an encrypted value that, if decrypted, is the same as shifting left _a k times
+* <<= (a<<=k) same as above, but the returned value is automatically attributed to a
+* >> (a>>k) returns an encrypted value that, if decrypted, is the same as shifting right _a k times
+* >>= (a>>=k) same as above, but the returned value is automatically attributed to a
+
+
 ## Cross Compiling
 
 To cross compile your code, use one of the following methods. Examples cross compiling to *openRISC 1000 baremetal* using code *test/main/main.cpp*.
 
-### Method 1
+#### Method 1
 
 ````
 make compile-unumber CC=or1k-elf-gcc CXX=or1k-elf-g++
@@ -210,7 +233,7 @@ make preprocess CODE=test/main/main.cpp *# if code is already preprocessed, this
 make compile CODE=test/main/main_T.cpp OUT=test/main/main.elf CC=or1k-elf-gcc CXX=or1k-elf-g++
 ````
 
-### Method 2
+#### Method 2
 
 ````
 export C_COMPILER=or1k-elf-gcc
