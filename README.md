@@ -210,15 +210,15 @@ Note: a ~ before a number means the encryption of that number and a _ before a v
 * \+ \(unary, usage +a\) returns a
 * \+ \(binary, a+b\) returns an encrypted number that, if decrypted, is equivalent to the sum of _a and _b
 * \+= \(a\+=b\) same as above, but the returned value is automatically attributed to a
-* - \(unary, usage -a\) returns the inverse of a, which, if decrypted, is equivalent to -(_a)
-* - \(binary, usage a-b\) returns an encrypted number that, is decrypted, is equivalent to subtracting b from a
-* -= \(a-=b\) same as above, but the returned value is automatically attributed to a
+* \- \(unary, usage -a\) returns the inverse of a, which, if decrypted, is equivalent to -(_a)
+* \- \(binary, usage a-b\) returns an encrypted number that, is decrypted, is equivalent to subtracting b from a
+* \-= \(a-=b\) same as above, but the returned value is automatically attributed to a
 * \* \(a\*b\) return an encrypted number that (if decrypted) is equivalent to the multiplication of _a and _b
 * \*= \(a\*=b\) same as above, but the returned value is automatically attributed to a
 * << \(a<<k\) returns an encrypted value that, if decrypted, is the same as shifting left _a k times
 * <<= \(a<<=k\) same as above, but the returned value is automatically attributed to a
-* >> \(a>>k\) returns an encrypted value that, if decrypted, is the same as shifting right _a k times
-* >>= \(a>>=k\) same as above, but the returned value is automatically attributed to a
+* \>\> \(a\>\>k\) returns an encrypted value that, if decrypted, is the same as shifting right _a k times
+* \>\>= \(a\>\>=k\) same as above, but the returned value is automatically attributed to a
 
 
 ## Cross Compiling
