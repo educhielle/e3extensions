@@ -63,7 +63,7 @@ preprocess: ## Preprocess code. Usage: make preprocessor CODE=path/to/code
 
 run: ## Run program. Usage: make run FILE=path/to/file
 	cp -f $(LIB)/libg.so $(FILE_DIR)
-	cd $(FILE_DIR); ls; ./$(FILENAME)
+	cd $(FILE_DIR); ./$(FILENAME)
 #	cd $(LOCAL_DIR)
 #	rm -f $(FILE_DIR)libg.so
 

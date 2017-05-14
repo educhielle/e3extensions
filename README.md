@@ -20,7 +20,7 @@ To be done. Inshallah!
 
 ### Coding
 
-Follow examples in /test/
+Follow the examples in *test/*
 
 ### Preprocessing
 
