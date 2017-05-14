@@ -1,4 +1,5 @@
 #define STATIC_LIBG
+#include "../../src/libg/libg.cpp"
 
 #ifndef IOSTREAM_INCLUDED
 	#define IOSTREAM_INCLUDED
@@ -67,8 +68,8 @@ int main()
 
 	/* SecureInt and Cryptosystem test area */
 
-	Cryptosystem cs("143","3","20128","7704","16389", libgDir, "g");
-	SecureInt a("13108",cs), b("2584",cs), c[20];
+	Cryptosystem cs("143","3","11500","10286","9214", libgDir, "g");
+	SecureInt a("12073",cs), b("4330",cs), c[20];
 
 	//aaa = Cryptosystem(__PQ()()()()__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, libgDir, "g");
 	//a = SecureInt(__N(11)__,aaa); b = SecureInt(__N(3)__,aaa);

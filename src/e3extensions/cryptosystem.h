@@ -10,11 +10,6 @@
 	#define DLFCN_INCLUDED	
 	#include <dlfcn.h>
 #endif
-#else
-#ifndef LIBG_INCLUDED
-	#define LIBG_INCLUDED
-	#include "../libg/libg.cpp"
-#endif
 #endif
 
 #ifndef IOSTREAM_INCLUDED

@@ -4,7 +4,8 @@ TODO: project description
 
 * [Install](#install)
 * [TL;DR](#tldr)
-* [Cross Compiling]
+* [Static vs Dynamic LibG](#static-vs-dynamic-libg)
+* [Cross Compiling](#cross-compiling)
 
 ## Install
 
@@ -182,6 +183,13 @@ Result: 144 (encrypted value: 3268181710)
 ````
 It shows 144 as the result, which is correct. Yahoo!
 
+## Static vs Dynamic LibG
+
+The Cryptosystem supports dynamic (shared object) or static (include) loading of LibG. The use of dynamic libG allows the several G functions in the same code. But if the code is targeting baremetal or you are planning to use only one G function, the static libG may be more appropriate. The dynamic approach is the standard. To use the static, you must:
+* *#define STATIC_LIBG* in the beggining of your code (see *test/main/main.cpp*)
+* *#include "path/to/your/libg"* before including *secureint.h*
+* name your G function in your libg file as *libg* (see *src/libg/libg.cpp*)
+
 ## Cross Compiling
 
 To cross compile your code, use one of the following methods. Examples cross compiling to *openRISC 1000 baremetal* using code *test/main/main.cpp*.
@@ -190,7 +198,7 @@ To cross compile your code, use one of the following methods. Examples cross com
 
 ````
 make compile-unumber CC=or1k-elf-gcc CXX=or1k-elf-g++
-make preprocess CODE=test/main/main.cpp # if code is already preprocessed, this comand is not necessary
+make preprocess CODE=test/main/main.cpp *# if code is already preprocessed, this comand is not necessary*
 make compile CODE=test/main/main_T.cpp OUT=test/main/main.elf CC=or1k-elf-gcc CXX=or1k-elf-g++
 ````
 
@@ -200,7 +208,7 @@ make compile CODE=test/main/main_T.cpp OUT=test/main/main.elf CC=or1k-elf-gcc CX
 export C_COMPILER=or1k-elf-gcc
 export CPP_COMPILER=or1k-elf-g++
 make compile-unumber
-make preprocess CODE=test/main/main.cpp # if code is already preprocessed, this comand is not necessary
+make preprocess CODE=test/main/main.cpp *# if code is already preprocessed, this comand is not necessary*
 make compile CODE=test/main/main_T.cpp OUT=test/main/main.elf
 ````
 
