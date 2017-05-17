@@ -1,4 +1,4 @@
-#define STATIC_LIBG
+//#define STATIC_LIBG
 #include "../../src/libg/libg.cpp"
 
 #ifndef IOSTREAM_INCLUDED

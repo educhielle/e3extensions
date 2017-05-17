@@ -13,6 +13,10 @@ else
 CXX := $(DEFAULT_CPP_COMPILER)
 endif
 
+ifeq ($(STATIC_LIBG),1)
+OPT := -D STATIC_LIBG
+endif
+
 CFLAGS=-Wall -O2 -fPIC # -static-libgcc -static-libstdc++ 
 CXXFLAGS=-Wall -O2 -std=c++14 -fPIC -fno-strict-aliasing # -static-libgcc -static-libstdc++ 
 
@@ -43,7 +47,7 @@ clean:
 	rm -f $(OBJ_UNUMBER)/*
 
 compile: ## Compile code. Usage: make compile CODE=path/to/code OUT=path/to/output [LDFLAGS=-ldl]
-	$(CXX) $(CXXFLAGS) $(CODE) $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(OUT) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(CODE) $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(OUT) $(LDFLAGS) $(OPT)
 
 compile-preprocessor: ## Compile Preprocessor
 	$(CXX) $(CXXFLAGS) $(SRC_PREPROCESSOR)/preprocessor.cpp $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/preprocessor

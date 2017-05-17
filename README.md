@@ -195,10 +195,14 @@ It shows 144 as the result, which is correct. Yahoo!
 
 ## Static vs Dynamic LibG
 
-The Cryptosystem supports dynamic (shared object) or static (include) loading of LibG. The use of dynamic libG allows several G functions in the same code. But if the code is targeting baremetal or you are planning to use only one G function, the static libG may be more appropriate. The dynamic approach is the standard. To use the static, you must:
-* *#define STATIC_LIBG* in the beggining of your code (see *test/main/main.cpp*)
+The Cryptosystem supports dynamic \(shared object\) or static \(include\) loading of LibG. The use of dynamic libG allows several G functions in the same code. But if the code is targeting baremetal or you are planning to use only one G function, the static libG may be more appropriate. The dynamic approach is the standard. To use the static, you must:
+* *#define STATIC_LIBG* in the beggining of your code \(see *test/main/main.cpp*\)\*
 * *#include "path/to/your/libg"* before including *secureint.h*
-* name your G function in your libg file as *libg* (see *src/libg/libg.cpp*)
+* name your G function in your libg file as *libg* \(see *src/libg/libg.cpp*\)
+\*an alternative to defining STATIC_LIBG in the code is compiling the program with the flag STATIC_LIBG=1, ex:
+````
+make compile CODE=test/main/main_T.cpp OUT=test/main/main.elf STATIC_LIBG=1
+````
 
 ## Supported Operations
 
