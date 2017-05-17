@@ -49,6 +49,9 @@ clean:
 compile: ## Compile code. Usage: make compile CODE=path/to/code OUT=path/to/output [LDFLAGS=-ldl]
 	$(CXX) $(CXXFLAGS) $(CODE) $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(OUT) $(LDFLAGS) $(OPT)
 
+compile-decrypt:
+	$(CXX) $(CXXFLAGS) $(SRC_PREPROCESSOR)/decrypt.cpp $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/decrypt
+
 compile-preprocessor: ## Compile Preprocessor
 	$(CXX) $(CXXFLAGS) $(SRC_PREPROCESSOR)/preprocessor.cpp $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/preprocessor
 
@@ -59,6 +62,9 @@ compile-unumber: ## Compile Unumber library
 	$(CXX) -c $(CXXFLAGS) $(SRC_UNUMBER)/unumberg.cpp -o $(OBJ_UNUMBER)/unumberg.o
 	$(CC) -c $(CFLAGS) $(SRC_UNUMBER)/cunmber_4096_m.c -o $(OBJ_UNUMBER)/cunmber_4096_m.o
 	$(CXX) -c $(CXXFLAGS) $(SRC_UNUMBER)/ma_invert_m.cpp -o $(OBJ_UNUMBER)/ma_invert_m.o
+
+decrypt: ## Decrypt file. Usage: make decrypt IN=path/to/inputfile OUT=path/to/outputfile CS=path/to/cryptosystem
+	$(BIN)/decrypt $(IN) $(OUT) $(CS)
 
 install: clean compile-unumber compile-preprocessor compile-shared-libg ## Install all basic components
 

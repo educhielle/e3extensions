@@ -138,7 +138,7 @@ void loadCryptosystemParams()
 	string strXp1 = text.substr(semicolon[6], semicolon[7]-semicolon[6]-1);
 	string strXp2 = text.substr(semicolon[7], newLine     -semicolon[7]-1);
 
-	cout << text << "\n";
+	//cout << text << "\n";
 
 	//p = Unumber(strP);
 	//q = Unumber(strQ);

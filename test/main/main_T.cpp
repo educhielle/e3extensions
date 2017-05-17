@@ -68,8 +68,8 @@ int main()
 
 	/* SecureInt and Cryptosystem test area */
 
-	Cryptosystem cs("143","3","13315","14722","9371", libgDir, "g");
-	SecureInt a("3994",cs), b("13802",cs), c[20];
+	Cryptosystem cs("143","3","4556","18758","4959", libgDir, "g");
+	SecureInt a("6537",cs), b("556",cs), c[20];
 
 	//aaa = Cryptosystem(__PQ()()()()__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, libgDir, "g");
 	//a = SecureInt(__N(11)__,aaa); b = SecureInt(__N(3)__,aaa);
