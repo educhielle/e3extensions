@@ -60,103 +60,104 @@ SensitiveInformation mountSensitiveInformation(string &);
 /* Transform Cryptosystem values, then encrypt SecureInt values */
 int main(int argc, char *argv[])
 {
-	while (argc-- > 1)
+	if (argc < 3)
 	{
-		string filename = argv[argc];
-
-		int dot = filename.find(".");
-		string filenameOut = filename.substr(0,dot) + "_T" + filename.substr(dot);
-		cout << filenameOut;
-		int lastSlash = filename.find_last_of("/\\");
-		string filenameCS = filename.substr(0,lastSlash+1) + "CS.txt";
-		
-		ofstream out;
-		out.open(filenameCS, ofstream::out);
-
-		ifstream in;
-		stringstream buffer;
-
-		in.open(filename, ifstream::in);
-		buffer << in.rdbuf();
-		in.close();
-
-		std::string code = buffer.str();
-
-		// Cryptosystem
-		cout << "\nCRYPTOSYSTEMs:\n";
-		for (int csd = 0; (csd = code.find("Cryptosystem",csd)) != -1; csd++)
-		{
-			if (!isComment(code,csd))
-			{
-				int semicolon = code.find(";", csd);
-				for (int csi; ((csi = code.find("(", csd)) != -1) && (csi < semicolon);)
-				{
-					int csf = findClosingBracket(code, csi+1);
-					string line = code.substr(csd, csf-csd+1);
-					//cout << "CSD: " << csd << "\tCSI: " << csi << "\tSC: " << semicolon << "\tCSF: " << csf << "\tline: " << line << "\tsubstr: " << code.substr(1733, 4) << "\n";
-					string objName = code.substr(csd, csi-csd);
-					int cso = objName.find_first_of(" \t");
-					if (cso > 0) objName = objName.substr(cso);
-					trim(objName);
-					if (!objName.compare("Cryptosystem")) objName = findObjectNameBefore(code, csd);
-
-					csi++;
-					string params = code.substr(csi, csf-csi);
-					string newParams = calcNewParamsCS(params);
-					code = code.replace(csi, csf-csi, newParams);
-					cout << "Object name: " << (objName.empty() ? "(no name)" : objName) << "\nParameters: " << newParams << "\n";
-					semicolon = code.find(";", csd);
-					csd = csi + newParams.length();
-
-					if (params.compare(newParams))
-					{
-						if (!objName.empty())
-						{
-							csList.push_back(objName);
-							sinfoList.push_back(sinfo);
-							out << objName << ";" << sinfo.getP() << ";" << sinfo.getQ() << ";" << sinfo.getK() << ";" << sinfo.fkf() << ";" << sinfo.access_g() << ";" << sinfo.getN() << ";" << sinfo.getXp1() << ";" << sinfo.getXp2() << "\n";
-						}
-						Unumber f = sinfo.fkf();
-						cout << "The fkf of '" << objName << "' is " << f.str() << ". Use it in the G function.\n";
-					}
-					cout << "\n";
-				}
-			}
-		}
-		
-		// SecureInt
-		cout << "\nSECUREINTs\n";
-		for (int sid = 0; (sid = code.find("SecureInt",sid)) != -1; sid++)
-		{
-			if (!isComment(code,sid))
-			{
-				int semicolon = code.find(";", sid);
-				for (int sii; ((sii = code.find("(", sid)) != -1) && (sii < semicolon);)
-				{
-					string objName = code.substr(sid, sii-sid);
-					int sio = objName.find_first_of(" \t");
-					if (sio > 0) objName = objName.substr(sio);
-					if (!objName.compare("SecureInt")) objName = findObjectNameBefore(code, sid);
-					///int sif = code.find(")", sii);
-					int sif = findClosingBracket(code, sii+1);
-
-					sii++;
-					string params = code.substr(sii, sif-sii);
-					string newParams = calcNewParamsSI(params);
-					code = code.replace(sii, sif-sii, newParams);
-					semicolon = code.find(";", sid);
-					sid = sii + newParams.length();
-					cout << "Object name: " << (objName.empty() ? "(no name)" : objName) << "\nParameters: " << newParams << "\n\n";
-				}
-			}
-		}
-		
-		out.close();
-		//ofstream out;
-		out.open(filenameOut, ofstream::out);
-		out << code;
-		out.close();
+		cout << "Invalid arguments.\n";
+		return 1;
 	}
+
+	string filename = argv[1];
+	string filenameOut = argv[2];
+
+	int lastSlash = filename.find_last_of("/\\");
+	string filenameCS = filename.substr(0,lastSlash+1) + "CS.txt";
+	
+	ofstream out;
+	out.open(filenameCS, ofstream::out);
+
+	ifstream in;
+	stringstream buffer;
+
+	in.open(filename, ifstream::in);
+	buffer << in.rdbuf();
+	in.close();
+
+	std::string code = buffer.str();
+
+	// Cryptosystem
+	cout << "\nCRYPTOSYSTEMs:\n";
+	for (int csd = 0; (csd = code.find("Cryptosystem",csd)) != -1; csd++)
+	{
+		if (!isComment(code,csd))
+		{
+			int semicolon = code.find(";", csd);
+			for (int csi; ((csi = code.find("(", csd)) != -1) && (csi < semicolon);)
+			{
+				int csf = findClosingBracket(code, csi+1);
+				string line = code.substr(csd, csf-csd+1);
+				//cout << "CSD: " << csd << "\tCSI: " << csi << "\tSC: " << semicolon << "\tCSF: " << csf << "\tline: " << line << "\tsubstr: " << code.substr(1733, 4) << "\n";
+				string objName = code.substr(csd, csi-csd);
+				int cso = objName.find_first_of(" \t");
+				if (cso > 0) objName = objName.substr(cso);
+				trim(objName);
+				if (!objName.compare("Cryptosystem")) objName = findObjectNameBefore(code, csd);
+
+				csi++;
+				string params = code.substr(csi, csf-csi);
+				string newParams = calcNewParamsCS(params);
+				code = code.replace(csi, csf-csi, newParams);
+				cout << "Object name: " << (objName.empty() ? "(no name)" : objName) << "\nParameters: " << newParams << "\n";
+				semicolon = code.find(";", csd);
+				csd = csi + newParams.length();
+
+				if (params.compare(newParams))
+				{
+					if (!objName.empty())
+					{
+						csList.push_back(objName);
+						sinfoList.push_back(sinfo);
+						out << objName << ";" << sinfo.getP() << ";" << sinfo.getQ() << ";" << sinfo.getK() << ";" << sinfo.fkf() << ";" << sinfo.access_g() << ";" << sinfo.getN() << ";" << sinfo.getXp1() << ";" << sinfo.getXp2() << "\n";
+					}
+					Unumber f = sinfo.fkf();
+					cout << "The fkf of '" << objName << "' is " << f.str() << ". Use it in the G function.\n";
+				}
+				cout << "\n";
+			}
+		}
+	}
+	
+	// SecureInt
+	cout << "\nSECUREINTs\n";
+	for (int sid = 0; (sid = code.find("SecureInt",sid)) != -1; sid++)
+	{
+		if (!isComment(code,sid))
+		{
+			int semicolon = code.find(";", sid);
+			for (int sii; ((sii = code.find("(", sid)) != -1) && (sii < semicolon);)
+			{
+				string objName = code.substr(sid, sii-sid);
+				int sio = objName.find_first_of(" \t");
+				if (sio > 0) objName = objName.substr(sio);
+				if (!objName.compare("SecureInt")) objName = findObjectNameBefore(code, sid);
+				///int sif = code.find(")", sii);
+				int sif = findClosingBracket(code, sii+1);
+
+				sii++;
+				string params = code.substr(sii, sif-sii);
+				string newParams = calcNewParamsSI(params);
+				code = code.replace(sii, sif-sii, newParams);
+				semicolon = code.find(";", sid);
+				sid = sii + newParams.length();
+				cout << "Object name: " << (objName.empty() ? "(no name)" : objName) << "\nParameters: " << newParams << "\n\n";
+			}
+		}
+	}
+	
+	out.close();
+	//ofstream out;
+	out.open(filenameOut, ofstream::out);
+	out << code;
+	out.close();
 
 	return 0;
 }

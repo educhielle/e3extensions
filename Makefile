@@ -70,8 +70,8 @@ decrypt: ## Decrypt file. Usage: make decrypt IN=path/to/inputfile OUT=path/to/o
 
 install: clean compile-unumber compile-preprocessor compile-shared-libg ## Install all basic components
 
-preprocess: ## Preprocess code. Usage: make preprocessor IN=path/to/code
-	$(BIN)/preprocessor $(IN)
+preprocess: ## Preprocess code. Usage: make preprocessor IN=path/to/code OUT=path/to/output
+	$(BIN)/preprocessor $(IN) $(OUT)
 
 run: ## Run program. Usage: make run IN=path/to/file
 	cp -f $(LIB)/libg.so $(FILE_DIR)

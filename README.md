@@ -31,7 +31,7 @@ If instead of hardcoding the arguments for the Cryptosystem and SecureInt object
 In the *e3extensions* directory, do:
 
 ````
-make preprocess IN=test/main/main.cpp
+make preprocess IN=test/main/main.cpp OUT=test/main/main\_T.cpp
 ````
 
 ### Compiling
@@ -48,7 +48,7 @@ make compile IN=test/main/main\_T.cpp OUT=test/main/main.elf STATIC\_LIBG=1
 ````
 If using another compiler:
 ````
-make compile IN=test/main/main_T.cpp OUT=test/main/main.elf CC=or1k-elf-gcc CXX=or1k-elf-g++
+make compile IN=test/main/main\_T.cpp OUT=test/main/main.elf CC=or1k-elf-gcc CXX=or1k-elf-g++
 ````
 
 ### Running
@@ -104,7 +104,7 @@ int main()
 ````
 Then, from the e3extensions directory, let us use the makefile to preprocess the code:
 ````
-make preprocess IN=test/simple/simple.cpp
+make preprocess IN=test/simple/simple.cpp OUT=test/simple/simple_T.cpp
 ````
 Now, compile the program:
 ````
