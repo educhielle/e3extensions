@@ -48,7 +48,7 @@ clean:
 	rm -f $(LIB)/*
 	rm -f $(OBJ_UNUMBER)/*
 
-compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output [STATIC_LIBG]
+compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output [STATIC_LIBG=1]
 	$(CXX) $(CXXFLAGS) $(IN) $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(OUT) $(OPT)
 
 compile-decrypt:
