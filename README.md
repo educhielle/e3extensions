@@ -44,7 +44,7 @@ make compile IN=test/main/main_T.cpp OUT=test/main/main.elf
 ````
 If using static libg:
 ````
-make compile IN=test/main/main\_T.cpp OUT=test/main/main.elf STATIC\_LIBG=1
+make compile IN=test/main/main_T.cpp OUT=test/main/main.elf STATIC_LIBG=1
 ````
 If using another compiler:
 ````
