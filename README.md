@@ -58,6 +58,13 @@ In the *e3extensions* directory, do:
 make run FILE=test/main/main.elf
 ```
 
+### Decrypting
+
+In the *e3extensions* directory, do as the following example:
+````
+make decrypt IN=test/simple/output.txt OUT=test/simple/output_dec.txt CS=test/simple/CS.txt
+```` 
+
 ## TL;DR
 
 Let us create a program that performs a simple mathematical equation (1+15*10-7). First, create a directory in *test/*.
@@ -114,84 +121,11 @@ Instantiating SecureInts
 Performing mathematical equation (it may take a while)
 Writing output file
 ````
-If you check the output.txt, you will see an encrypted value. To see the unencrypted result, let us make another program (file: decrypt.cpp).
+If you check the output.txt, you will see an encrypted value. To see the unencrypted result:
 ````
-#include <fstream>
-#include <iostream>
-#include "../../src/preprocessor/sensitive_information.h"
-
-#define FILENAME "CS.txt"
-
-using namespace std;
-
-Unumber p, q, k;
-
-void loadCryptosystemParams();
-
-int main()
-{
-	cout << "Loading Cryptosystem parameters\n";
-	loadCryptosystemParams();
-	cout << "Instantiating SensitiveInformation (to decrypt)\n";
-	SensitiveInformation si(p,q,k);
-	cout << "Reading encrypted value from output.txt\n";
-	ifstream in;
-	in.open("output.txt", ifstream::in);
-	stringstream buffer;
-	buffer << in.rdbuf();
-	string strEncValue = buffer.str();
-	in.close();
-	Unumber encValue(strEncValue);
-	cout << "Decrypting\n";
-	Unumber R, result;
-	result = si.decrypt(encValue, &R);
-	cout << "Result: " << result.str() << " (encrypted value: " << encValue.str() << ")\n";
-
-	return 0;
-}
-
-void loadCryptosystemParams()
-{
-	ifstream in;
-	in.open(FILENAME, ifstream::in);
-	stringstream buffer;
-	buffer << in.rdbuf();
-	string text = buffer.str();
-	in.close();
-
-	int semicolon[4];
-	semicolon[0] = text.find(";") + 1;
-	semicolon[1] = text.find(";", semicolon[0]) + 1;
-	semicolon[2] = text.find(";", semicolon[1]) + 1;
-	semicolon[3] = text.find(";", semicolon[2]) + 1;
-
-	string strP = text.substr(semicolon[0], semicolon[1]-semicolon[0]-1);
-	string strQ = text.substr(semicolon[1], semicolon[2]-semicolon[1]-1);
-	string strK = text.substr(semicolon[2], semicolon[3]-semicolon[2]-1);
-
-	p = Unumber(strP);
-	q = Unumber(strQ);
-	k = Unumber(strK);
-}
-
+make decrypt IN=test/simple/output.txt OUT=test/simple/output_dec.txt CS=test/simple/CS.txt
 ````
-Then compile it:
-````
-make compile CODE=test/simple/decrypt.cpp OUT=test/simple/decrypt.elf
-````
-Now, test it:
-````
-make run FILE=test/simple/decrypt.elf
-````
-You should get the following (the encrypted value may change):
-````
-Loading Cryptosystem parameters
-Instantiating SensitiveInformation (to decrypt)
-Reading encrypted value from output.txt
-Decrypting
-Result: 144 (encrypted value: 3268181710)
-````
-It shows 144 as the result, which is correct. Yahoo!
+The decryption of *output.txt* is then available in the file *output_dec.txt*. It shows 144 as the result.
 
 ## Static vs Dynamic LibG
 
