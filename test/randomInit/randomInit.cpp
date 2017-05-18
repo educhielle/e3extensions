@@ -1,3 +1,11 @@
+/*******************************************
+*  DDD   EEEE  BBB   U  U   GG       DEBUG *
+*  D  D  E     B  B  U  U  G               *
+*  D  D  EEE   BBB   U  U  G GG            *
+*  D  D  E     B  B  U  U  G  G            *
+*  DDD   EEEE  BBB    UU    GG   2016-2017 *
+********************************************/
+
 #ifndef FSTREAM_INCLUDED
 	#define FSTREAM_INCLUDED
 	#include <fstream>

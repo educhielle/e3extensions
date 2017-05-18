@@ -1,3 +1,10 @@
+/*******************************************
+* New York University in Abu Dhabi (NYUAD) *
+* MoMAlab                                  *
+* Author: Eduardo Chielle                  *
+* eduardo.chielle@nyu.edu        2016-2017 *
+********************************************/
+
 #ifndef BIG_RANDOM_INCLUDED
 	#define BIG_RANDOM_INCLUDED
 	#include "big_random.h"

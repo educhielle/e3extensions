@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
+/* Read filenameIn, decrypts its content by line and write to the filenameOut */
 void decrypt(string filenameIn, string filenameOut, SensitiveInformation sinfo)
 {
 	ifstream in;
@@ -78,6 +79,8 @@ void decrypt(string filenameIn, string filenameOut, SensitiveInformation sinfo)
 	out.close();
 }
 
+/* Read and parse the cryptosystem file, usually CS.txt. */
+/* And creates a SensitiveInformation file used for decryption */
 SensitiveInformation loadCryptosystemParams(string filename)
 {
 	ifstream in;
