@@ -15,6 +15,8 @@ endif
 
 ifeq ($(STATIC_LIBG),1)
 OPT := -D STATIC_LIBG
+else
+OPT := -ldl
 endif
 
 CFLAGS=-Wall -O2 -fPIC # -static-libgcc -static-libstdc++ 
@@ -34,8 +36,8 @@ OBJ_UNUMBER=$(OBJ)/unumber
 SRC_UNUMBER=$(SRC)/unumber
 
 LOCAL_DIR=$(abspath .)
-FILE_DIR=$(dir $(FILE))
-FILENAME=$(notdir $(FILE))
+FILE_DIR=$(dir $(IN))
+FILENAME=$(notdir $(IN))
 LD_LIBRARY_PATH=./lib
 
 help:
@@ -46,8 +48,8 @@ clean:
 	rm -f $(LIB)/*
 	rm -f $(OBJ_UNUMBER)/*
 
-compile: ## Compile code. Usage: make compile CODE=path/to/code OUT=path/to/output [LDFLAGS=-ldl]
-	$(CXX) $(CXXFLAGS) $(CODE) $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(OUT) $(LDFLAGS) $(OPT)
+compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output [STATIC_LIBG]
+	$(CXX) $(CXXFLAGS) $(IN) $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(OUT) $(OPT)
 
 compile-decrypt:
 	$(CXX) $(CXXFLAGS) $(SRC_PREPROCESSOR)/decrypt.cpp $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/decrypt
@@ -68,10 +70,10 @@ decrypt: ## Decrypt file. Usage: make decrypt IN=path/to/inputfile OUT=path/to/o
 
 install: clean compile-unumber compile-preprocessor compile-shared-libg ## Install all basic components
 
-preprocess: ## Preprocess code. Usage: make preprocessor CODE=path/to/code
-	$(BIN)/preprocessor $(CODE)
+preprocess: ## Preprocess code. Usage: make preprocessor IN=path/to/code
+	$(BIN)/preprocessor $(IN)
 
-run: ## Run program. Usage: make run FILE=path/to/file
+run: ## Run program. Usage: make run IN=path/to/file
 	cp -f $(LIB)/libg.so $(FILE_DIR)
 	cd $(FILE_DIR); ./$(FILENAME)
 #	cd $(LOCAL_DIR)
