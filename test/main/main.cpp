@@ -46,9 +46,12 @@ int main()
 
 	//SensitiveInformation (p,q,k,rnd);
 	//SensitiveInformation si ("104947","105613","3","2");
+	cout << "Sensitive Information\n";
 	SensitiveInformation si ("13","11","3","2");
 	
 	Unumber udecA(11), udecB(3);
+
+	cout << "Encrypting...\n";
 
 	Unumber uencA = si.encrypt(udecA);
 	Unumber uencB = si.encrypt(udecB);

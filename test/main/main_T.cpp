@@ -46,9 +46,12 @@ int main()
 
 	//SensitiveInformation (p,q,k,rnd);
 	//SensitiveInformation si ("104947","105613","3","2");
+	cout << "Sensitive Information\n";
 	SensitiveInformation si ("13","11","3","2");
 	
 	Unumber udecA(11), udecB(3);
+
+	cout << "Encrypting...\n";
 
 	Unumber uencA = si.encrypt(udecA);
 	Unumber uencB = si.encrypt(udecB);
@@ -76,8 +79,8 @@ int main()
 
 	/* SecureInt and Cryptosystem test area */
 
-	Cryptosystem cs("143","3","9787","18998","4639", libgDir, "g");
-	SecureInt a("12073",cs), b("11711",cs), c[20];
+	Cryptosystem cs("143","3","499","18758","17180", libgDir, "g");
+	SecureInt a("5684",cs), b("20336",cs), c[20];
 
 	//aaa = Cryptosystem(__PQ()()()()__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, libgDir, "g");
 	//a = SecureInt(__N(11)__,aaa); b = SecureInt(__N(3)__,aaa);

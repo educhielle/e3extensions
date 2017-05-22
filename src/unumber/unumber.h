@@ -141,7 +141,7 @@ Unumber::Unumber(const string & s, unsigned int base)
 inline
 Unumber::Unumber(const Unumber & n)
 {
-    init10(n.str().c_str());
+	init10(n.str().c_str());
 }
 
 inline

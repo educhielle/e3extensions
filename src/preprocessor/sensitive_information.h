@@ -1,11 +1,11 @@
+#ifndef BIG_RANDOM_INCLUDED
+	#define BIG_RANDOM_INCLUDED
+	#include "big_random.h"
+#endif
+
 #ifndef IOSTREAM_INCLUDED
 	#define IOSTREAM_INCLUDED
 	#include <iostream>
-#endif
-
-#ifndef RANDOM_INCLUDED
-	#define RANDOM_INCLUDED
-	#include <random>
 #endif
 
 #ifndef UNUMBER_INCLUDED
@@ -52,7 +52,7 @@ class SensitiveInformation
     public:
 	Unumber decrypt(Unumber a, Unumber * R);
 	Unumber encrypt(Unumber x, Unumber R);
-	Unumber encrypt(Unumber x) { return encrypt(x, invertibleRandom()); }
+	Unumber encrypt(Unumber x) { return encrypt(x, invertibleRandom(2,n)); }
         Unumber access_g() const { return g; }
         Unumber access_Nm1() const { return Nm1; }
         Unumber access_p1Nk1N() const { return p1Nk1N; }
@@ -68,7 +68,6 @@ class SensitiveInformation
 	Unumber getTwoToBeta() const;
 	Unumber getXp1() const;
 	Unumber getXp2() const;
-	Unumber invertibleRandom() const;
         bool isrnd() const { return !rnd.iszero(); }
 	bool leq(const Unumber) const;
 	void setBeta(unsigned);
@@ -177,7 +176,6 @@ void SensitiveInformation::init()
 	Unumber x = n - 1;
 	while (x != 0) { x >>= 1; high_bit_posN++; }
 	high_bit_posN--;
-
 	xp1 = 2;
 	xp2 = Unumber(0) - 1;
 	xp2 >>= 1;
@@ -196,12 +194,11 @@ void SensitiveInformation::init()
 	xp2 = n * (tpmax + 1);
 
 	/* what does congruence do? */
-	rnd = (rnd.iszero() ? invertibleRandom() : congruence(rnd, n));
+	rnd = (rnd.iszero() ? invertibleRandom(2,n) : congruence(rnd, n));
 	k = congruence(k, n);
-
 	rndN = rnd;
 	rndN.pow(n, n2);
-	
+
 	phi = (p - 1) * (q - 1);
 	// (p - 1) * (q - 1) * (z - 1);
 
@@ -225,7 +222,6 @@ void SensitiveInformation::init()
 
 	ik = ma::invert(n - phi, phi, &Nm1); // inverting N by phi
 	if ( !ik ) throw "Cannot invert N";
-
 	p1Nk1N = phim1.mul(km1, n); // modulus is N, not N2
 
 	//skipped - bitguard
@@ -317,11 +313,11 @@ Unumber SensitiveInformation::decrypt(Unumber a, Unumber * R)
 Unumber SensitiveInformation::encrypt(Unumber m, Unumber r)
 {
 	r.pow(n, n2); //r^N
-
+	
 	Unumber gm = g;
 	gm.pow(congruence(m, n), n2); // g^m % N2 -- replaced by the next line
 	//gm = (congruence(m, n) * (gm - 1) + 1) % n2; // (1 + N*k*m) % N2
-
+	
 	Unumber x = r.mul(gm, n2); // r^N * (1 + N*k*m) % N2
 	
 	return x;
@@ -394,42 +390,6 @@ Unumber SensitiveInformation::getXp1() const
 Unumber SensitiveInformation::getXp2() const
 {
 	return xp2;
-}
-
-/* Invertible Random */
-/* Generate an invetible random number */
-Unumber SensitiveInformation::invertibleRandom() const
-{
-	std::random_device rd;
-	std::mt19937_64 mt64(rd());
-	
-	Unumber number(0);
-
-	while (true)
-	{
-		number = 0;
-		unsigned count = 0;
-		while (count < high_bit_posN)
-		{
-			count += 64;
-			number <<= 64;
-			number += mt64();
-		}
-
-		/* "count - high_bit_posN - 1" guarantees random numbers [1,n-1].
-		 * However, any random number > (n-1) needs to be ignored.
-		 * If "count - high_bit_posN" is used instead,
-		 * the range of random numbers is [1,x], where x < (n-1),
-		 * but it is faster. */
-		unsigned shift = count - high_bit_posN - 1;
-		number >>= shift;
-
-		/* the number is valid if it is a number in the range [1,n-1]
-		 * and its gcd with n is one */
-		if ((number < n) && (ma::gcd(number, n) == 1)) break;
-	}
-
-	return number;
 }
 
 /* Leq test */

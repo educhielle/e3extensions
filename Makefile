@@ -14,10 +14,27 @@ CXX := $(DEFAULT_CPP_COMPILER)
 endif
 
 ifeq ($(STATIC_LIBG),1)
-OPT := -D STATIC_LIBG
+OPT := -DSTATIC_LIBG $(OPT)
 else
-OPT := -ldl
+LDFLAGS := -ldl
 endif
+
+ifeq ($(STATIC_LIBGCC),1)
+LDF := -static-libgcc $(LDF)
+endif
+
+ifeq ($(STATIC_LIBSTDCPP),1)
+LDF := -static-libstdc++ $(LDF)
+endif
+
+ifeq ($(GMP),1)
+OPT := -DGMP=1 $(OPT)
+LDF := -lgmpxx -lgmp $(LDF)
+ifeq ($(STATIC_GMP),1)
+LDF := -static $(LDF)
+endif
+endif
+
 
 CFLAGS=-Wall -O2 -fPIC # -static-libgcc -static-libstdc++ 
 CXXFLAGS=-Wall -O2 -std=c++14 -fPIC -fno-strict-aliasing # -static-libgcc -static-libstdc++ 
@@ -49,21 +66,28 @@ clean:
 	rm -f $(OBJ_UNUMBER)/*
 
 compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output [STATIC_LIBG=1]
-	$(CXX) $(CXXFLAGS) $(IN) $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(OUT) $(OPT)
+	$(CXX) $(CXXFLAGS) $(IN) $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(OUT) $(OPT) $(LDF) $(LDFLAGS)
 
 compile-decrypt:
-	$(CXX) $(CXXFLAGS) $(SRC_PREPROCESSOR)/decrypt.cpp $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/decrypt
+	$(CXX) $(CXXFLAGS) $(SRC_PREPROCESSOR)/decrypt.cpp $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/decrypt $(OPT) $(LDF)
 
 compile-preprocessor: ## Compile Preprocessor
-	$(CXX) $(CXXFLAGS) $(SRC_PREPROCESSOR)/preprocessor.cpp $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/preprocessor
+	$(CXX) $(CXXFLAGS) $(SRC_PREPROCESSOR)/preprocessor.cpp $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/preprocessor  $(OPT) $(LDF)
 
 compile-shared-libg:
-	$(CXX) $(CXXFLAGS) -shared $(SRC_LIBG)/libg.cpp $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(LIB)/libg.so
+	$(CXX) $(CXXFLAGS) -shared $(SRC_LIBG)/libg.cpp $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(LIB)/libg.so $(OPT) $(LDF)
 
 compile-unumber: ## Compile Unumber library
-	$(CXX) -c $(CXXFLAGS) $(SRC_UNUMBER)/unumberg.cpp -o $(OBJ_UNUMBER)/unumberg.o
-	$(CC) -c $(CFLAGS) $(SRC_UNUMBER)/cunmber_4096_m.c -o $(OBJ_UNUMBER)/cunmber_4096_m.o
-	$(CXX) -c $(CXXFLAGS) $(SRC_UNUMBER)/ma_invert_m.cpp -o $(OBJ_UNUMBER)/ma_invert_m.o
+	$(CXX) -c $(CXXFLAGS) $(SRC_UNUMBER)/unumberg.cpp -o $(OBJ_UNUMBER)/unumberg.o  $(OPT) $(LDF)
+	$(CC) -c $(CFLAGS) $(SRC_UNUMBER)/cunmber_4096_m.c -o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OPT) $(LDF)
+	$(CXX) -c $(CXXFLAGS) $(SRC_UNUMBER)/ma_invert_m.cpp -o $(OBJ_UNUMBER)/ma_invert_m.o $(OPT) $(LDF)
+
+cross-compile-gmp:
+	wget https://gmplib.org/download/gmp/gmp-6.1.2.tar.xz
+	tar xf gmp-6.1.2.tar.xz gmp
+	cd gmp-6.1.2
+	./configure --host=or1k-linux-musl --enable-cxx --prefix=/build-or1k-gmp --disable-shared --disable-assembly
+	sudo make
 
 decrypt: ## Decrypt file. Usage: make decrypt IN=path/to/inputfile OUT=path/to/outputfile CS=path/to/cryptosystem
 	$(BIN)/decrypt $(IN) $(OUT) $(CS)

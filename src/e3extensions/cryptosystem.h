@@ -27,6 +27,12 @@
 	#include "../unumber/unumberg.h"
 #endif
 
+#ifdef ARCH64
+	#define WORD_SIZE 64
+#else
+	#define WORD_SIZE 32
+#endif
+
 class Cryptosystem
 {
 #ifndef STATIC_LIBG
@@ -240,19 +246,22 @@ Unumber Cryptosystem::getZero() const
 Unumber Cryptosystem::invertibleRandom() const
 {
 	std::random_device rd;
-	std::mt19937_64 mt64(rd());
+#ifdef ARCH64
+	std::mt19937_64 mt(rd());
+#else
+	std::mt19937 mt(rd());
+#endif
 	
 	Unumber number(0);
-
 	while (true)
 	{
 		number = 0;
 		unsigned count = 0;
 		while (count < high_bit_posN)
 		{
-			count += 64;
-			number <<= 64;
-			number += mt64();
+			count += WORD_SIZE;
+			number <<= WORD_SIZE;
+			number += mt();
 		}
 
 		/* "count - high_bit_posN - 1" guarantees random numbers [1,n-1].

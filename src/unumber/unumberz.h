@@ -10,6 +10,7 @@
 
 #include <stddef.h>
 #include <gmpxx.h>
+//#include <gmp.h>
 
 using std::string;
 
@@ -29,6 +30,8 @@ class Unumber
 
         enum StringType { Binary, Decimal };
         Unumber(const string & s, StringType st);
+	Unumber(const string & s, unsigned int base=10);
+	Unumber(const Unumber & n);
 
         void init10(const char * s);
         void initBin(const string & s);
@@ -74,8 +77,14 @@ class Unumber
         { Unumber r(n1); r /= n2; return r; }
 
         friend bool operator<(const Unumber & n1, const Unumber & n2);
+	
+	friend bool operator<=(const Unumber & n1, const Unumber & n2)
+	{ return ((n1 < n2) || (n1 == n2)); }
 
         friend bool operator>(const Unumber & n1, const Unumber & n2) { return n2 < n1; }
+
+	friend bool operator>=(const Unumber & n1, const Unumber & n2)
+	{ return ((n1 > n2) || (n1 == n2)); }
 
         friend bool operator!=(const Unumber & n1, const Unumber & n2)
         { return !(n1 == n2); }

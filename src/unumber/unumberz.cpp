@@ -74,6 +74,17 @@ Unumber::Unumber(const string & s, Unumber::StringType st)
     if ( st == Binary ) throw "GMP binary initialization not implemented";
 }
 
+Unumber::Unumber(const string & s, unsigned int base)
+{
+	if ( base == 10 ) z = s;
+	if ( base == 2 ) throw "GMP binary initialization not implemented";
+}
+
+Unumber::Unumber(const Unumber & n)
+{
+	z = n.str();
+}
+
 Unumber Unumber::div(const Unumber & d, Unumber & q) const
 {
     Unumber r;
