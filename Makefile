@@ -30,11 +30,11 @@ endif
 ifeq ($(GMP),1)
 OPT := -DGMP=1 $(OPT)
 LDF := -lgmpxx -lgmp $(LDF)
-ifeq ($(STATIC_GMP),1)
-LDF := -static $(LDF)
-endif
 endif
 
+ifeq ($(STATIC),1)
+OPT := -static $(OPT)
+endif
 
 CFLAGS=-Wall -O2 -fPIC # -static-libgcc -static-libstdc++ 
 CXXFLAGS=-Wall -O2 -std=c++14 -fPIC -fno-strict-aliasing # -static-libgcc -static-libstdc++ 
@@ -56,6 +56,9 @@ LOCAL_DIR=$(abspath .)
 FILE_DIR=$(dir $(IN))
 FILENAME=$(notdir $(IN))
 LD_LIBRARY_PATH=./lib
+
+INSTALL_GMP_DIR=$(LOCAL_DIR)/build-or1k-gmp
+HOST=or1k-linux-musl
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-22s\033[0m %s\n", $$1, $$2}'
@@ -83,11 +86,11 @@ compile-unumber: ## Compile Unumber library
 	$(CXX) -c $(CXXFLAGS) $(SRC_UNUMBER)/ma_invert_m.cpp -o $(OBJ_UNUMBER)/ma_invert_m.o $(OPT) $(LDF)
 
 cross-compile-gmp:
-	wget https://gmplib.org/download/gmp/gmp-6.1.2.tar.xz
-	tar xf gmp-6.1.2.tar.xz gmp
-	cd gmp-6.1.2
-	./configure --host=or1k-linux-musl --enable-cxx --prefix=/build-or1k-gmp --disable-shared --disable-assembly
-	sudo make
+	[ -s "gmp-6.1.2.tar.xz" ] || wget https://gmplib.org/download/gmp/gmp-6.1.2.tar.xz
+	[ -s "gmp-6.1.2" ] || tar xf gmp-6.1.2.tar.xz
+	test -s $(INSTALL_GMP_DIR) || mkdir $(INSTALL_GMP_DIR)
+	cd gmp-6.1.2 ; ./configure --host=$(HOST) --enable-cxx --prefix=$(INSTALL_GMP_DIR) --disable-assembly ; make ; make install
+# --disable-shared
 
 decrypt: ## Decrypt file. Usage: make decrypt IN=path/to/inputfile OUT=path/to/outputfile CS=path/to/cryptosystem
 	$(BIN)/decrypt $(IN) $(OUT) $(CS)
@@ -100,6 +103,5 @@ preprocess: ## Preprocess code. Usage: make preprocessor IN=path/to/code OUT=pat
 run: ## Run program. Usage: make run IN=path/to/file
 	cp -f $(LIB)/libg.so $(FILE_DIR)
 	cd $(FILE_DIR); ./$(FILENAME)
-#	cd $(LOCAL_DIR)
-#	rm -f $(FILE_DIR)libg.so
+
 
