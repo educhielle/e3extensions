@@ -89,7 +89,8 @@ cross-compile-gmp:
 	[ -s "gmp-6.1.2.tar.xz" ] || wget https://gmplib.org/download/gmp/gmp-6.1.2.tar.xz
 	[ -s "gmp-6.1.2" ] || tar xf gmp-6.1.2.tar.xz
 	test -s $(INSTALL_GMP_DIR) || mkdir $(INSTALL_GMP_DIR)
-	cd gmp-6.1.2 ; ./configure --host=$(HOST) --enable-cxx --prefix=$(INSTALL_GMP_DIR) --disable-assembly ; make ; make install
+	cd gmp-6.1.2 ; ./configure --host=$(HOST) --enable-cxx --prefix=$(INSTALL_GMP_DIR) ; make ; make install
+# --disable-assembly
 # --disable-shared
 
 decrypt: ## Decrypt file. Usage: make decrypt IN=path/to/inputfile OUT=path/to/outputfile CS=path/to/cryptosystem
