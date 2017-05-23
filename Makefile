@@ -36,6 +36,14 @@ ifeq ($(STATIC),1)
 OPT := -static $(OPT)
 endif
 
+ifeq ($(GMP_ASSEMBLY),0)
+GMP_PARAMS := --disable-assembly $(GMP_PARAMS)
+endif
+
+ifeq ($(GMP_SHARED),0)
+GMP_PARAMS := --disable-shared $(GMP_PARAMS)
+endif
+
 CFLAGS=-Wall -O2 -fPIC # -static-libgcc -static-libstdc++ 
 CXXFLAGS=-Wall -O2 -std=c++14 -fPIC -fno-strict-aliasing # -static-libgcc -static-libstdc++ 
 
@@ -57,7 +65,7 @@ FILE_DIR=$(dir $(IN))
 FILENAME=$(notdir $(IN))
 LD_LIBRARY_PATH=./lib
 
-INSTALL_GMP_DIR=$(LOCAL_DIR)/build-or1k-gmp
+INSTALL_GMP_DIR=$(LOCAL_DIR)/build-gmp
 HOST=or1k-linux-musl
 
 help:
@@ -89,9 +97,8 @@ cross-compile-gmp:
 	[ -s "gmp-6.1.2.tar.xz" ] || wget https://gmplib.org/download/gmp/gmp-6.1.2.tar.xz
 	[ -s "gmp-6.1.2" ] || tar xf gmp-6.1.2.tar.xz
 	test -s $(INSTALL_GMP_DIR) || mkdir $(INSTALL_GMP_DIR)
-	cd gmp-6.1.2 ; ./configure --host=$(HOST) --enable-cxx --prefix=$(INSTALL_GMP_DIR) ; make ; make install
-# --disable-assembly
-# --disable-shared
+	cd gmp-6.1.2 ; ./configure --host=$(HOST) --enable-cxx --prefix=$(INSTALL_GMP_DIR) $(GMP_PARAMS) ; make ; make install
+
 
 decrypt: ## Decrypt file. Usage: make decrypt IN=path/to/inputfile OUT=path/to/outputfile CS=path/to/cryptosystem
 	$(BIN)/decrypt $(IN) $(OUT) $(CS)

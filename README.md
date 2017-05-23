@@ -10,6 +10,7 @@ TODO: project description
 * [Static vs Dynamic LibG](#static-vs-dynamic-libg)
 * [Supported Operations](#supported-operations)
 * [Cross Compiling](#cross-compiling)
+* [Cross Compiling GMP](#cross-compiling-gmp)
 
 ## Install
 
@@ -180,6 +181,25 @@ make compile-unumber
 make preprocess IN=test/main/main.cpp *# if code is already preprocessed, this comand is not necessary*
 make compile IN=test/main/main_T.cpp OUT=test/main/main.elf STATIC_LIBG=1
 ````
+
+## Cross Compiling GMP
+
+To cross compile GMP for or1k-linux-musl, just do:
+````
+make cross-compile-gmp
+````
+It will download GMP 6.1.2, do all the stuff, and install the files in the *build-gmp* directory. Then, considering that your or1k-linux-musl compiler is installed at */opt/toolchains/or1k-linux-musl*, you must move the files from *./build-gmp/include* to */opt/toolchains/or1k-linux-musl/or1k-linux-musl/include* and the files from *./build-gmp/lib* to */opt/toolchains/or1k-linux-musl/or1k-linux-musl/lib*. The script could have done that, but better safe than sorry.
+
+To cross compile to another platform and install in another directory, do:
+````
+make cross-compile-gmp INSTALL_GMP_DIR=/absolute/path/to/the/directory HOST=other-platform
+````
+
+Further options are GMP_ASSEMBLY=0 to disable assembly and GMP_SHARED=0 to disable shared objects. The following example cross compile for or1k-elf:
+````
+make cross-compile-gmp HOST=or1k-elf INSTALL_GMP_DIR=/home/user/e3extensions/gmp_installation GMP_SHARED=0
+````
+Then, move the headers to include and libraries to libs. If it does not work for your compiler, check [GMPlib.org](https://gmplib.org).
 
 ## MoMAlab
 
