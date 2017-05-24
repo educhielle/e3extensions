@@ -2,28 +2,13 @@
 * New York University in Abu Dhabi (NYUAD) *
 * MoMAlab                                  *
 * Author: Eduardo Chielle                  *
-* eduardo.chielle@nyu.edu             2017 *
+* eduardo.chielle@nyu.edu        2016-2017 *
 ********************************************/
 
-#ifndef FSTREAM_INCLUDED
-	#define FSTREAM_INCLUDED
-	#include <fstream>
-#endif
-
-#ifndef IOSTREAM_INCLUDED
-	#define IOSTREAM_INCLUDED
-	#include <iostream>
-#endif
-
-#ifndef SENSITIVE_INFORMATION_INCLUDED
-	#define SENSITIVE_INFORMATION_INCLUDED
-	#include "sensitive_information.h"
-#endif
-
-#ifndef UTIL_INCLUDED
-	#define UTIL_INCLUDED
-	#include "util.h"
-#endif
+#include <fstream>
+#include <iostream>
+#include "sensitive_information.h"
+#include "util.h"
 
 using namespace std;
 

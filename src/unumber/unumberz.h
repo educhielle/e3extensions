@@ -10,7 +10,6 @@
 
 #include <stddef.h>
 #include <gmpxx.h>
-//#include <gmp.h>
 
 using std::string;
 

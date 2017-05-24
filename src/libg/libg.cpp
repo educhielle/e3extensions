@@ -11,52 +11,35 @@
         use it only for testing purpose    *
 ********************************************/
 
-#ifndef BIG_RANDOM_INCLUDED
-	#define BIG_RANDOM_INCLUDED
-	#include "../preprocessor/big_random.h"
-#endif
-
-#ifndef FSTREAM_INCLUDED
-	#define FSTREAM_INCLUDED
+#include "../preprocessor/big_random.h"
+#include "libg.h"
+#include "../unumber/unumberg.h"
+#ifndef STATIC_LIBG
 	#include <fstream>
-#endif
-
-#ifndef IOSTREAM_INCLUDED
-	#define IOSTREAM_INCLUDED
 	#include <iostream>
 #endif
 
-#ifndef UNUMBER_INCLUDED
-	#define UNUMBER_INCLUDED
-	#include "../unumber/unumberg.h"
+#ifndef STATIC_LIBG
+	#define FILENAME "CS.txt"
 #endif
-
-#define FILENAME "CS.txt"
 
 using namespace std;
 
-#ifdef STATIC_LIBG
-	bool loaded = true;
-#else
-	bool loaded = false;
-#endif
-
 Unumber fkf(3480), _g(430), n(143), n2(20449), xp1(144), xp2(18304);
 
-Unumber congruence(Unumber, const Unumber &);
-Unumber encrypt(const Unumber &);
-bool leq(const Unumber);
-void loadCryptosystemParams();
-Unumber reencrypt(const Unumber &);
+#ifndef STATIC_LIBG
+	bool loaded = false;
+#endif
 
 /* G function */
 /* if the unencryption of x is less or equal zero
  * 	return the encryption of zero
  * else return the reencryption of y */	
-extern "C" Unumber libg(Unumber x, Unumber y)
+Unumber libg(Unumber x, Unumber y)
 {
+#ifndef STATIC_LIBG
 	if (!loaded) loadCryptosystemParams();
-	
+#endif
 	Unumber ox = Unumber(x);
 	ox.pow(fkf, n2);
 
@@ -109,6 +92,7 @@ bool leq(const Unumber x)
 }
 
 /* Load Cryptosystem parameters from CS.txt file */
+#ifndef STATIC_LIBG
 void loadCryptosystemParams()
 {
 	ifstream in;
@@ -152,6 +136,7 @@ void loadCryptosystemParams()
 	
 	loaded = true;
 }
+#endif
 
 /* Reencrypt a cyphertext with a random invertible number */
 /* Following the equation x' = (r^N * x) % N2 */

@@ -1,20 +1,15 @@
-DEFAULT_C_COMPILER=gcc
-DEFAULT_CPP_COMPILER=g++
+AR=ar
+CC=gcc
+CXX=g++
 
-ifdef C_COMPILER
-CC := $(C_COMPILER)
-else
-CC := $(DEFAULT_C_COMPILER)
+ifdef COMPILER
+AR := $(COMPILER)$(AR)
+CC := $(COMPILER)$(CC)
+CXX := $(COMPILER)$(CXX)
 endif
 
-ifdef CPP_COMPILER
-CXX := $(CPP_COMPILER)
-else
-CXX := $(DEFAULT_CPP_COMPILER)
-endif
-
-ifeq ($(STATIC_LIBG),1)
-OPT := -DSTATIC_LIBG $(OPT)
+ifdef STATIC_LIBG
+OPT := -DSTATIC_LIBG=$(STATIC_LIBG) $(OPT)
 else
 LDFLAGS := -ldl
 endif
@@ -44,8 +39,13 @@ ifeq ($(GMP_SHARED),0)
 GMP_PARAMS := --disable-shared $(GMP_PARAMS)
 endif
 
-CFLAGS=-Wall -O2 -fPIC # -static-libgcc -static-libstdc++ 
-CXXFLAGS=-Wall -O2 -std=c++14 -fPIC -fno-strict-aliasing # -static-libgcc -static-libstdc++ 
+ifeq ($(ARCH),64)
+OPT := -DARCH64 $(OPT)
+endif
+
+ARFLAGS=-cvq
+CFLAGS=-Wall -O2 -fPIC
+CXXFLAGS=-Wall -O2 -std=c++14 -fPIC -fno-strict-aliasing
 
 BIN=bin
 LIB=lib
@@ -53,9 +53,14 @@ OBJ=obj
 SRC=src
 TMP=tmp
 
+SRC_E3EXTENSIONS=$(SRC)/e3extensions
+OBJ_E3EXTENSIONS=$(OBJ)/e3extensions
+
 SRC_LIBG=$(SRC)/libg
+OBJ_LIBG=$(OBJ)/libg
 
 SRC_PREPROCESSOR=$(SRC)/preprocessor
+OBJ_PREPROCESSOR=$(OBJ)/preprocessor
 
 OBJ_UNUMBER=$(OBJ)/unumber
 SRC_UNUMBER=$(SRC)/unumber
@@ -76,19 +81,39 @@ clean:
 	rm -f $(LIB)/*
 	rm -f $(OBJ_UNUMBER)/*
 
-compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output [STATIC_LIBG=1]
-	$(CXX) $(CXXFLAGS) $(IN) $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(OUT) $(OPT) $(LDF) $(LDFLAGS)
+compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output [GMP=1] [STATIC=1]
+	$(CXX) $(CXXFLAGS) $(IN) $(OBJ_E3EXTENSIONS)/cryptosystem.o $(OBJ_E3EXTENSIONS)/secureint.o $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(OUT) $(OPT) $(LDF) $(LDFLAGS)
 
-compile-decrypt:
-	$(CXX) $(CXXFLAGS) $(SRC_PREPROCESSOR)/decrypt.cpp $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/decrypt $(OPT) $(LDF)
+compile-decrypt: ## Compile Decrypt. Usage: make compile-decrypt [GMP=1]
+	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/decrypt.cpp -o $(OBJ_PREPROCESSOR)/decrypt.o
+	$(CXX) $(CXXFLAGS) $(OBJ_PREPROCESSOR)/decrypt.o $(OBJ_PREPROCESSOR)/big_random.o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OBJ_PREPROCESSOR)/util.o $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/decrypt $(OPT) $(LDF)
 
-compile-preprocessor: ## Compile Preprocessor
-	$(CXX) $(CXXFLAGS) $(SRC_PREPROCESSOR)/preprocessor.cpp $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/preprocessor  $(OPT) $(LDF)
+compile-decrypt-all: compile-unumber compile-sensitive-information compile-decrypt ## Recompile all dependencies and compile Decrypt. Usage: make compile-decrypt-all [GMP=1] [ARCH=64]
+
+compile-e3extensions: ## Compile e3extensions. Usage: make compile-e3extensions [STATIC_LIBG=path/to/libg] [ARCH=64]
+	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/cryptosystem.cpp -o $(OBJ_E3EXTENSIONS)/cryptosystem.o $(OPT) $(LDF)
+	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/secureint.cpp -o $(OBJ_E3EXTENSIONS)/secureint.o $(OPT) $(LDF)
+
+compile-preprocessor: ## Compile Preprocessor. Usage: make compile-preprocessor [GMP=1]
+	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/preprocessor.cpp -o $(OBJ_PREPROCESSOR)/preprocessor.o
+	$(CXX) $(CXXFLAGS) $(OBJ_PREPROCESSOR)/preprocessor.o $(OBJ_PREPROCESSOR)/big_random.o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OBJ_PREPROCESSOR)/util.o $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/preprocessor $(OPT) $(LDF)
+
+compile-preprocessor-all: compile-unumber compile-sensitive-information compile-preprocessor ## Recompile all dependencies and compile Preprocessor. Usage: make compile-preprocessor [GMP=1] [ARCH=64]
 
 compile-shared-libg:
-	$(CXX) $(CXXFLAGS) -shared $(SRC_LIBG)/libg.cpp $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(LIB)/libg.so $(OPT) $(LDF)
+	$(CXX) $(CXXFLAGS) -c $(SRC_LIBG)/libg.cpp -o $(OBJ_LIBG)/libg.o $(OPT) $(LDF)
+	$(CXX) $(CXXFLAGS) -shared $(OBJ_LIBG)/libg.o $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(LIB)/libg.so $(OPT) $(LDF)
 
-compile-unumber: ## Compile Unumber library
+compile-sensitive-information: ## Compile Sensitive Information class and auxiliary libraries. Usage: make compile-sensitive-information [ARCH=64]
+	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/big_random.cpp -o $(OBJ_PREPROCESSOR)/big_random.o $(OPT) $(LDF)
+	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/sensitive_information.cpp -o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OPT) $(LDF)
+	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/util.cpp -o $(OBJ_PREPROCESSOR)/util.o $(OPT) $(LDF)
+
+compile-static-libg:
+	$(CXX) -c $(CXXFLAGS) $(SRC_LIBG)/libg.cpp -o $(OBJ_LIBG)/libg.o $(OPT) $(LDF) -DSTATIC_LIBG
+	$(AR) $(ARFLAGS) $(LIB)/libg.a $(OBJ_LIBG)/libg.o
+
+compile-unumber: ## Compile Unumber library. Usage: make compile-unumber [GMP=1]
 	$(CXX) -c $(CXXFLAGS) $(SRC_UNUMBER)/unumberg.cpp -o $(OBJ_UNUMBER)/unumberg.o  $(OPT) $(LDF)
 	$(CC) -c $(CFLAGS) $(SRC_UNUMBER)/cunmber_4096_m.c -o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OPT) $(LDF)
 	$(CXX) -c $(CXXFLAGS) $(SRC_UNUMBER)/ma_invert_m.cpp -o $(OBJ_UNUMBER)/ma_invert_m.o $(OPT) $(LDF)

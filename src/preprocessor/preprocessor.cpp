@@ -5,45 +5,14 @@
 * eduardo.chielle@nyu.edu        2016-2017 *
 ********************************************/
 
-#ifndef BIG_RANDOM_INCLUDED
-	#define BIG_RANDOM_INCLUDED
-	#include "big_random.h"
-#endif
-
-#ifndef FSTREAM_INCLUDED
-	#define FSTREAM_INCLUDED
-	#include <fstream>
-#endif
-
-#ifndef IOSTREAM_INCLUDED
-	#define IOSTREAM_INCLUDED
-	#include <iostream>
-#endif
-
-#ifndef REGEX_INCLUDED
-	#define REGEX_INCLUDED	
-	#include <regex>
-#endif
-
-#ifndef SENSITIVE_INFORMATION_INCLUDED
-	#define SENSITIVE_INFORMATION_INCLUDED	
-	#include "sensitive_information.h"
-#endif
-
-#ifndef UNUMBER_INCLUDED
-	#define UNUMBER_INCLUDED
-	#include "../unumber/unumberg.h"
-#endif
-
-#ifndef UTIL_INCLUDED
-	#define UTIL_INCLUDED
-	#include "util.h"
-#endif
-
-#ifndef VECTOR_INCLUDED
-	#define VECTOR_INCLUDED	
-	#include <vector>
-#endif
+#include "big_random.h"
+#include <fstream>
+#include <iostream>
+#include <regex>
+#include "sensitive_information.h"
+#include <vector>
+#include "../unumber/unumberg.h"
+#include "util.h"
 
 using namespace std;
 

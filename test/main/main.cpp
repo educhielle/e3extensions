@@ -7,7 +7,7 @@
 ********************************************/
 
 //#define STATIC_LIBG
-#include "../../src/libg/libg.cpp"
+//#include "../../src/libg/libg.cpp"
 
 #ifndef IOSTREAM_INCLUDED
 	#define IOSTREAM_INCLUDED
