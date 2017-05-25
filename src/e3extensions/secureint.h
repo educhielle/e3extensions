@@ -77,7 +77,7 @@ class SecureInt
 	Unumber getN2() const;
 	Unumber getX() const;
 	SecureInt invert() const;
-	string str(unsigned) const;
+	string str(unsigned base=10) const;
 
     /* Private static functions */
     private:

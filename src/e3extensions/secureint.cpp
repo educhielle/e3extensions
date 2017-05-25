@@ -230,7 +230,7 @@ SecureInt SecureInt::invert() const
 }
 
 /* Return the cyphertext in string format */
-string SecureInt::str(unsigned base=10) const
+string SecureInt::str(unsigned base) const
 {
 	return x.str(base);
 }

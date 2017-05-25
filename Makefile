@@ -111,7 +111,7 @@ compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output
 	-o $(OUT) $(OPT) $(LDF) $(LIBGFLAGS)
 
 
-compile-all: compile-unumber compile-shared-libg compile-static-libg compile-e3extensions compile ## Recompile all dependencies and compile code. Usage: make compile-all IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
+compile-all: compile-unumber compile-sensitive-information compile-shared-libg compile-static-libg compile-e3extensions compile ## Recompile all dependencies and compile code. Usage: make compile-all IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
 
 
 compile-debug:
@@ -138,7 +138,7 @@ compile-decrypt: ## Compile Decrypt. Usage: make compile-decrypt [ARCH=64] [GMP=
 compile-decrypt-all: compile-unumber compile-sensitive-information compile-decrypt ## Recompile all dependencies and compile Decrypt. Usage: make compile-decrypt-all [ARCH=64] [GMP=1]
 
 
-compile-e3extensions: ## Compile e3extensions. Usage: make compile-e3extensions [STATIC_LIBG=path/to/libg] [ARCH=64]
+compile-e3extensions: ## Compile e3extensions. Usage: make compile-e3extensions [STATIC_LIBG=path/to/libg] [ARCH=64] [GMP=1]
 	# compile Cryptosystem
 	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/cryptosystem.cpp -o $(OBJ_E3EXTENSIONS)/cryptosystem.o $(OPT) $(LDF) $(LIBGFLAGS)
 	# compile SecureInt
@@ -203,7 +203,7 @@ decrypt: ## Decrypt file. Usage: make decrypt IN=path/to/inputfile OUT=path/to/o
 	$(BIN)/decrypt $(IN) $(OUT) $(CS)
 
 
-install: clean compile-unumber compile-sensitive-information compile-preprocessor compile-decrypt compile-shared-libg compile-static-libg ## Install all basic components. Usage: make install [ARCH=64] [GMP=1]
+install: clean compile-unumber compile-sensitive-information compile-preprocessor compile-decrypt compile-shared-libg compile-static-libg compile-e3extensions ## Install all basic components. Usage: make install [ARCH=64] [GMP=1]
 
 
 preprocess: ## Preprocess code. Usage: make preprocessor IN=path/to/code OUT=path/to/output

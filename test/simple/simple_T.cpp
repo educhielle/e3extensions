@@ -10,9 +10,9 @@ string gFunctionName = "libg";
 int main()
 {
 	cout << "Creating Cryptosystem\n";
-	Cryptosystem cs("32293","12","431139774","551046301","292906477", libgDir, gFunctionName);
+	Cryptosystem cs("106037","14","489906008","10546378165","2718129991", libgDir, gFunctionName);
 	cout << "Instantiating SecureInts\n";
-	SecureInt a("537140728",cs), b("351644484",cs), c("539273510",cs), d("858291674",cs);
+	SecureInt a("7835062305",cs), b("10023955253",cs), c("9114366194",cs), d("5036267407",cs);
 	cout << "Performing mathematical equation (it may take a while)\n";
 	SecureInt r = a+b*c-d;
 	cout << "Writing output file\n";
