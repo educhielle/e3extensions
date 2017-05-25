@@ -1,2 +1,0 @@
-g++ -Wall -O2 -std=c++14 -fPIC -fno-strict-aliasing test/main/main_T.cpp obj/unumber/unumberg.o obj/unumber/cunmber_4096_m.o obj/unumber/ma_invert_m.o obj/preprocessor/big_random.o obj/preprocessor/sensitive_information.o obj/preprocessor/util.o obj/libg/libg.o obj/e3extensions/cryptosystem.o obj/e3extensions/secureint.o -o test/main/main.elf -lgmpxx -lgmp -DGMP=1 
-

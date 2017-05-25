@@ -9,10 +9,11 @@
 #include <random>
 
 #ifdef STATIC_LIBG
-//	#include "../libg/libg.cpp"
+	#include "libg.h"
+/*	#include "../libg/libg.cpp"
 	#define QUOTEME(M)	#M
 	#define INCLUDE_FILE(M)	QUOTEME(M)
-	#include INCLUDE_FILE(STATIC_LIBG)
+	#include INCLUDE_FILE(STATIC_LIBG) */
 #endif
 
 /*****************************

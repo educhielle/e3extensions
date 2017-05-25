@@ -14,22 +14,19 @@
 #include "../preprocessor/big_random.h"
 #include "libg.h"
 #include "../unumber/unumberg.h"
+
 #ifndef STATIC_LIBG
 	#include <fstream>
 	#include <iostream>
-#endif
 
-#ifndef STATIC_LIBG
 	#define FILENAME "CS.txt"
-#endif
 
-using namespace std;
+	using namespace std;
 
-Unumber fkf(3480), _g(430), n(143), n2(20449), xp1(144), xp2(18304);
-
-#ifndef STATIC_LIBG
 	bool loaded = false;
 #endif
+
+Unumber fkf(3480), _g(430), n(143), n2(20449), xp1(144), xp2(18304);
 
 /* G function */
 /* if the unencryption of x is less or equal zero

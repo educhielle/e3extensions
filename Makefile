@@ -1,52 +1,22 @@
+# GCC/G++ defined as the standard compiler
 AR=ar
 CC=gcc
 CXX=g++
 
+#Compiler flags
+ARFLAGS=-cvq
+CFLAGS=-Wall -O2 -fPIC
+CXXFLAGS=-Wall -O2 -std=c++14 -fPIC -fno-strict-aliasing
+
+# To cross compile, set COMPILER accordingly
 ifdef COMPILER
 AR := $(COMPILER)$(AR)
 CC := $(COMPILER)$(CC)
 CXX := $(COMPILER)$(CXX)
 endif
 
-ifdef STATIC_LIBG
-OPT := -DSTATIC_LIBG=$(STATIC_LIBG) $(OPT)
-else
-LDFLAGS := -ldl
-endif
 
-ifeq ($(STATIC_LIBGCC),1)
-LDF := -static-libgcc $(LDF)
-endif
-
-ifeq ($(STATIC_LIBSTDCPP),1)
-LDF := -static-libstdc++ $(LDF)
-endif
-
-ifeq ($(GMP),1)
-OPT := -DGMP=1 $(OPT)
-LDF := -lgmpxx -lgmp $(LDF)
-endif
-
-ifeq ($(STATIC),1)
-OPT := -static $(OPT)
-endif
-
-ifeq ($(GMP_ASSEMBLY),0)
-GMP_PARAMS := --disable-assembly $(GMP_PARAMS)
-endif
-
-ifeq ($(GMP_SHARED),0)
-GMP_PARAMS := --disable-shared $(GMP_PARAMS)
-endif
-
-ifeq ($(ARCH),64)
-OPT := -DARCH64 $(OPT)
-endif
-
-ARFLAGS=-cvq
-CFLAGS=-Wall -O2 -fPIC
-CXXFLAGS=-Wall -O2 -std=c++14 -fPIC -fno-strict-aliasing
-
+# E3EXTENSIONS directories
 BIN=bin
 LIB=lib
 OBJ=obj
@@ -70,71 +40,177 @@ FILE_DIR=$(dir $(IN))
 FILENAME=$(notdir $(IN))
 LD_LIBRARY_PATH=./lib
 
-INSTALL_GMP_DIR=$(LOCAL_DIR)/build-gmp
-HOST=or1k-linux-musl
+ifeq ($(STATIC),1)
+OPT := -static $(OPT)
+endif
+
+ifeq ($(STATIC_LIBGCC),1)
+LDF := -static-libgcc $(LDF)
+endif
+
+ifeq ($(STATIC_LIBSTDCPP),1)
+LDF := -static-libstdc++ $(LDF)
+endif
+
+# E3EXTENSIONS' FLAGS #
+
+# if ARCH=64, the random number generator will work on a base of 64 bits. Only use it in a 64-bit processor. The standard is 32.
+ifeq ($(ARCH),64)
+OPT := -DARCH64 $(OPT)
+endif
+
+# Compile using GMP
+ifeq ($(GMP),1)
+OPT := -DGMP=1 $(OPT)
+LDF := -lgmpxx -lgmp $(LDF)
+endif
+
+# Define if libg is static or dynamic
+ifdef STATIC_LIBG
+CSFLAGS := $(OBJ_LIBG)/libg.o $(CSFLAGS)
+LIBGFLAGS := -DSTATIC_LIBG $(LIBGFLAGS)
+else
+# CSFLAGS := -L./lib -lg $(CSFLAGS)
+LIBGFLAGS := -ldl $(LIBGFLAGS)
+endif
+
+# GMP CROSS COMPILATION #
+
+# GMP CROSS COMPILATION FLAGS
+GMP_INSTALL_DIR=$(LOCAL_DIR)/build-gmp
+GMP_HOST=or1k-linux-musl
+
+# If GMP_ASSEMBLY=0, GMP is configured with the flag --disable-assembly when installing GMP for a cross compiler
+ifeq ($(GMP_ASSEMBLY),0)
+GMP_PARAMS := --disable-assembly $(GMP_PARAMS)
+endif
+
+# If GMP_SHARED=0, GMP is configured with the flag --disable-shared when installing GMP for a cross compiler
+ifeq ($(GMP_SHARED),0)
+GMP_PARAMS := --disable-shared $(GMP_PARAMS)
+endif
+
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-22s\033[0m %s\n", $$1, $$2}'
 
+
 clean:
 	rm -f $(BIN)/*
 	rm -f $(LIB)/*
+	rm -f $(OBJ_E3EXTENSIONS)/*
+	rm -f $(OBJ_LIBG)/*
+	rm -f $(OBJ_PREPROCESSOR)/*
 	rm -f $(OBJ_UNUMBER)/*
 
-compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output [GMP=1] [STATIC=1]
-	$(CXX) $(CXXFLAGS) $(IN) $(OBJ_E3EXTENSIONS)/cryptosystem.o $(OBJ_E3EXTENSIONS)/secureint.o $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(OUT) $(OPT) $(LDF) $(LDFLAGS)
 
-compile-decrypt: ## Compile Decrypt. Usage: make compile-decrypt [GMP=1]
-	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/decrypt.cpp -o $(OBJ_PREPROCESSOR)/decrypt.o
-	$(CXX) $(CXXFLAGS) $(OBJ_PREPROCESSOR)/decrypt.o $(OBJ_PREPROCESSOR)/big_random.o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OBJ_PREPROCESSOR)/util.o $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/decrypt $(OPT) $(LDF)
+compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
+	$(CXX) $(CXXFLAGS) $(IN) $(CSFLAGS) \
+	$(OBJ_E3EXTENSIONS)/cryptosystem.o $(OBJ_E3EXTENSIONS)/secureint.o \
+	$(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o \
+	-o $(OUT) $(OPT) $(LDF) $(LIBGFLAGS)
 
-compile-decrypt-all: compile-unumber compile-sensitive-information compile-decrypt ## Recompile all dependencies and compile Decrypt. Usage: make compile-decrypt-all [GMP=1] [ARCH=64]
+
+compile-all: compile-unumber compile-shared-libg compile-static-libg compile-e3extensions compile ## Recompile all dependencies and compile code. Usage: make compile-all IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
+
+
+compile-debug:
+	$(CXX) $(CXXFLAGS) $(IN) $(CSFLAGS) \
+	$(OBJ_PREPROCESSOR)/big_random.o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OBJ_PREPROCESSOR)/util.o \
+	$(OBJ_E3EXTENSIONS)/cryptosystem.o $(OBJ_E3EXTENSIONS)/secureint.o \
+	$(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o \
+	-o $(OUT) $(OPT) $(LDF) $(LIBGFLAGS)
+
+
+compile-debug-all: compile-unumber compile-shared-libg compile-static-libg compile-sensitive-information compile-e3extensions compile-debug
+
+
+compile-decrypt: ## Compile Decrypt. Usage: make compile-decrypt [ARCH=64] [GMP=1]
+	# compile
+	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/decrypt.cpp -o $(OBJ_PREPROCESSOR)/decrypt.o $(OPT) $(LDF)
+	# link
+	$(CXX) $(CXXFLAGS) \
+	$(OBJ_PREPROCESSOR)/decrypt.o $(OBJ_PREPROCESSOR)/big_random.o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OBJ_PREPROCESSOR)/util.o \
+	$(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o \
+	-o $(BIN)/decrypt $(OPT) $(LDF)
+
+
+compile-decrypt-all: compile-unumber compile-sensitive-information compile-decrypt ## Recompile all dependencies and compile Decrypt. Usage: make compile-decrypt-all [ARCH=64] [GMP=1]
+
 
 compile-e3extensions: ## Compile e3extensions. Usage: make compile-e3extensions [STATIC_LIBG=path/to/libg] [ARCH=64]
-	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/cryptosystem.cpp -o $(OBJ_E3EXTENSIONS)/cryptosystem.o $(OPT) $(LDF)
-	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/secureint.cpp -o $(OBJ_E3EXTENSIONS)/secureint.o $(OPT) $(LDF)
+	# compile Cryptosystem
+	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/cryptosystem.cpp -o $(OBJ_E3EXTENSIONS)/cryptosystem.o $(OPT) $(LDF) $(LIBGFLAGS)
+	# compile SecureInt
+	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/secureint.cpp -o $(OBJ_E3EXTENSIONS)/secureint.o $(OPT) $(LDF) $(LIBGFLAGS)
 
-compile-preprocessor: ## Compile Preprocessor. Usage: make compile-preprocessor [GMP=1]
-	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/preprocessor.cpp -o $(OBJ_PREPROCESSOR)/preprocessor.o
-	$(CXX) $(CXXFLAGS) $(OBJ_PREPROCESSOR)/preprocessor.o $(OBJ_PREPROCESSOR)/big_random.o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OBJ_PREPROCESSOR)/util.o $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(BIN)/preprocessor $(OPT) $(LDF)
 
-compile-preprocessor-all: compile-unumber compile-sensitive-information compile-preprocessor ## Recompile all dependencies and compile Preprocessor. Usage: make compile-preprocessor [GMP=1] [ARCH=64]
+compile-preprocessor: ## Compile Preprocessor. Usage: make compile-preprocessor [ARCH=64] [GMP=1]
+	# compile
+	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/preprocessor.cpp -o $(OBJ_PREPROCESSOR)/preprocessor.o $(OPT) $(LDF)
+	# link
+	$(CXX) $(CXXFLAGS) \
+	$(OBJ_PREPROCESSOR)/preprocessor.o $(OBJ_PREPROCESSOR)/big_random.o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OBJ_PREPROCESSOR)/util.o \
+	$(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o \
+	-o $(BIN)/preprocessor $(OPT) $(LDF)
 
-compile-shared-libg:
+
+compile-preprocessor-all: compile-unumber compile-sensitive-information compile-preprocessor ## Recompile all dependencies and compile Preprocessor. Usage: make compile-preprocessor [ARCH=64] [GMP=1]
+
+
+compile-shared-libg: ## Usage: make compile-shared-libg [ARCH=64] [GMP=1]
+	# compile
 	$(CXX) $(CXXFLAGS) -c $(SRC_LIBG)/libg.cpp -o $(OBJ_LIBG)/libg.o $(OPT) $(LDF)
-	$(CXX) $(CXXFLAGS) -shared $(OBJ_LIBG)/libg.o $(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o -o $(LIB)/libg.so $(OPT) $(LDF)
+	# create shared library
+	$(CXX) $(CXXFLAGS) -shared $(OBJ_LIBG)/libg.o \
+	$(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o $(OBJ_PREPROCESSOR)/big_random.o \
+	-o $(LIB)/libg.so $(OPT) $(LDF)
 
-compile-sensitive-information: ## Compile Sensitive Information class and auxiliary libraries. Usage: make compile-sensitive-information [ARCH=64]
+
+compile-sensitive-information: ## Compile Sensitive Information class and auxiliary libraries. Usage: make compile-sensitive-information [ARCH=64] [GMP=1]
+	# compile big_random
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/big_random.cpp -o $(OBJ_PREPROCESSOR)/big_random.o $(OPT) $(LDF)
+	# compile SensitiveInformation
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/sensitive_information.cpp -o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OPT) $(LDF)
+	# compile big_random
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/util.cpp -o $(OBJ_PREPROCESSOR)/util.o $(OPT) $(LDF)
 
-compile-static-libg:
+
+compile-static-libg: ## Usage: make compile-static-libg [ARCH=64] [GMP=1]
+	# compile
 	$(CXX) -c $(CXXFLAGS) $(SRC_LIBG)/libg.cpp -o $(OBJ_LIBG)/libg.o $(OPT) $(LDF) -DSTATIC_LIBG
+	# create static library
 	$(AR) $(ARFLAGS) $(LIB)/libg.a $(OBJ_LIBG)/libg.o
 
+
 compile-unumber: ## Compile Unumber library. Usage: make compile-unumber [GMP=1]
+	# compile unumberg
 	$(CXX) -c $(CXXFLAGS) $(SRC_UNUMBER)/unumberg.cpp -o $(OBJ_UNUMBER)/unumberg.o  $(OPT) $(LDF)
+	# compile cunmber_4096
 	$(CC) -c $(CFLAGS) $(SRC_UNUMBER)/cunmber_4096_m.c -o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OPT) $(LDF)
+	# compile ma_invert_m
 	$(CXX) -c $(CXXFLAGS) $(SRC_UNUMBER)/ma_invert_m.cpp -o $(OBJ_UNUMBER)/ma_invert_m.o $(OPT) $(LDF)
 
-cross-compile-gmp:
+
+cross-compile-gmp: ## Download and install GMP. Usage: make cross-compile-gmp [GMP_HOST=or1k-musl-elf] [GMP_INSTALL_DIR=/home/user/e3extensions/build-gmp] [GMP_ASSEMBLY=0] [GMP_SHARED=0]
 	[ -s "gmp-6.1.2.tar.xz" ] || wget https://gmplib.org/download/gmp/gmp-6.1.2.tar.xz
 	[ -s "gmp-6.1.2" ] || tar xf gmp-6.1.2.tar.xz
-	test -s $(INSTALL_GMP_DIR) || mkdir $(INSTALL_GMP_DIR)
-	cd gmp-6.1.2 ; ./configure --host=$(HOST) --enable-cxx --prefix=$(INSTALL_GMP_DIR) $(GMP_PARAMS) ; make ; make install
+	test -s $(GMP_INSTALL_DIR) || mkdir $(GMP_INSTALL_DIR)
+	cd gmp-6.1.2 ; ./configure --host=$(GMP_HOST) --enable-cxx --prefix=$(GMP_INSTALL_DIR) $(GMP_PARAMS) ; make ; make install
 
 
 decrypt: ## Decrypt file. Usage: make decrypt IN=path/to/inputfile OUT=path/to/outputfile CS=path/to/cryptosystem
 	$(BIN)/decrypt $(IN) $(OUT) $(CS)
 
-install: clean compile-unumber compile-preprocessor compile-shared-libg ## Install all basic components
+
+install: clean compile-unumber compile-sensitive-information compile-preprocessor compile-decrypt compile-shared-libg compile-static-libg ## Install all basic components. Usage: make install [ARCH=64] [GMP=1]
+
 
 preprocess: ## Preprocess code. Usage: make preprocessor IN=path/to/code OUT=path/to/output
 	$(BIN)/preprocessor $(IN) $(OUT)
 
+
 run: ## Run program. Usage: make run IN=path/to/file
 	cp -f $(LIB)/libg.so $(FILE_DIR)
 	cd $(FILE_DIR); ./$(FILENAME)
-
 

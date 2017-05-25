@@ -1,3 +1,11 @@
+/*******************************************
+*  DDD   EEEE  BBB   U  U   GG       DEBUG *
+*  D  D  E     B  B  U  U  G               *
+*  D  D  EEE   BBB   U  U  G GG            *
+*  D  D  E     B  B  U  U  G  G            *
+*  DDD   EEEE  BBB    UU    GG   2016-2017 *
+********************************************/
+
 #ifndef FSTREAM_INCLUDED
 	#define FSTREAM_INCLUDED
 	#include <fstream>
@@ -44,8 +52,8 @@ int main()
 	loadCryptosystemParams();
 	SensitiveInformation si(p,q,k);
 
-	Cryptosystem cs("20081","3","23917821","48789966","206697970", libgDir, "libg");
-	SecureInt a("23097693",cs), b("233439219",cs), c[20];
+	Cryptosystem cs("14921","3","68486325","165436341","116806818", libgDir, "libg");
+	SecureInt a("189109890",cs), b("3905038",cs), c[20];
 		
 	c[0] = a+b;	cout << "0\n";
 	c[1] = a-b;	cout << "1\n";
