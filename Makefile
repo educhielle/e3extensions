@@ -192,7 +192,7 @@ compile-unumber: ## Compile Unumber library. Usage: make compile-unumber [GMP=1]
 	$(CXX) -c $(CXXFLAGS) $(SRC_UNUMBER)/ma_invert_m.cpp -o $(OBJ_UNUMBER)/ma_invert_m.o $(OPT) $(LDF)
 
 
-cross-compile-gmp: ## Download and install GMP. Usage: make cross-compile-gmp [GMP_HOST=or1k-musl-elf] [GMP_INSTALL_DIR=/home/user/e3extensions/build-gmp] [GMP_ASSEMBLY=0] [GMP_SHARED=0]
+cross-compile-gmp: ## Download and install GMP. Usage: make cross-compile-gmp [GMP_HOST=or1k-linux-musl] [GMP_INSTALL_DIR=/home/user/e3extensions/build-gmp] [GMP_ASSEMBLY=0] [GMP_SHARED=0]
 	[ -s "gmp-6.1.2.tar.xz" ] || wget https://gmplib.org/download/gmp/gmp-6.1.2.tar.xz
 	[ -s "gmp-6.1.2" ] || tar xf gmp-6.1.2.tar.xz
 	test -s $(GMP_INSTALL_DIR) || mkdir $(GMP_INSTALL_DIR)
