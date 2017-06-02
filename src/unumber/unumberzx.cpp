@@ -107,10 +107,24 @@ void Unumber::divABRQ(const Unumber & d, Unumber * r, Unumber * q) const
 // modify here
 Unumber Unumber::mul(const Unumber & b, const Unumber & m) const
 {
+/*
     Unumber r;
     mpz_mul(r.z.get_mpz_t(), z.get_mpz_t(), b.z.get_mpz_t());
     mpz_mod(r.z.get_mpz_t(), r.z.get_mpz_t(), m.z.get_mpz_t());
     return r;
+*/
+	Unumber r;
+	// gmp import z
+	// gmp import b.z
+	// gmp import m.z
+	// asm load vz[i] to gpr, move gpr to spr
+	// asm load vb[i] to gpr, move gpr to spr
+	// asm load vm[i] to gpr, move gpr to spr
+	// asm modmul
+	// asm move from spr to gpr, store gpr into vr[i]
+	// gmp export vr to r
+	__asm__ ("moma.modmul m3,m0,m1,m2");
+	return r;
 }
 
 unsigned Unumber::Unumber::getbit(int b) const { return mpz_tstbit(z.get_mpz_t(), b); }

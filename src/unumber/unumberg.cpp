@@ -2,10 +2,19 @@
 
 const char * BIGNUM_NAME = "UNUM";
 
-#else
+#else // begin GMP
+
+#ifndef HWACC
 
 #include "cunum_def_4096.hh"
 #include "unumberz.cpp"
+
+#else
+
+#include "cunum_def_4096.hh"
+#include "unumberzx.cpp"
+
+#endif
 
 #if defined __SIZEOF_SIZE_T__
 
@@ -19,6 +28,6 @@ const char * BIGNUM_NAME = "GMP-32b";
 const char * BIGNUM_NAME = "GMP";
 #endif
 
-#endif // GMP
+#endif // end GMP
 
 
