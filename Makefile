@@ -116,9 +116,8 @@ compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output
 	-o $(OUT) $(OPT) $(LDF) $(LIBGFLAGS)
 
 
-compile-all-dynamic: compile-unumber compile-sensitive-information compile-shared-libg compile-e3extensions compile ## Recompile all dependencies and compile code. Usage: make compile-all IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
+compile-all: compile-unumber compile-sensitive-information compile-libg compile-e3extensions compile ## Recompile all dependencies and compile code. Usage: make compile-all IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
 
-compile-all-static: compile-unumber compile-sensitive-information compile-static-libg compile-e3extensions compile ## Recompile all dependencies and compile code. Usage: make compile-all IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
 
 compile-debug:
 	$(CXX) $(CXXFLAGS) $(IN) $(CSFLAGS) \
@@ -128,11 +127,7 @@ compile-debug:
 	-o $(OUT) $(OPT) $(LDF) $(LIBGFLAGS)
 
 
-compile-debug-all: compile-unumber compile-shared-libg compile-static-libg compile-sensitive-information compile-e3extensions compile-debug
-
-compile-debug-all-dynamic: compile-unumber compile-shared-libg compile-sensitive-information compile-e3extensions compile-debug
-
-compile-debug-all-static: compile-unumber compile-static-libg compile-sensitive-information compile-e3extensions compile-debug
+compile-debug-all: compile-unumber compile-libg compile-sensitive-information compile-e3extensions compile-debug
 
 
 compile-decrypt: ## Compile Decrypt. Usage: make compile-decrypt [ARCH=64] [GMP=1]
@@ -155,6 +150,21 @@ compile-e3extensions: ## Compile e3extensions. Usage: make compile-e3extensions 
 	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/secureint.cpp -o $(OBJ_E3EXTENSIONS)/secureint.o $(OPT) $(LDF) $(LIBGFLAGS)
 
 
+compile-libg: ## Usage: make compile-shared-libg [ARCH=64] [GMP=1] [STATIC_LIBG=1]
+ifdef STATIC_LIBG # static libg
+#	compile
+	$(CXX) -c $(CXXFLAGS) $(SRC_LIBG)/libg.cpp -o $(OBJ_LIBG)/libg.o $(OPT) $(LDF) $(LIBGFLAGS)
+#	create static library
+	$(AR) $(ARFLAGS) $(LIB)/libg.a $(OBJ_LIBG)/libg.o		
+else # shared libg
+#	compile
+	$(CXX) $(CXXFLAGS) -c $(SRC_LIBG)/libg.cpp -o $(OBJ_LIBG)/libg.o $(OPT) $(LDF)
+#	create shared library
+	$(CXX) $(CXXFLAGS) -shared $(OBJ_LIBG)/libg.o \
+	$(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o $(OBJ_PREPROCESSOR)/big_random.o \
+	-o $(LIB)/libg.so $(OPT) $(LDF)
+endif
+
 compile-preprocessor: ## Compile Preprocessor. Usage: make compile-preprocessor [ARCH=64] [GMP=1]
 #	compile
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/preprocessor.cpp -o $(OBJ_PREPROCESSOR)/preprocessor.o $(OPT) $(LDF)
@@ -168,15 +178,6 @@ compile-preprocessor: ## Compile Preprocessor. Usage: make compile-preprocessor 
 compile-preprocessor-all: compile-unumber compile-sensitive-information compile-preprocessor ## Recompile all dependencies and compile Preprocessor. Usage: make compile-preprocessor [ARCH=64] [GMP=1]
 
 
-compile-shared-libg: ## Usage: make compile-shared-libg [ARCH=64] [GMP=1]
-#	compile
-	$(CXX) $(CXXFLAGS) -c $(SRC_LIBG)/libg.cpp -o $(OBJ_LIBG)/libg.o $(OPT) $(LDF)
-#	create shared library
-	$(CXX) $(CXXFLAGS) -shared $(OBJ_LIBG)/libg.o \
-	$(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o $(OBJ_PREPROCESSOR)/big_random.o \
-	-o $(LIB)/libg.so $(OPT) $(LDF)
-
-
 compile-sensitive-information: ## Compile Sensitive Information class and auxiliary libraries. Usage: make compile-sensitive-information [ARCH=64] [GMP=1]
 #	compile big_random
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/big_random.cpp -o $(OBJ_PREPROCESSOR)/big_random.o $(OPT) $(LDF)
@@ -184,13 +185,6 @@ compile-sensitive-information: ## Compile Sensitive Information class and auxili
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/sensitive_information.cpp -o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OPT) $(LDF)
 #	compile big_random
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/util.cpp -o $(OBJ_PREPROCESSOR)/util.o $(OPT) $(LDF)
-
-
-compile-static-libg: ## Usage: make compile-static-libg [ARCH=64] [GMP=1]
-#	compile
-	$(CXX) -c $(CXXFLAGS) $(SRC_LIBG)/libg.cpp -o $(OBJ_LIBG)/libg.o $(OPT) $(LDF) -DSTATIC_LIBG
-#	create static library
-	$(AR) $(ARFLAGS) $(LIB)/libg.a $(OBJ_LIBG)/libg.o
 
 
 compile-unumber: ## Compile Unumber library. Usage: make compile-unumber [GMP=1]

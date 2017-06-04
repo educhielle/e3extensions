@@ -123,7 +123,8 @@ Unumber Unumber::mul(const Unumber & b, const Unumber & m) const
 	// asm modmul
 	// asm move from spr to gpr, store gpr into vr[i]
 	// gmp export vr to r
-	__asm__ ("moma.modmul m3,m0,m1,m2");
+	// __asm__ ("moma.modmul m3,m0,m1,m2");
+	__asm__ ("moma.modmul r3");
 	return r;
 }
 
