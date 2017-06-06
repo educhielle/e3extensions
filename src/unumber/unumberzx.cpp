@@ -324,7 +324,8 @@ Unumber Unumber::mul(const Unumber & b, const Unumber & m) const
 	__asm__ __volatile__ ("l.nop");
 	__asm__ __volatile__ ("l.nop");
 	__asm__ __volatile__ ("l.nop");
-	__asm__ ("moma.modmul m3");
+	__asm__ ("moma.modmul m0,m1,m2,m3");
+	__asm__ ("moma.mtmr m0,m1,m4");
 	__asm__ __volatile__ ("l.nop");
 	__asm__ __volatile__ ("l.nop");
 	__asm__ __volatile__ ("l.nop");
