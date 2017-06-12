@@ -40,7 +40,7 @@ class Cryptosystem
 #endif
 	
     /* Constructors */
-    public:	
+    public:
 	Cryptosystem() {}
 	Cryptosystem(const Cryptosystem &);
 	Cryptosystem(const string &, const string &, const string &, const string &, const string &, const string &, const string &);
@@ -63,6 +63,7 @@ class Cryptosystem
 	Unumber getZero() const;
 	Unumber invertibleRandom() const;
 	Unumber reencrypt(const Unumber) const;
+	void prita();
 };
 
 /************************

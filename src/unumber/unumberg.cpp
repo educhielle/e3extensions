@@ -1,3 +1,5 @@
+#include "stats.h"
+
 #ifndef GMP
 
 const char * BIGNUM_NAME = "UNUM";

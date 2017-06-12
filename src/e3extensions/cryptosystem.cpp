@@ -1,3 +1,5 @@
+#include "statsg.h"
+
 /*******************************************
 * New York University in Abu Dhabi (NYUAD) *
 * MoMAlab                                  *
@@ -76,6 +78,7 @@ void Cryptosystem::close()
 /* G function */
 Unumber Cryptosystem::g(Unumber x, Unumber y) const
 {
+	stats_g_counter++;
 	return libg(x, y);
 }
 
@@ -164,3 +167,7 @@ Unumber Cryptosystem::reencrypt(const Unumber x) const
 	return y;
 }
 
+void Cryptosystem::prita()
+{
+	std::cout << "G calls: " << stats_g_counter << "\n";
+}

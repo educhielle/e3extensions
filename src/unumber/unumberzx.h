@@ -88,10 +88,9 @@ class Unumber
         friend bool operator!=(const Unumber & n1, const Unumber & n2)
         { return !(n1 == n2); }
 
-        friend bool operator==(const Unumber & n1, const Unumber & n2)
-        { return n1.z == n2.z; }
+        friend bool operator==(const Unumber & n1, const Unumber & n2);
 
-        void swap(Unumber & n) { mpz_class t = z; z=n.z; n.z=t; }
+        void swap(Unumber & n);
 
         string str(unsigned base=10) const;
         unsigned long long to_ull() const;
@@ -102,6 +101,19 @@ class Unumber
         friend std::istream & operator>>(std::istream & os, Unumber & n);
 
         string raw(unsigned sz) const;
+
+	void prita();
+
+	/* Assembly support */
+    private:
+	static void mfmr2048_m0(unsigned[]);
+	static void mfmr2048_m1(unsigned[]);
+	static void mfmr2048_m2(unsigned[]);
+	static void mfmr2048_m3(unsigned[]);
+	static void mtmr2048_m0(unsigned[]);
+	static void mtmr2048_m1(unsigned[]);
+	static void mtmr2048_m2(unsigned[]);
+	static void mtmr2048_m3(unsigned[]);
 };
 
 

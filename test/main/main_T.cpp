@@ -79,8 +79,8 @@ int main()
 
 	/* SecureInt and Cryptosystem test area */
 
-	Cryptosystem cs("143","3","20434","17088","841", libgDir, "g");
-	SecureInt a("20206",cs), b("6389",cs), c[20];
+	Cryptosystem cs("143","3","9787","12825","14284", libgDir, "g");
+	SecureInt a("11159",cs), b("10190",cs), c[20];
 
 	//aaa = Cryptosystem(__PQ()()()()__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, libgDir, "g");
 	//a = SecureInt(__N(11)__,aaa); b = SecureInt(__N(3)__,aaa);
@@ -124,6 +124,9 @@ int main()
 		cout << i << "\t";
 		printPair(udecC[i], c[i].getX());
 	}
+	++R;
+	R.prita();
+	cs.prita();
 
 	return 0;
 }
