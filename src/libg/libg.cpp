@@ -1,3 +1,5 @@
+#include <iostream>
+
 /*******************************************
 * New York University in Abu Dhabi (NYUAD) *
 * MoMAlab                                  *
@@ -34,6 +36,7 @@ Unumber fkf(3480), _g(430), n(143), n2(20449), xp1(144), xp2(18304);
  * else return the reencryption of y */	
 Unumber libg(Unumber x, Unumber y)
 {
+#ifndef HWACC
 #ifndef STATIC_LIBG
 	if (!loaded) loadCryptosystemParams();
 #endif
@@ -46,6 +49,40 @@ Unumber libg(Unumber x, Unumber y)
 	if (leq(ox)) return zero;
 
 	return _y;
+#else
+	mpz_t mpz_x, mpz_y, mpz_r;
+	mpz_init(mpz_x);
+	mpz_init(mpz_y);
+	mpz_init(mpz_r);
+	mpz_set_str(mpz_x, x.str().c_str(), 10);
+	mpz_set_str(mpz_y, y.str().c_str(), 10);
+
+	unsigned length = 64;
+	size_t *countp;
+	unsigned order = 1;
+	unsigned endianess = 1;
+	unsigned nails = 0;
+	unsigned mA[length], mB[length], mD[length];
+	unsigned size = length * sizeof(unsigned);
+
+	if (mpz_cmp_ui(mpz_x, 0)) mpz_export(mA, countp, order, size, endianess, nails, mpz_x);
+	else for (unsigned i = 0; i < length; i++) mA[i] = 0;
+
+	if (mpz_cmp_ui(mpz_y, 0)) mpz_export(mB, countp, order, size, endianess, nails, mpz_y);
+	else for (unsigned i = 0; i < length; i++) mB[i] = 0;
+
+	Unumber::mtmr2048_m1(mA);
+	Unumber::mtmr2048_m2(mB);
+
+	__asm__ ("moma.g2048 m0,m1,m2");
+
+	Unumber::mfmr2048_m0(mD);
+
+	mpz_import(mpz_r, length, order, sizeof(unsigned), endianess, nails, mD);
+
+	Unumber r (mpz_get_str(NULL, 10, mpz_r));
+	return r;
+#endif
 }
 
 /* Return (x % n) */

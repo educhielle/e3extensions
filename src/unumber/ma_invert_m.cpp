@@ -90,17 +90,6 @@ bool ma::invert(const Unumber & x, const Unumber & mod, Unumber * xm1)
 
 	*xm1 = Unumber (mpz_get_str(NULL, 10, mpz_r));
 	return true;
-/*
-    UC ucx(x);
-    UC ucmod(mod);
-
-    Invertor<UC> iuc(ucx, ucmod);
-
-    if ( !iuc.isOk() ) return false;
-
-    if (xm1) *xm1 = iuc.get().x;
-
-    return true;*/
 #endif
 }
 
