@@ -105,7 +105,7 @@ class Unumber
 	void prita();
 
 	/* Assembly support */
-    private:
+    //private:
 	static void mfmr2048_m0(unsigned[]);
 	static void mfmr2048_m1(unsigned[]);
 	static void mfmr2048_m2(unsigned[]);
