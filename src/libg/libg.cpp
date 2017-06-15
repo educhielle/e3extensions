@@ -30,6 +30,10 @@
 
 Unumber fkf(3480), _g(430), n(143), n2(20449), xp1(144), xp2(18304);
 
+#ifdef FAST_RANDOM
+Unumber rN(0);
+#endif
+
 /* G function */
 /* if the unencryption of x is less or equal zero
  * 	return the encryption of zero
@@ -51,31 +55,12 @@ Unumber libg(Unumber x, Unumber y)
 	return _y;
 #else
 //std::cout << "libg\n";
-	mpz_t mpz_x, mpz_y, mpz_n2, mpz_r;
-	mpz_init(mpz_x);
-	mpz_init(mpz_y);
-	mpz_init(mpz_n2);
-	mpz_init(mpz_r);
-	mpz_set_str(mpz_x, x.str().c_str(), 10);
-	mpz_set_str(mpz_y, y.str().c_str(), 10);
-	mpz_set_str(mpz_n2, n2.str().c_str(), 10);
-
 	unsigned length = 64;
-	size_t *countp;
-	unsigned order = 1;
-	unsigned endianess = 1;
-	unsigned nails = 0;
 	unsigned mA[length], mB[length], mC[length], mD[length];
-	unsigned size = length * sizeof(unsigned);
 
-	if (mpz_cmp_ui(mpz_x, 0)) mpz_export(mA, countp, order, size, endianess, nails, mpz_x);
-	else for (unsigned i = 0; i < length; i++) mA[i] = 0;
-
-	if (mpz_cmp_ui(mpz_y, 0)) mpz_export(mB, countp, order, size, endianess, nails, mpz_y);
-	else for (unsigned i = 0; i < length; i++) mB[i] = 0;
-
-	if (mpz_cmp_ui(mpz_n2, 0)) mpz_export(mC, countp, order, size, endianess, nails, mpz_n2);
-	else for (unsigned i = 0; i < length; i++) mC[i] = 0;
+	Unumber::exportArray(mA, length, x);
+	Unumber::exportArray(mB, length, y);
+	Unumber::exportArray(mC, length, n2);
 
 	Unumber::mter_ye1(mA);
 	Unumber::mter_ye2(mB);
@@ -85,9 +70,7 @@ Unumber libg(Unumber x, Unumber y)
 
 	Unumber::mfer_ye0(mD);
 
-	mpz_import(mpz_r, length, order, sizeof(unsigned), endianess, nails, mD);
-
-	Unumber r (mpz_get_str(NULL, 10, mpz_r));
+	Unumber r = Unumber::importArray(mD, length);
 	return r;
 #endif
 }
@@ -113,8 +96,17 @@ Unumber congruence(Unumber x, const Unumber & n)
 /* Encrypt following equation x = r^N * (1 + N*k*m) % N2 */
 Unumber encrypt(const Unumber & m)
 {
+#ifdef FAST_RANDOM
+	if (rN == 0)
+	{
+		rN = invertibleRandom(2,n);
+		rN.pow(n,n2);
+	}
+	else rN.mul(rN,n2);
+#else
 	Unumber rN = invertibleRandom(2,n);
 	rN.pow(n, n2); //r^N
+#endif
 
 	Unumber gm = _g;
 	// gm.pow(congruence(m, n), n2); // g^m % N2 -- replaced by the next line
@@ -183,9 +175,21 @@ void loadCryptosystemParams()
 /* Following the equation x' = (r^N * x) % N2 */
 Unumber reencrypt(const Unumber & x)
 {
+#ifdef FAST_RANDOM
+	if (rN == 0)
+	{
+		rN = invertibleRandom(2,n);
+		rN.pow(n,n2);
+	}
+	else rN.mul(rN,n2);
+
+	Unumber y = rN.mul(x,n2);
+	return y;
+#else
 	Unumber y = invertibleRandom(2,n);
 	y.pow(n,n2);
 	y = y.mul(x,n2);
 	return y;
+#endif
 }
 

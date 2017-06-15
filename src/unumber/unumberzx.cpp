@@ -49,26 +49,26 @@ void Unumber::pos()
 Unumber::Unumber(unsigned long long x): z((unsigned long)(x)) {}
 Unumber::Unumber(): z(0) {}
 
-void Unumber::operator*=(const Unumber & n) { z *= n.z; stats_operatorMul++; }
-void Unumber::operator+=(const Unumber & n) { z += n.z; pos(); stats_operatorAdd++; }
-void Unumber::operator-=(const Unumber & n) { z -= n.z; neg(); stats_operatorSub++; }
-void Unumber::operator%=(const Unumber & n) { z %= n.z; stats_operatorMod++; }
-void Unumber::operator/=(const Unumber & n) { z /= n.z; stats_operatorDiv++; }
+void Unumber::operator*=(const Unumber & n) { z *= n.z; /*stats_operatorMul++;*/ }
+void Unumber::operator+=(const Unumber & n) { z += n.z; pos(); /*stats_operatorAdd++;*/ }
+void Unumber::operator-=(const Unumber & n) { z -= n.z; neg(); /*stats_operatorSub++;*/ }
+void Unumber::operator%=(const Unumber & n) { z %= n.z;/* stats_operatorMod++;*/ }
+void Unumber::operator/=(const Unumber & n) { z /= n.z; /*stats_operatorDiv++;*/ }
 
-Unumber & Unumber::operator++() { stats_operatorInc++; z += 1; return *this; }
-Unumber & Unumber::operator--() { stats_operatorDec++; z -= 1; return *this; }
+Unumber & Unumber::operator++() { /*stats_operatorInc++;*/ z += 1; return *this; }
+Unumber & Unumber::operator--() {/* stats_operatorDec++;*/ z -= 1; return *this; }
 
-bool Unumber::iszero() const { stats_iszero++; return z == 0; }
+bool Unumber::iszero() const { /*stats_iszero++;*/ return z == 0; }
 
 string Unumber::str(unsigned base) const { return z.get_str(base); }
 
 unsigned long long Unumber::to_ull() const { return z.get_ui(); }
 
-void Unumber::operator<<=(int b) { mpz_mul_2exp (z.get_mpz_t(), z.get_mpz_t(), b); stats_operatorShiftLeft++; }
-void Unumber::operator>>=(int b) { mpz_div_2exp (z.get_mpz_t(), z.get_mpz_t(), b); stats_operatorShiftRight++;}
+void Unumber::operator<<=(int b) { mpz_mul_2exp (z.get_mpz_t(), z.get_mpz_t(), b); /*stats_operatorShiftLeft++;*/ }
+void Unumber::operator>>=(int b) { mpz_div_2exp (z.get_mpz_t(), z.get_mpz_t(), b); /*stats_operatorShiftRight++;*/ }
 
-bool operator<(const Unumber & n1, const Unumber & n2) { stats_operatorLess++; return n1.z < n2.z; }
-bool operator==(const Unumber & n1, const Unumber & n2) { stats_operatorEqual++; return n1.z == n2.z; }
+bool operator<(const Unumber & n1, const Unumber & n2) { /*stats_operatorLess++;*/ return n1.z < n2.z; }
+bool operator==(const Unumber & n1, const Unumber & n2) { /*stats_operatorEqual++;*/ return n1.z == n2.z; }
 
 Unumber::Unumber(const string & s, Unumber::StringType st)
 {
@@ -89,7 +89,7 @@ Unumber::Unumber(const Unumber & n)
 
 Unumber Unumber::div(const Unumber & d, Unumber & q) const
 {
-stats_div++;
+/*stats_div++;*/
     Unumber r;
     mpz_fdiv_qr (q.z.get_mpz_t(), r.z.get_mpz_t(), z.get_mpz_t(), d.z.get_mpz_t());
     return r;
@@ -97,7 +97,7 @@ stats_div++;
 
 void Unumber::divABRQ(const Unumber & d, Unumber * r, Unumber * q) const
 {
-stats_divABRQ++;
+/*stats_divABRQ++;*/
     Unumber m;
 
     if (q)
@@ -110,7 +110,7 @@ stats_divABRQ++;
 
 Unumber Unumber::mul(const Unumber & b, const Unumber & m) const
 {
-stats_mul++;
+/*stats_mul++;*/
 //std::cout << "mul\n";
 	Unumber r;
 /*
@@ -175,7 +175,7 @@ std::istream & operator>>(std::istream & is, Unumber & n)
 
 void Unumber::pow(Unumber e, const Unumber & mod)
 {
-stats_pow++;
+/*stats_pow++;*/
 //std::cout << "pow\n";
 //	mpz_powm(z.get_mpz_t(), z.get_mpz_t(), e.z.get_mpz_t(), mod.z.get_mpz_t());
 
@@ -207,8 +207,24 @@ stats_pow++;
 	mpz_import(z.get_mpz_t(), length, order, sizeof(unsigned), endianess, nails, mD);
 }
 
-void Unumber::swap(Unumber & n) { stats_swap++; mpz_class t = z; z=n.z; n.z=t; }
+void Unumber::swap(Unumber & n) { /*stats_swap++;*/ mpz_class t = z; z=n.z; n.z=t; }
 
+void Unumber::exportArray(unsigned arr[], unsigned length, Unumber u)
+{
+	size_t *countp;
+	unsigned size = length * sizeof(unsigned);
+	if (mpz_cmp_ui(u.z.get_mpz_t(), 0)) mpz_export(arr, countp, ORDER, size, ENDIANESS, NAILS, u.z.get_mpz_t());
+	else for (unsigned i = 0; i < length; i++) arr[i] = 0;
+}
+
+Unumber Unumber::importArray(unsigned arr[], unsigned length)
+{
+	Unumber r;
+	mpz_import(r.z.get_mpz_t(), length, ORDER, sizeof(unsigned), ENDIANESS, NAILS, arr);
+	return r;
+}
+
+/*
 void Unumber::prita()
 {
 	std::cout << "---\n";
@@ -234,4 +250,4 @@ void Unumber::prita()
 
 	std::cout << "---\n";
 }
-
+*/

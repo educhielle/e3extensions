@@ -70,6 +70,11 @@ ifeq ($(HWACC),1)
 OPT := -DHWACC $(OPT)
 endif
 
+# Fast Random
+ifeq ($(FAST_RANDOM),1)
+OPT := -DFAST_RANDOM $(OPT)
+endif
+
 # Define if libg is static or dynamic
 ifdef STATIC_LIBG
 CSFLAGS := $(OBJ_LIBG)/libg.o $(CSFLAGS)

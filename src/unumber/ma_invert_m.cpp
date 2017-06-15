@@ -1,4 +1,4 @@
-#include <iostream>
+//#include <iostream>
 
 #include "unumberg.h"
 
@@ -59,26 +59,11 @@ bool ma::invert(const Unumber & x, const Unumber & mod, Unumber * xm1)
     return true;
 #else
 //std::cout << "ma::invert\n";
-	mpz_t mpz_x, mpz_y, mpz_r;
-	mpz_init(mpz_x);
-	mpz_init(mpz_y);
-	mpz_init(mpz_r);
-	mpz_set_str(mpz_x, x.str().c_str(), 10);
-	mpz_set_str(mpz_y, mod.str().c_str(), 10);
-
 	unsigned length = 64;
-	size_t *countp;
-	unsigned order = 1;
-	unsigned endianess = 1;
-	unsigned nails = 0;
 	unsigned mA[length], mB[length], mD[length];
-	unsigned size = length * sizeof(unsigned);
 
-	if (mpz_cmp_ui(mpz_x, 0)) mpz_export(mA, countp, order, size, endianess, nails, mpz_x);
-	else for (unsigned i = 0; i < length; i++) mA[i] = 0;
-
-	if (mpz_cmp_ui(mpz_y, 0)) mpz_export(mB, countp, order, size, endianess, nails, mpz_y);
-	else for (unsigned i = 0; i < length; i++) mB[i] = 0;
+	Unumber::exportArray(mA, length, x);
+	Unumber::exportArray(mB, length, mod);
 
 	Unumber::mter_ye1(mA);
 	Unumber::mter_ye2(mB);
@@ -87,9 +72,7 @@ bool ma::invert(const Unumber & x, const Unumber & mod, Unumber * xm1)
 
 	Unumber::mfer_ye0(mD);
 
-	mpz_import(mpz_r, length, order, sizeof(unsigned), endianess, nails, mD);
-
-	*xm1 = Unumber (mpz_get_str(NULL, 10, mpz_r));
+	*xm1 = Unumber::importArray(mD, length);
 	return true;
 #endif
 }
@@ -105,26 +88,11 @@ Unumber ma::gcd(const Unumber & x, const Unumber & y)
     return iuc.gcd().x;
 #else
 //std::cout << "ma::gcd\n";
-	mpz_t mpz_x, mpz_y, mpz_r;
-	mpz_init(mpz_x);
-	mpz_init(mpz_y);
-	mpz_init(mpz_r);
-	mpz_set_str(mpz_x, x.str().c_str(), 10);
-	mpz_set_str(mpz_y, y.str().c_str(), 10);
-
 	unsigned length = 64;
-	size_t *countp;
-	unsigned order = 1;
-	unsigned endianess = 1;
-	unsigned nails = 0;
 	unsigned mA[length], mB[length], mD[length];
-	unsigned size = length * sizeof(unsigned);
 
-	if (mpz_cmp_ui(mpz_x, 0)) mpz_export(mA, countp, order, size, endianess, nails, mpz_x);
-	else for (unsigned i = 0; i < length; i++) mA[i] = 0;
-
-	if (mpz_cmp_ui(mpz_y, 0)) mpz_export(mB, countp, order, size, endianess, nails, mpz_y);
-	else for (unsigned i = 0; i < length; i++) mB[i] = 0;
+	Unumber::exportArray(mA, length, x);
+	Unumber::exportArray(mB, length, y);
 
 	Unumber::mter_ye1(mA);
 	Unumber::mter_ye2(mB);
@@ -133,9 +101,7 @@ Unumber ma::gcd(const Unumber & x, const Unumber & y)
 
 	Unumber::mfer_ye0(mD);
 
-	mpz_import(mpz_r, length, order, sizeof(unsigned), endianess, nails, mD);
-
-	Unumber r (mpz_get_str(NULL, 10, mpz_r));
+	Unumber r = Unumber::importArray(mD, length);
 	return r;
 #endif
 }

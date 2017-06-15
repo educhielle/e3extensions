@@ -124,9 +124,9 @@ int main()
 		cout << i << "\t";
 		printPair(udecC[i], c[i].getX());
 	}
-	++R;
-	R.prita();
-	cs.prita();
+
+	//R.prita();
+	//cs.prita();
 
 	return 0;
 }

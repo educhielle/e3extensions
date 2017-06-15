@@ -11,6 +11,10 @@
 #include <stddef.h>
 #include <gmpxx.h>
 
+#define ORDER 1
+#define ENDIANESS 1
+#define NAILS 0
+
 using std::string;
 
 class Unumber
@@ -102,10 +106,12 @@ class Unumber
 
         string raw(unsigned sz) const;
 
-	void prita();
+	//void prita();
 
 	/* Assembly support */
-    //private:
+	static void exportArray(unsigned[], unsigned, Unumber);
+	static Unumber importArray(unsigned[], unsigned);
+
 	static void mfer_ye0(unsigned[]);
 	static void mfer_ye1(unsigned[]);
 	static void mfer_ye2(unsigned[]);

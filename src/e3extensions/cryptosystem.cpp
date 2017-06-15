@@ -1,4 +1,4 @@
-#include "statsg.h"
+//#include "statsg.h"
 
 /*******************************************
 * New York University in Abu Dhabi (NYUAD) *
@@ -18,6 +18,11 @@
 	#include INCLUDE_FILE(STATIC_LIBG) */
 #endif
 
+#ifdef FAST_RANDOM
+unsigned Cryptosystem::idCount = 0;
+Unumber Cryptosystem::rndN[CS_LIMIT];
+#endif
+
 /*****************************
  *     PRIVATE FUNCTIONS     *
  *****************************/
@@ -33,7 +38,13 @@ void Cryptosystem::init()
 	Unumber x = n - 1;
 	while (x != 0) { x >>= 1; high_bit_posN++; }
 	high_bit_posN--;
-
+#ifdef FAST_RANDOM
+	if (id == 0)
+	{
+		idCount = (idCount + 1) % CS_LIMIT;
+		id = idCount;
+	}
+#endif
 	/*x = n2;
 	while (x != 0) { x >>= 1; high_bit_posN2++; }
 	high_bit_posN2--;*/
@@ -78,7 +89,7 @@ void Cryptosystem::close()
 /* G function */
 Unumber Cryptosystem::g(Unumber x, Unumber y) const
 {
-	stats_g_counter++;
+	/*stats_g_counter++;*/
 	return libg(x, y);
 }
 
@@ -161,13 +172,30 @@ Unumber Cryptosystem::invertibleRandom() const
 /* Following the equation x' = (r^N * x) % N2 */
 Unumber Cryptosystem::reencrypt(const Unumber x) const
 {
+#ifdef FAST_RANDOM
+	if (rndN[id] == 0)
+	{
+		rndN[id] = invertibleRandom();
+		rndN[id].pow(n,n2);
+	}
+	else
+	{
+		rndN[id].mul(rndN[id],n2);
+	}
+
+	Unumber y = rndN[id].mul(x,n2);
+	return y;
+#else
 	Unumber y = invertibleRandom();
 	y.pow(n,n2);
 	y = y.mul(x,n2);
 	return y;
+#endif
 }
-
+/*
 void Cryptosystem::prita()
 {
 	std::cout << "G calls: " << stats_g_counter << "\n";
 }
+*/
+
