@@ -111,6 +111,7 @@ stats_divABRQ++;
 Unumber Unumber::mul(const Unumber & b, const Unumber & m) const
 {
 stats_mul++;
+//std::cout << "mul\n";
 	Unumber r;
 /*
 	mpz_mul(r.z.get_mpz_t(), z.get_mpz_t(), b.z.get_mpz_t());
@@ -134,13 +135,13 @@ stats_mul++;
 		if (mpz_cmp_ui(m.z.get_mpz_t(), 0)) mpz_export(mC, countp, order, size, endianess, nails, m.z.get_mpz_t());
 		else for (unsigned i = 0; i < length; i++) mC[i] = 0;
 
-		mtmr2048_m1(mA);
-		mtmr2048_m2(mB);
-		mtmr2048_m3(mC);
+		mter_ye1(mA);
+		mter_ye2(mB);
+		mter_ye3(mC);
 
-		__asm__ ("moma.modmul2048 m0,m1,m2,m3");
+		__asm__ ("le3.modmul ye0,ye1,ye2,ye3");
 
-		mfmr2048_m0(mD);
+		mfer_ye0(mD);
 
 		mpz_import(r.z.get_mpz_t(), length, order, sizeof(unsigned), endianess, nails, mD);
 	}
@@ -175,7 +176,7 @@ std::istream & operator>>(std::istream & is, Unumber & n)
 void Unumber::pow(Unumber e, const Unumber & mod)
 {
 stats_pow++;
-
+//std::cout << "pow\n";
 //	mpz_powm(z.get_mpz_t(), z.get_mpz_t(), e.z.get_mpz_t(), mod.z.get_mpz_t());
 
 	unsigned length = 64;
@@ -195,13 +196,13 @@ stats_pow++;
 	if (mpz_cmp_ui(mod.z.get_mpz_t(), 0)) mpz_export(mC, countp, order, size, endianess, nails, mod.z.get_mpz_t());
 	else for (unsigned i = 0; i < length; i++) mC[i] = 0;
 
-	mtmr2048_m1(mA);
-	mtmr2048_m2(mB);
-	mtmr2048_m3(mC);
+	mter_ye1(mA);
+	mter_ye2(mB);
+	mter_ye3(mC);
 
-	__asm__ ("moma.modexp2048 m0,m1,m2,m3");
+	__asm__ ("le3.modexp ye0,ye1,ye2,ye3");
 
-	mfmr2048_m0(mD);
+	mfer_ye0(mD);
 
 	mpz_import(z.get_mpz_t(), length, order, sizeof(unsigned), endianess, nails, mD);
 }

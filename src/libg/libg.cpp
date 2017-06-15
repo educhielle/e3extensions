@@ -50,19 +50,22 @@ Unumber libg(Unumber x, Unumber y)
 
 	return _y;
 #else
-	mpz_t mpz_x, mpz_y, mpz_r;
+//std::cout << "libg\n";
+	mpz_t mpz_x, mpz_y, mpz_n2, mpz_r;
 	mpz_init(mpz_x);
 	mpz_init(mpz_y);
+	mpz_init(mpz_n2);
 	mpz_init(mpz_r);
 	mpz_set_str(mpz_x, x.str().c_str(), 10);
 	mpz_set_str(mpz_y, y.str().c_str(), 10);
+	mpz_set_str(mpz_n2, n2.str().c_str(), 10);
 
 	unsigned length = 64;
 	size_t *countp;
 	unsigned order = 1;
 	unsigned endianess = 1;
 	unsigned nails = 0;
-	unsigned mA[length], mB[length], mD[length];
+	unsigned mA[length], mB[length], mC[length], mD[length];
 	unsigned size = length * sizeof(unsigned);
 
 	if (mpz_cmp_ui(mpz_x, 0)) mpz_export(mA, countp, order, size, endianess, nails, mpz_x);
@@ -71,12 +74,16 @@ Unumber libg(Unumber x, Unumber y)
 	if (mpz_cmp_ui(mpz_y, 0)) mpz_export(mB, countp, order, size, endianess, nails, mpz_y);
 	else for (unsigned i = 0; i < length; i++) mB[i] = 0;
 
-	Unumber::mtmr2048_m1(mA);
-	Unumber::mtmr2048_m2(mB);
+	if (mpz_cmp_ui(mpz_n2, 0)) mpz_export(mC, countp, order, size, endianess, nails, mpz_n2);
+	else for (unsigned i = 0; i < length; i++) mC[i] = 0;
 
-	__asm__ ("moma.g2048 m0,m1,m2");
+	Unumber::mter_ye1(mA);
+	Unumber::mter_ye2(mB);
+	Unumber::mter_ye3(mC);
 
-	Unumber::mfmr2048_m0(mD);
+	__asm__ ("le3.gfun ye0,ye1,ye2,ye3");
+
+	Unumber::mfer_ye0(mD);
 
 	mpz_import(mpz_r, length, order, sizeof(unsigned), endianess, nails, mD);
 

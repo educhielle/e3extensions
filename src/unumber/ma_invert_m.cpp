@@ -58,6 +58,7 @@ bool ma::invert(const Unumber & x, const Unumber & mod, Unumber * xm1)
 
     return true;
 #else
+//std::cout << "ma::invert\n";
 	mpz_t mpz_x, mpz_y, mpz_r;
 	mpz_init(mpz_x);
 	mpz_init(mpz_y);
@@ -79,12 +80,12 @@ bool ma::invert(const Unumber & x, const Unumber & mod, Unumber * xm1)
 	if (mpz_cmp_ui(mpz_y, 0)) mpz_export(mB, countp, order, size, endianess, nails, mpz_y);
 	else for (unsigned i = 0; i < length; i++) mB[i] = 0;
 
-	Unumber::mtmr2048_m1(mA);
-	Unumber::mtmr2048_m2(mB);
+	Unumber::mter_ye1(mA);
+	Unumber::mter_ye2(mB);
 
-	__asm__ ("moma.inv2048 m0,m1,m2");
+	__asm__ ("le3.inv ye0,ye1,ye2");
 
-	Unumber::mfmr2048_m0(mD);
+	Unumber::mfer_ye0(mD);
 
 	mpz_import(mpz_r, length, order, sizeof(unsigned), endianess, nails, mD);
 
@@ -103,6 +104,7 @@ Unumber ma::gcd(const Unumber & x, const Unumber & y)
 
     return iuc.gcd().x;
 #else
+//std::cout << "ma::gcd\n";
 	mpz_t mpz_x, mpz_y, mpz_r;
 	mpz_init(mpz_x);
 	mpz_init(mpz_y);
@@ -124,12 +126,12 @@ Unumber ma::gcd(const Unumber & x, const Unumber & y)
 	if (mpz_cmp_ui(mpz_y, 0)) mpz_export(mB, countp, order, size, endianess, nails, mpz_y);
 	else for (unsigned i = 0; i < length; i++) mB[i] = 0;
 
-	Unumber::mtmr2048_m1(mA);
-	Unumber::mtmr2048_m2(mB);
+	Unumber::mter_ye1(mA);
+	Unumber::mter_ye2(mB);
 
-	__asm__ ("moma.gcd2048 m0,m1,m2");
+	__asm__ ("le3.gcd ye0,ye1,ye2");
 
-	Unumber::mfmr2048_m0(mD);
+	Unumber::mfer_ye0(mD);
 
 	mpz_import(mpz_r, length, order, sizeof(unsigned), endianess, nails, mD);
 

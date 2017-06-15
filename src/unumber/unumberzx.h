@@ -106,14 +106,14 @@ class Unumber
 
 	/* Assembly support */
     //private:
-	static void mfmr2048_m0(unsigned[]);
-	static void mfmr2048_m1(unsigned[]);
-	static void mfmr2048_m2(unsigned[]);
-	static void mfmr2048_m3(unsigned[]);
-	static void mtmr2048_m0(unsigned[]);
-	static void mtmr2048_m1(unsigned[]);
-	static void mtmr2048_m2(unsigned[]);
-	static void mtmr2048_m3(unsigned[]);
+	static void mfer_ye0(unsigned[]);
+	static void mfer_ye1(unsigned[]);
+	static void mfer_ye2(unsigned[]);
+	static void mfer_ye3(unsigned[]);
+	static void mter_ye0(unsigned[]);
+	static void mter_ye1(unsigned[]);
+	static void mter_ye2(unsigned[]);
+	static void mter_ye3(unsigned[]);
 };
 
 
