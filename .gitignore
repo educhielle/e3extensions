@@ -5,4 +5,5 @@ obj/
 CS.txt
 *.la
 *.so
+*.disasm
 
