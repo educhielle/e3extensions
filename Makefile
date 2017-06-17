@@ -136,6 +136,8 @@ compile-debug-all: compile-unumber compile-libg compile-sensitive-information co
 
 
 compile-decrypt: ## Compile Decrypt. Usage: make compile-decrypt [ARCH=64] [GMP=1]
+#	check dir
+	[ -s "$(BIN)" ] || mkdir -p $(BIN)
 #	compile
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/decrypt.cpp -o $(OBJ_PREPROCESSOR)/decrypt.o $(OPT) $(LDF)
 #	link
@@ -149,6 +151,8 @@ compile-decrypt-all: compile-unumber compile-sensitive-information compile-decry
 
 
 compile-e3extensions: ## Compile e3extensions. Usage: make compile-e3extensions [STATIC_LIBG=path/to/libg] [ARCH=64] [GMP=1]
+#	check dir
+	[ -s "$(OBJ_E3EXTENSIONS)" ] || mkdir -p $(OBJ_E3EXTENSIONS)
 #	compile Cryptosystem
 	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/cryptosystem.cpp -o $(OBJ_E3EXTENSIONS)/cryptosystem.o $(OPT) $(LDF) $(LIBGFLAGS)
 #	compile SecureInt
@@ -156,6 +160,9 @@ compile-e3extensions: ## Compile e3extensions. Usage: make compile-e3extensions 
 
 
 compile-libg: ## Usage: make compile-shared-libg [ARCH=64] [GMP=1] [STATIC_LIBG=1]
+#	check dir
+	[ -s "$(OBJ_LIBG)" ] || mkdir -p $(OBJ_LIBG)
+	[ -s "$(LIB)" ] || mkdir -p $(LIB)
 ifdef STATIC_LIBG # static libg
 #	compile
 	$(CXX) -c $(CXXFLAGS) $(SRC_LIBG)/libg.cpp -o $(OBJ_LIBG)/libg.o $(OPT) $(LDF) $(LIBGFLAGS)
@@ -171,6 +178,8 @@ else # shared libg
 endif
 
 compile-preprocessor: ## Compile Preprocessor. Usage: make compile-preprocessor [ARCH=64] [GMP=1]
+#	check dir
+	[ -s "$(BIN)" ] || mkdir -p $(BIN)
 #	compile
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/preprocessor.cpp -o $(OBJ_PREPROCESSOR)/preprocessor.o $(OPT) $(LDF)
 #	link
@@ -184,6 +193,8 @@ compile-preprocessor-all: compile-unumber compile-sensitive-information compile-
 
 
 compile-sensitive-information: ## Compile Sensitive Information class and auxiliary libraries. Usage: make compile-sensitive-information [ARCH=64] [GMP=1]
+#	check dir
+	[ -s "$(OBJ_PREPROCESSOR)" ] || mkdir -p $(OBJ_PREPROCESSOR)
 #	compile big_random
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/big_random.cpp -o $(OBJ_PREPROCESSOR)/big_random.o $(OPT) $(LDF)
 #	compile SensitiveInformation
@@ -193,6 +204,8 @@ compile-sensitive-information: ## Compile Sensitive Information class and auxili
 
 
 compile-unumber: ## Compile Unumber library. Usage: make compile-unumber [GMP=1]
+#	check dir
+	[ -s "$(OBJ_UNUMBER)" ] || mkdir -p $(OBJ_UNUMBER)
 #	compile unumberg
 	$(CXX) -c $(CXXFLAGS) $(SRC_UNUMBER)/unumberg.cpp -o $(OBJ_UNUMBER)/unumberg.o  $(OPT) $(LDF)
 #	compile cunmber_4096

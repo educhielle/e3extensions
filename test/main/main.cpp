@@ -48,7 +48,7 @@ int main()
 	//SensitiveInformation si ("104947","105613","3","2");
 	cout << "Sensitive Information\n";
 	SensitiveInformation si ("13","11","3","2");
-	
+	cout << "Unumber\n";
 	Unumber udecA(11), udecB(3);
 
 	cout << "Encrypting...\n";

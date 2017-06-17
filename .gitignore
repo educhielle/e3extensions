@@ -1,0 +1,7 @@
+bin
+lib
+obj
+test/**/*.elf
+test/**/CS.txt
+test/**/*.la
+test/**/*.so

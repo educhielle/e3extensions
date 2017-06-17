@@ -1,4 +1,4 @@
-//#include <iostream>
+#include <iostream>
 
 #include "unumberg.h"
 
@@ -47,15 +47,16 @@ typedef UnumberContractor UC;
 bool ma::invert(const Unumber & x, const Unumber & mod, Unumber * xm1)
 {
 #ifndef HWACC
+	std::cout << "ma::invert 0\n";
     UC ucx(x);
     UC ucmod(mod);
-
+	std::cout << "ma::invert 1\n";
     Invertor<UC> iuc(ucx, ucmod);
-
+	std::cout << "ma::invert 2\n";
     if ( !iuc.isOk() ) return false;
-
+	std::cout << "ma::invert 3\n";
     if (xm1) *xm1 = iuc.get().x;
-
+	std::cout << "ma::invert 4\n";
     return true;
 #else
 //std::cout << "ma::invert\n";

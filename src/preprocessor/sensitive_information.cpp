@@ -98,6 +98,7 @@ Unumber SensitiveInformation::congruence(Unumber x, const Unumber & n)
 
 void SensitiveInformation::init()
 {
+	std::cout << "SensitiveInformation::init 0\n";
 	rndN = 0;
 	sneak = 1;
 
@@ -107,7 +108,7 @@ void SensitiveInformation::init()
 	
 	/* initialize high_bit_posN and high_bit_posN2 */
 	a2 = b2 = high_bit_posN = high_bit_posN2 = 0;
-
+	std::cout << "SensitiveInformation::init 1\n";
 	Unumber x = n - 1;
 	while (x != 0) { x >>= 1; high_bit_posN++; }
 	high_bit_posN--;
@@ -118,49 +119,58 @@ void SensitiveInformation::init()
 	x = n2;
 	while (x != 0) { x >>= 1; high_bit_posN2++; }
 	high_bit_posN2--;
-
+	std::cout << "SensitiveInformation::init 2\n";
 	unsigned nbit = 0;
 	while ((n >> ++nbit) != 1);
 	a2 = (Unumber(1) << nbit);
-	
+	std::cout << "SensitiveInformation::init 3\n";
 	/* define xp1 and xp2 for Leq test */
 	Unumber tpmax = (Unumber(1) << high_bit_posN) - 1;
 	xp1 = n + 1;
 	xp2 = n * (tpmax + 1);
-
+	std::cout << "SensitiveInformation::init 4\n";
 	/* what does congruence do? */
 	rnd = (rnd.iszero() ? invertibleRandom(2,n) : congruence(rnd, n));
 	k = congruence(k, n);
 	rndN = rnd;
 	rndN.pow(n, n2);
-
+	std::cout << "SensitiveInformation::init 5\n";
 	phi = (p - 1) * (q - 1);
 	// (p - 1) * (q - 1) * (z - 1);
 
 	//skipped is not prime test
 
 	bool ik;
-
+	std::cout << "SensitiveInformation::init 6\n";
 	if (!rnd.iszero())
 	{
+		std::cout << "SensitiveInformation::init 6.1\n";
 		ik = ma::invert(rndN, n, &phim1);
+		std::cout << "SensitiveInformation::init 6.2\n";
 		if (!ik) throw "Cannot invert seed: " + rnd.str() + " ^N = " + rndN.str();
 	}
 
+	std::cout << "SensitiveInformation::init 6.3\n";
 	ik = ma::invert(phi, n, &phim1); // inverting by N, not N2
+	std::cout << "SensitiveInformation::init 6.4\n";
 	if ( !ik ) throw "Cannot invert phi";
 
+	std::cout << "SensitiveInformation::init 6.5\n";
 	ik = ma::invert(k, n, &km1);  // inverting by N, not N2
+	std::cout << "SensitiveInformation::init 6.6\n";
 	if ( !ik ) throw "Cannot invert k";
 
+	std::cout << "SensitiveInformation::init 6.7\n";
 	g = 1 + k * n;
 
+	std::cout << "SensitiveInformation::init 6.8\n";
 	ik = ma::invert(n - phi, phi, &Nm1); // inverting N by phi
+	std::cout << "SensitiveInformation::init 6.9\n";
 	if ( !ik ) throw "Cannot invert N";
 	p1Nk1N = phim1.mul(km1, n); // modulus is N, not N2
 
 	//skipped - bitguard
-
+	std::cout << "SensitiveInformation::init 7\n";
 	/* Beta */
 	Unumber m = n - a2;
 	if (m.iszero())
@@ -178,6 +188,7 @@ void SensitiveInformation::init()
 		if (b2 * 2 < a2) {}
 		else setB2Beta(nbit - 1);
 	}
+	std::cout << "SensitiveInformation::init 8\n";
 }
 
 /* Set ~2^Beta */
