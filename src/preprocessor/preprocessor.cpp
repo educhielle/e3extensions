@@ -18,11 +18,20 @@ using namespace std;
 
 #define NUMBER_OF_CS_PARAMETERS 7
 #define NUMBER_OF_SI_PARAMETERS 2
-#define PRIME_FROM "11"
-#define PRIME_TO "1000"
-#define PRIME_MIN_EXP 511
-#define PRIME_MAX_EXP 112
 
+//#define PRIME_FROM "11"
+//#define PRIME_TO "1000"
+/*
+#ifndef KEY_SIZE
+	#define KEY_SIZE 1024
+#endif
+
+#define PRIME_MAX_EXP KEY_SIZE / 2
+#define PRIME_MIN_EXP PRIME_MIN_EXP - 1 */
+
+int keySize = 1024;
+int primeMaxExp = keySize / 2;
+int primeMinExp = primeMaxExp - 1;
 vector<string> csList;
 vector<SensitiveInformation> sinfoList;
 SensitiveInformation sinfo;
@@ -46,6 +55,14 @@ int main(int argc, char *argv[])
 
 	string filename = argv[1];
 	string filenameOut = argv[2];
+
+	if (argc == 4)
+	{
+		keySize = (int) (Unumber(argv[3]).to_ull());
+		primeMaxExp = keySize / 2;
+		primeMinExp = primeMaxExp - 1;
+		
+	}
 
 	int lastSlash = filename.find_last_of("/\\");
 	string filenameCS = filename.substr(0,lastSlash+1) + "CS.txt";
@@ -327,9 +344,11 @@ SensitiveInformation mountSensitiveInformation(string & pqkrnd)
 		//Unumber primeFrom (PRIME_FROM);
 		//Unumber primeTo (PRIME_TO);
 		Unumber primeFrom(1);
-		primeFrom <<= PRIME_MIN_EXP;
+		primeFrom <<= primeMinExp;
 		Unumber primeTo(1);
-		primeTo <<= PRIME_MAX_EXP;
+		primeTo <<= primeMaxExp;
+
+		cout << "primeFrom: " << primeFrom.str() << "\tprimeTo: " << primeTo.str() << "\n";
 
 		Unumber p   = (  strP.empty() ? prime(primeFrom, primeTo) : Unumber(strP));
 		Unumber q   = (  strQ.empty() ? prime(primeFrom, primeTo) : Unumber(strQ));
