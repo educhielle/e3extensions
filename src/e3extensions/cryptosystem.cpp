@@ -172,6 +172,7 @@ Unumber Cryptosystem::invertibleRandom() const
 /* Following the equation x' = (r^N * x) % N2 */
 Unumber Cryptosystem::reencrypt(const Unumber x) const
 {
+std::cout << "CS::reencrypt i\n";
 #ifdef FAST_RANDOM
 	if (rndN[id] == 0)
 	{
@@ -184,13 +185,13 @@ Unumber Cryptosystem::reencrypt(const Unumber x) const
 	}
 
 	Unumber y = rndN[id].mul(x,n2);
-	return y;
 #else
 	Unumber y = invertibleRandom();
 	y.pow(n,n2);
 	y = y.mul(x,n2);
-	return y;
 #endif
+std::cout << "CS::reencrypt f\n";
+	return y;
 }
 /*
 void Cryptosystem::prita()

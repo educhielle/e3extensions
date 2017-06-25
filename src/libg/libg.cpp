@@ -96,6 +96,7 @@ Unumber congruence(Unumber x, const Unumber & n)
 /* Encrypt following equation x = r^N * (1 + N*k*m) % N2 */
 Unumber encrypt(const Unumber & m)
 {
+std::cout << "encrypt i\n";
 #ifdef FAST_RANDOM
 	if (rN == 0)
 	{
@@ -113,7 +114,7 @@ Unumber encrypt(const Unumber & m)
 	gm = (congruence(m, n) * (gm - 1) + 1) % n2; // (1 + N*k*m) % N2
 
 	Unumber x = rN.mul(gm, n2); // r^N * (1 + N*k*m) % N2
-	
+std::cout << "encrypt f\n";
 	return x;
 }
 
@@ -175,6 +176,7 @@ void loadCryptosystemParams()
 /* Following the equation x' = (r^N * x) % N2 */
 Unumber reencrypt(const Unumber & x)
 {
+std::cout << "reencrypt i\n";
 #ifdef FAST_RANDOM
 	if (rN == 0)
 	{
@@ -184,12 +186,12 @@ Unumber reencrypt(const Unumber & x)
 	else rN.mul(rN,n2);
 
 	Unumber y = rN.mul(x,n2);
-	return y;
 #else
 	Unumber y = invertibleRandom(2,n);
 	y.pow(n,n2);
 	y = y.mul(x,n2);
-	return y;
 #endif
+std::cout << "reencrypt f\n";
+	return y;
 }
 
