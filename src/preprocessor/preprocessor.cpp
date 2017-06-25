@@ -20,6 +20,8 @@ using namespace std;
 #define NUMBER_OF_SI_PARAMETERS 2
 #define PRIME_FROM "11"
 #define PRIME_TO "1000"
+#define PRIME_MIN_EXP 511
+#define PRIME_MAX_EXP 112
 
 vector<string> csList;
 vector<SensitiveInformation> sinfoList;
@@ -322,8 +324,12 @@ SensitiveInformation mountSensitiveInformation(string & pqkrnd)
 		trim(strK);
 		trim(strRnd);
 		
-		Unumber primeFrom (PRIME_FROM);
-		Unumber primeTo (PRIME_TO);
+		//Unumber primeFrom (PRIME_FROM);
+		//Unumber primeTo (PRIME_TO);
+		Unumber primeFrom(1);
+		primeFrom <<= PRIME_MIN_EXP;
+		Unumber primeTo(1);
+		primeTo <<= PRIME_MAX_EXP;
 
 		Unumber p   = (  strP.empty() ? prime(primeFrom, primeTo) : Unumber(strP));
 		Unumber q   = (  strQ.empty() ? prime(primeFrom, primeTo) : Unumber(strQ));

@@ -117,6 +117,7 @@ clean:
 compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
 	$(CXX) $(CXXFLAGS) $(IN) $(CSFLAGS) \
 	$(OBJ_E3EXTENSIONS)/cryptosystem.o $(OBJ_E3EXTENSIONS)/secureint.o \
+	$(OBJ_PREPROCESSOR)/big_random.o \
 	$(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o \
 	-o $(OUT) $(OPT) $(LDF) $(LIBGFLAGS)
 
@@ -167,12 +168,13 @@ ifdef STATIC_LIBG # static libg
 #	compile
 	$(CXX) -c $(CXXFLAGS) $(SRC_LIBG)/libg.cpp -o $(OBJ_LIBG)/libg.o $(OPT) $(LDF) $(LIBGFLAGS)
 #	create static library
-	$(AR) $(ARFLAGS) $(LIB)/libg.a $(OBJ_LIBG)/libg.o		
+	$(AR) $(ARFLAGS) $(LIB)/libg.a $(OBJ_LIBG)/libg.o $(OBJ_PREPROCESSOR)/big_random.o 	
 else # shared libg
 #	compile
 	$(CXX) $(CXXFLAGS) -c $(SRC_LIBG)/libg.cpp -o $(OBJ_LIBG)/libg.o $(OPT) $(LDF)
 #	create shared library
 	$(CXX) $(CXXFLAGS) -shared $(OBJ_LIBG)/libg.o \
+	$(OBJ_PREPROCESSOR)/big_random.o \
 	$(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o $(OBJ_PREPROCESSOR)/big_random.o \
 	-o $(LIB)/libg.so $(OPT) $(LDF)
 endif
