@@ -28,7 +28,11 @@
 	bool loaded = false;
 #endif
 
-Unumber fkf(3480), _g(430), n(143), n2(20449), xp1(144), xp2(18304);
+// Unumber fkf(3480), _g(430), n(143), n2(20449), xp1(144), xp2(18304);
+
+Unumber fkf("2725884"), _g("814378"), n("2537"), xp1("2538"), xp2("5195776");
+
+Unumber n2 = n*n;
 
 #ifdef FAST_RANDOM
 Unumber rN(0);
@@ -96,7 +100,6 @@ Unumber congruence(Unumber x, const Unumber & n)
 /* Encrypt following equation x = r^N * (1 + N*k*m) % N2 */
 Unumber encrypt(const Unumber & m)
 {
-std::cout << "encrypt i\n";
 #ifdef FAST_RANDOM
 	if (rN == 0)
 	{
@@ -114,7 +117,7 @@ std::cout << "encrypt i\n";
 	gm = (congruence(m, n) * (gm - 1) + 1) % n2; // (1 + N*k*m) % N2
 
 	Unumber x = rN.mul(gm, n2); // r^N * (1 + N*k*m) % N2
-std::cout << "encrypt f\n";
+
 	return x;
 }
 
@@ -176,7 +179,6 @@ void loadCryptosystemParams()
 /* Following the equation x' = (r^N * x) % N2 */
 Unumber reencrypt(const Unumber & x)
 {
-std::cout << "reencrypt i\n";
 #ifdef FAST_RANDOM
 	if (rN == 0)
 	{
@@ -191,7 +193,7 @@ std::cout << "reencrypt i\n";
 	y.pow(n,n2);
 	y = y.mul(x,n2);
 #endif
-std::cout << "reencrypt f\n";
+
 	return y;
 }
 
