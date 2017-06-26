@@ -28,15 +28,33 @@
 	bool loaded = false;
 #endif
 
+#define MAX_LIBG_SPEED 3
+#ifndef LIBG_SPEED
+	#define LIBG_SPEED 0
+#endif
+
+#if LIBG_SPEED < 0
+	#define LIBG_SPEED 0
+#elif LIBG_SPEED > MAX_LIBG_SPEED
+	#define LIBG_SPEED MAX_LIBG_SPEED
+#endif
+
 // Unumber fkf(3480), _g(430), n(143), n2(20449), xp1(144), xp2(18304);
 
+//key size == 16 bits
+Unumber fkf("379476600"), _g("755156588"), n("34277"), xp1("34278"), xp2("1123188736");
+
 // key size = 32 bits
-Unumber fkf("2506860070809399216"), _g("1017139172976082058"), n("2337263449"), xp1("2337263450"), xp2("5019235037795581952");
+//Unumber fkf("2506860070809399216"), _g("1017139172976082058"), n("2337263449"), xp1("2337263450"), xp2("5019235037795581952");
 
 Unumber n2 = n*n;
 
 #ifdef FAST_RANDOM
 Unumber rN(0);
+#endif
+
+#if LIBG_SPEED == 2 || LIBG_SPEED == 3
+Unumber zero = encrypt(0);
 #endif
 
 /* G function */
@@ -45,19 +63,34 @@ Unumber rN(0);
  * else return the reencryption of y */	
 Unumber libg(Unumber x, Unumber y)
 {
+/* Software libg */
 #ifndef HWACC
+
+/* Software libg */
 #ifndef STATIC_LIBG
-	if (!loaded) loadCryptosystemParams();
+	if (!loaded) loadCryptosystemParams(); // Used if libg is a shared object
 #endif
+
 	Unumber ox = Unumber(x);
 	ox.pow(fkf, n2);
-
+#if LIBG_SPEED == 0
 	Unumber zero = encrypt(0);
 	Unumber _y = reencrypt(y);
 
 	if (leq(ox)) return zero;
-
 	return _y;
+#elif LIBG_SPEED == 1
+	if (leq(ox)) return encrypt(0);
+	return reencrypt(y);
+#elif LIBG_SPEED == 2
+	if (leq(ox)) return reencrypt(zero);
+	return reencrypt(y);
+#elif LIBG_SPEED == 3 // Insecure
+	if (leq(ox)) return zero;
+	return y;
+#endif
+
+/* Hardware libg */
 #else
 //std::cout << "libg\n";
 	unsigned length = 64;

@@ -81,7 +81,12 @@ CSFLAGS := $(OBJ_LIBG)/libg.o $(CSFLAGS)
 LIBGFLAGS := -DSTATIC_LIBG $(LIBGFLAGS)
 else
 # CSFLAGS := -L./lib -lg $(CSFLAGS)
-LIBGFLAGS := -ldl $(LIBGFLAGS)
+LIBGFLAGS := $(LIBGFLAGS) -ldl
+endif
+
+# libg speed (0, 1, or 2). The greater, the fastest.
+ifdef LIBG_SPEED
+LIBGFLAGS := -DLIBG_SPEED=$(LIBG_SPEED) $(LIBGFLAGS)
 endif
 
 # GMP CROSS COMPILATION #
@@ -175,7 +180,7 @@ else # shared libg
 #	create shared library
 	$(CXX) $(CXXFLAGS) -shared $(OBJ_LIBG)/libg.o \
 	$(OBJ_PREPROCESSOR)/big_random.o \
-	$(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o $(OBJ_PREPROCESSOR)/big_random.o \
+	$(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o \
 	-o $(LIB)/libg.so $(OPT) $(LDF)
 endif
 
