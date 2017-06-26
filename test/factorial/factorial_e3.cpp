@@ -11,7 +11,7 @@ string gFunctionName = "libg";
 
 int main()
 {
-	Cryptosystem cs(__PQ()()()()__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, libgDir, gFunctionName);
+	Cryptosystem cs(__PQ()()()()__, 16, __2TOBETA__, __ENC0__, __ENC1__, libgDir, gFunctionName);
 
 	SecureInt num(__N(5)__,cs);
 	SecureInt fact(__N(1)__,cs);
@@ -21,7 +21,7 @@ int main()
 	int counter = 1;
 
 	do {
-		//cout << counter << "...\n";
+		cout << counter << "...\n";
 		fact *= i;
 		result += (i == num) * fact;
 	} while (++counter != MAX_NUM);
