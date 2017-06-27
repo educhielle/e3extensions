@@ -14,6 +14,9 @@
 
 #include <iostream>
 #include "../unumber/unumberg.h"
+#include <vector>
+
+using namespace std;
 
 #ifdef ARCH64
 	#define WORD_SIZE 64
@@ -21,9 +24,11 @@
 	#define WORD_SIZE 32
 #endif
 
+/*
 #ifdef FAST_RANDOM
 	#define CS_LIMIT	100
 #endif
+*/
 
 class Cryptosystem
 {
@@ -31,17 +36,11 @@ class Cryptosystem
 	typedef Unumber (*libG_t)(Unumber, Unumber);
 #endif
 
-#ifdef FAST_RANDOM
     /* Variables */
-    public:
-	static unsigned idCount;
-	static Unumber rndN[CS_LIMIT];
-
     private:
-	unsigned id;
-#endif
-
-    private:
+	int id, int_beta;
+	static int idCount;
+	static vector<vector<Unumber>> halfTable;
 	Unumber n, n2, beta, twoToBeta, zero, one;
 	unsigned high_bit_posN; //, high_bit_posN2;
 	//Unumber rndN;
@@ -51,6 +50,13 @@ class Cryptosystem
 	void* libgHandle;
 	libG_t libg;
 #endif
+
+#ifdef FAST_RANDOM
+	static vector<Unumber> rndN;
+//	static Unumber rndN[CS_LIMIT];
+#endif
+
+#define INVALID_ID -1
 	
     /* Constructors */
     public:
@@ -62,6 +68,8 @@ class Cryptosystem
 
     /* Private functions */
     private:
+	void calcHalfs();
+	Unumber half(Unumber);
 	void init();
 
     /* Public functions */
@@ -72,8 +80,10 @@ class Cryptosystem
 	Unumber getN() const;
 	Unumber getN2() const;
 	Unumber getOne() const;
+	Unumber getPowerOfTwo(int) const;
 	Unumber getTwoToBeta() const;
 	Unumber getZero() const;
+	Unumber invert(Unumber) const;
 	Unumber invertibleRandom() const;
 	Unumber reencrypt(const Unumber) const;
 	//void prita();
@@ -94,9 +104,8 @@ Cryptosystem::Cryptosystem(const Cryptosystem & param)
 	this->libgFilename = param.libgFilename;
 	this->libgFunction = param.libgFunction;
 	//this->libgInit = param.libgInit;
-#ifdef FAST_RANDOM
 	this->id = param.id;
-#endif
+
 	init();
 }
 
@@ -111,9 +120,8 @@ Cryptosystem::Cryptosystem(const string & n, const string & beta, const string &
 	this->libgFilename = libgFilename;
 	this->libgFunction = libgFunction;
 	//this->libgInit = libgInit;
-#ifdef FAST_RANDOM
-	this->id = 0;
-#endif
+	this->id = INVALID_ID;
+
 	init();
 }
 
@@ -128,9 +136,8 @@ Cryptosystem::Cryptosystem(const Unumber n, const Unumber beta, const Unumber tw
 	this->libgFilename = libgFilename;
 	this->libgFunction = libgFunction;
 	//this->libgInit = libgInit;
-#ifdef FAST_RANDOM
-	this->id = 0;
-#endif
+	this->id = INVALID_ID;
+
 	init();
 }
 
@@ -145,9 +152,8 @@ Cryptosystem::Cryptosystem(unsigned long long n, unsigned long long beta, unsign
 	this->libgFilename = libgFilename;
 	this->libgFunction = libgFunction;
 	//this->libgInit = libgInit;
-#ifdef FAST_RANDOM
-	this->id = 0;
-#endif
+	this->id = INVALID_ID;
+
 	init();
 }
 

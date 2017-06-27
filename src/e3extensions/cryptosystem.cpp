@@ -18,14 +18,78 @@
 	#include INCLUDE_FILE(STATIC_LIBG) */
 #endif
 
+int Cryptosystem::idCount = 0;
+vector<vector<Unumber>> Cryptosystem::halfTable;
 #ifdef FAST_RANDOM
-unsigned Cryptosystem::idCount = 0;
-Unumber Cryptosystem::rndN[CS_LIMIT];
+vector <Unumber> Cryptosystem::rndN;
 #endif
 
 /*****************************
  *     PRIVATE FUNCTIONS     *
  *****************************/
+
+void Cryptosystem::calcHalfs()
+{
+	cout << "ID: " << id << "\n";
+	int length = int_beta;
+	vector<Unumber> newHalfTable;
+	Unumber param = twoToBeta;
+
+	for (length -= - 1; length > 0; length--)
+	{
+		param = half(param);
+		newHalfTable.push_back(param);
+	}
+
+	halfTable.push_back(newHalfTable);
+}
+
+Unumber Cryptosystem::half(Unumber x)
+{
+	// sum = ~0
+	Unumber sum = zero;
+
+	// p2 = ~1
+	Unumber p2 = one;
+
+	// Other variables
+	Unumber y, my;
+
+	// Inverse of param
+	Unumber mx = invert(x);
+
+	// Beta times
+	int b = int_beta;
+
+	while (b-- > 0)
+	{
+		// y = p2 + p2 - x
+		y = p2.mul(p2, n2);
+		y = y.mul(mx, n2);
+
+		// |y| = G(y,y)+G(-y,-y)
+		my = invert(y);
+		y = g(y,y);
+		my = g(my,my);
+		y = y.mul(my,n2);
+		
+		// y = G(|y|,~1)
+		y = g(y,one);
+
+		// y = G(~1-y,p2)
+		my = invert(y);
+		y = my.mul(one,n2);
+		y = g(y,p2);
+
+		// sum = sum + y
+		sum = sum.mul(y,n2);
+
+		// p2 = p2 + p2
+		p2 = p2.mul(p2,n2);
+	}
+
+	return sum;
+}
 
 /* Initialize */
 /* Find the high bit position of (n-1) */
@@ -33,18 +97,23 @@ Unumber Cryptosystem::rndN[CS_LIMIT];
 void Cryptosystem::init()
 {
 	n2 = n * n;
+	int_beta = (int) beta.to_ull();
 
 	high_bit_posN = 0;
 	Unumber x = n - 1;
 	while (x != 0) { x >>= 1; high_bit_posN++; }
 	high_bit_posN--;
-#ifdef FAST_RANDOM
-	if (id == 0)
+
+	if (id == INVALID_ID)
 	{
-		idCount = (idCount + 1) % CS_LIMIT;
-		id = idCount;
-	}
+		//idCount = (idCount + 1) % CS_LIMIT;
+		id = idCount++;
+		calcHalfs();
+#ifdef FAST_RANDOM
+		rndN.push_back(0);
 #endif
+	}
+
 	/*x = n2;
 	while (x != 0) { x >>= 1; high_bit_posN2++; }
 	high_bit_posN2--;*/
@@ -117,16 +186,35 @@ Unumber Cryptosystem::getOne() const
 	return reencrypt(one);
 }
 
+Unumber Cryptosystem::getPowerOfTwo(int index) const
+{
+	return halfTable[id][int_beta-index-1];
+}
+
 /* Return reencrypted 2^Beta */
 Unumber Cryptosystem::getTwoToBeta() const
 {
-	return reencrypt(twoToBeta);
+	//return reencrypt(twoToBeta);
+	return twoToBeta;
 }
 
 /* Return reencrypted zero */
 Unumber Cryptosystem::getZero() const
 {
 	return reencrypt(zero);
+}
+
+Unumber Cryptosystem::invert(Unumber number) const
+{
+	Unumber inv;
+	bool k = ma::invert(number, n2, &inv);
+	if ( !k )
+	{
+		std::cout << "Inverse does not exist.\n";
+		throw "Inverse does not exist.\n";
+	}
+
+	return inv;
 }
 
 /* Invertible Random */

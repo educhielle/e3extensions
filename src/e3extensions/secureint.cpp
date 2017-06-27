@@ -76,7 +76,7 @@ void SecureInt::operator>>= (unsigned shift)
 /* Equal */
 /* Compare if two encrypted numbers are equal */
 /* Return encrypted one if true, and encrypted zero otherwise */
-/* Equal(x,y) = ~1 - G(x-y,~1) - G(y-x,~1) */
+/* Equal(x,y) = ~1 - ( G(x-y,~1) + G(y-x,~1) ) */
 SecureInt operator== (const SecureInt & n1, const SecureInt & n2)
 {
 	//Cryptosystem cs(n1.cryptosystem);
@@ -114,8 +114,8 @@ SecureInt SecureInt::div2()
 	SecureInt sum(uzero, cryptosystem);
 
 	// p2 = ~2^B
-	Unumber twoToBeta = cryptosystem.getTwoToBeta();
-	SecureInt p2(twoToBeta, cryptosystem);
+	//Unumber twoToBeta = cryptosystem.getTwoToBeta();
+	SecureInt p2;// (twoToBeta, cryptosystem);
 
 	// Other SecureInt variables
 	Unumber uone = cryptosystem.getOne();
@@ -123,14 +123,16 @@ SecureInt SecureInt::div2()
 	SecureInt y;
 
 	// Beta
-	Unumber beta = cryptosystem.getBeta() + 1;
+	//Unumber beta = cryptosystem.getBeta() + 1;
+	int beta = (int) cryptosystem.getBeta().to_ull();
 	
 	// for Beta times do
-	while (--beta > 0)
+	while (beta-- > 0)
 	{
 		// p2 = Half(p2)
-		p2 = p2.half2();
-		
+		//p2 = p2.half2();
+		p2 = SecureInt(cryptosystem.getPowerOfTwo(beta), cryptosystem);		
+
 		// y = sum + p2
 		y = sum + p2;
 
@@ -243,13 +245,15 @@ string SecureInt::str(unsigned base) const
 /* Return the inverse of a number */
 SecureInt SecureInt::invert(const SecureInt & param)
 {
-	Unumber inv;
+	Unumber inv = param.cryptosystem.invert(param.x);
+	/*
 	bool k = ma::invert(param.x, param.cryptosystem.getN2(), &inv);
 	if ( !k )
 	{
-		std::cout << "CRY IN C++\n";
+		std::cout << "SecureInt: inverse does not exist.\n";
 		throw "Inverse does not exist.\n";
 	}
+	*/
 
 	return SecureInt(inv, param.cryptosystem);
 }
