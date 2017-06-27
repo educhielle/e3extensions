@@ -104,16 +104,6 @@ void Cryptosystem::init()
 	while (x != 0) { x >>= 1; high_bit_posN++; }
 	high_bit_posN--;
 
-	if (id == INVALID_ID)
-	{
-		//idCount = (idCount + 1) % CS_LIMIT;
-		id = idCount++;
-		calcHalfs();
-#ifdef FAST_RANDOM
-		rndN.push_back(0);
-#endif
-	}
-
 	/*x = n2;
 	while (x != 0) { x >>= 1; high_bit_posN2++; }
 	high_bit_posN2--;*/
@@ -142,6 +132,16 @@ void Cryptosystem::init()
 		exit(1);
 	}
 #endif
+
+	if (id == INVALID_ID)
+	{
+		//idCount = (idCount + 1) % CS_LIMIT;
+		id = idCount++;
+		calcHalfs();
+#ifdef FAST_RANDOM
+		rndN.push_back(0);
+#endif
+	}
 }
 
 /****************************
