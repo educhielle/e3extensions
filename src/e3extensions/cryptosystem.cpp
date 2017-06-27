@@ -30,7 +30,6 @@ vector <Unumber> Cryptosystem::rndN;
 
 void Cryptosystem::calcHalfs()
 {
-	cout << "ID: " << id << "\n";
 	int length = int_beta;
 	vector<Unumber> newHalfTable;
 	Unumber param = twoToBeta;
