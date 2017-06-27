@@ -11,12 +11,12 @@ string gFunctionName = "libg";
 
 int main()
 {
-	Cryptosystem cs(__PQ()()()()__, 8, __2TOBETA__, __ENC0__, __ENC1__, libgDir, gFunctionName);
+	Cryptosystem cs("37909","8","333065373","414009683","1271483429", libgDir, gFunctionName);
 
-	SecureInt num(__N(5)__,cs);
-	SecureInt fact(__N(1)__,cs);
-	SecureInt i(__N(1)__,cs);
-	SecureInt result(__N(0)__,cs);
+	SecureInt num("88075793",cs);
+	SecureInt fact("140192229",cs);
+	SecureInt i("920952364",cs);
+	SecureInt result("1151657908",cs);
 	
 	int counter = 1;
 
