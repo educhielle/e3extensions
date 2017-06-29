@@ -8,6 +8,7 @@ int main(void) {
     int i = 1;
     int result;
     do {
+	printf("%d...\n", i);
         fact *= i;
         result += (i == NUM) * fact;
     } while (++i != MAX_NUM);
