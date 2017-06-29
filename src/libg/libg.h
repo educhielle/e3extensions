@@ -23,9 +23,9 @@ Unumber encrypt(const Unumber &);
 bool leq(const Unumber);
 Unumber libg(Unumber, Unumber);
 Unumber reencrypt(const Unumber &);
-#ifndef STATIC_LIBG
+//#ifndef STATIC_LIBG
 void loadCryptosystemParams();
-#endif
+//#endif
 
 #ifdef __cplusplus
 }

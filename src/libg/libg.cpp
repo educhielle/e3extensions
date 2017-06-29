@@ -17,7 +17,7 @@
 #include "libg.h"
 #include "../unumber/unumberg.h"
 
-#ifndef STATIC_LIBG
+//#ifndef STATIC_LIBG
 	#include <fstream>
 	#include <iostream>
 
@@ -26,7 +26,7 @@
 	using namespace std;
 
 	bool loaded = false;
-#endif
+//#endif
 
 #define MAX_LIBG_SPEED 3
 #ifndef LIBG_SPEED
@@ -39,21 +39,10 @@
 	#define LIBG_SPEED MAX_LIBG_SPEED
 #endif
 
-Unumber fkf(3480), _g(430), n(143), xp1(144), xp2(18304);
+Unumber fkf, _g, n, xp1, xp2, n2;
 
-//key size == 16 bits
-//Unumber fkf("379476600"), _g("755156588"), n("34277"), xp1("34278"), xp2("1123188736");
-
-// key size = 32 bits
-//Unumber fkf("2506860070809399216"), _g("1017139172976082058"), n("2337263449"), xp1("2337263450"), xp2("5019235037795581952");
-
-// key size = 256 bits/*==
-/*Unumber fkf("1180681502882590273829175428777281418221949305247026742798167242057578247491391931679678670630835533243105020404716020971624585092094755998022168628446912");
-Unumber _g("1017139172976082058"), n("2337263449"), xp1("2337263450"), xp2("5019235037795581952");
-1180681502882590273829175428777281418221949305247026742798167242057578247491391931679678670630835533243105020404716020971624585092094755998022168628446912
-*/
-
-Unumber n2 = n*n;
+//Unumber fkf(3480), _g(430), n(143), xp1(144), xp2(18304);
+//Unumber n2 = n*n;
 
 #ifdef FAST_RANDOM
 Unumber rN(0);
@@ -73,9 +62,9 @@ Unumber libg(Unumber x, Unumber y)
 #ifndef HWACC
 
 /* Software libg */
-#ifndef STATIC_LIBG
+//#ifndef STATIC_LIBG
 	if (!loaded) loadCryptosystemParams(); // Used if libg is a shared object
-#endif
+//#endif
 
 	Unumber ox = Unumber(x);
 	ox.pow(fkf, n2);
@@ -169,7 +158,7 @@ bool leq(const Unumber x)
 }
 
 /* Load Cryptosystem parameters from CS.txt file */
-#ifndef STATIC_LIBG
+//#ifndef STATIC_LIBG
 void loadCryptosystemParams()
 {
 	ifstream in;
@@ -213,7 +202,7 @@ void loadCryptosystemParams()
 	
 	loaded = true;
 }
-#endif
+//#endif
 
 /* Reencrypt a cyphertext with a random invertible number */
 /* Following the equation x' = (r^N * x) % N2 */
