@@ -264,10 +264,10 @@ magic-all:
 	make magic IN=$(IN) KEY_SIZE=16 BETA=$(BETA)
 	make magic IN=$(IN) KEY_SIZE=32 BETA=$(BETA)
 	make magic IN=$(IN) KEY_SIZE=64 BETA=$(BETA)
-#	make magic IN=$(IN) KEY_SIZE=128 BETA=$(BETA)
-#	make magic IN=$(IN) KEY_SIZE=256 BETA=$(BETA)
-#	make magic IN=$(IN) KEY_SIZE=512 BETA=$(BETA)
-#	make magic IN=$(IN) KEY_SIZE=1024 BETA=$(BETA)
+	make magic IN=$(IN) KEY_SIZE=128 BETA=$(BETA)
+	make magic IN=$(IN) KEY_SIZE=256 BETA=$(BETA)
+	make magic IN=$(IN) KEY_SIZE=512 BETA=$(BETA)
+	make magic IN=$(IN) KEY_SIZE=1024 BETA=$(BETA)
 
 preprocess: ## Preprocess code. Usage: make preprocessor IN=path/to/code OUT=path/to/output [KEY_SIZE=1024] [BETA=16]
 	$(BIN)/preprocessor $(IN) $(OUT) $(KEY_SIZE) $(BETA)
