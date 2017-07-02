@@ -11,12 +11,12 @@ string gFunctionName = "libg";
 
 int main()
 {
-	Cryptosystem cs("2537","8","4429886","5776537","679251", libgDir, gFunctionName);
+	Cryptosystem cs("37001","8","554358061","986284612","793957090", libgDir, gFunctionName);
 
-	SecureInt num("5177588",cs);
-	SecureInt fact("4595836",cs);
-	SecureInt i("1336295",cs);
-	SecureInt result("4448106",cs);
+	SecureInt num("1248112231",cs);
+	SecureInt fact("979206993",cs);
+	SecureInt i("1208553933",cs);
+	SecureInt result("36567051",cs);
 	
 	int counter = 1;
 
@@ -24,10 +24,10 @@ int main()
 		//cout << counter << "...\n";
 		fact *= i;
 		result += (i == num) * fact;
+		++i;
 	} while (++counter != MAX_NUM);
 
-
-	cout << "fact(" << fact.str() << ") = " << result.str() << "\n";
+	cout << "fact( " << num.str() << " ) = " << result.str() << "\n";
 
 	return 0;
 }

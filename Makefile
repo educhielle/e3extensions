@@ -35,10 +35,29 @@ OBJ_PREPROCESSOR=$(OBJ)/preprocessor
 OBJ_UNUMBER=$(OBJ)/unumber
 SRC_UNUMBER=$(SRC)/unumber
 
+LD_LIBRARY_PATH=./lib
+
 LOCAL_DIR=$(abspath .)
 FILE_DIR=$(dir $(IN))
 FILENAME=$(notdir $(IN))
-LD_LIBRARY_PATH=./lib
+BASENAME=$(basename $(IN))
+SUFFIX=$(suffix $(IN))
+
+## MAGIC
+PREPROC_FILE=$(BASENAME)-K$(KEY_SIZE)-B$(BETA)$(SUFFIX)
+BINARY_FILE=$(BASENAME)-K$(KEY_SIZE)-B$(BETA).elf
+CS_FILE=$(FILE_DIR)CS.txt
+CS_FILE_BACKUP=$(basename $(CS_FILE))-K$(KEY_SIZE)-B$(BETA)$(suffix $(CS_FILE))
+OUTPUT_ENC=$(FILE_DIR)output_enc-K$(KEY_SIZE)-B$(BETA).txt
+OUTPUT_DEC=$(FILE_DIR)output_dec-K$(KEY_SIZE)-B$(BETA).txt
+
+ifdef OUT
+RUN_OUT := > $(notdir $(OUT))
+endif
+
+ifeq ($(SAVE_TIME),1)
+TIME_OUT := 2> TIME-K$(KEY_SIZE)-B$(BETA).txt
+endif
 
 ifeq ($(STATIC),1)
 OPT := -static $(OPT)
@@ -234,12 +253,27 @@ decrypt: ## Decrypt file. Usage: make decrypt IN=path/to/inputfile OUT=path/to/o
 
 install: clean compile-unumber compile-sensitive-information compile-preprocessor compile-decrypt compile-shared-libg compile-static-libg compile-e3extensions ## Install all basic components. Usage: make install [ARCH=64] [GMP=1]
 
+magic:
+	make preprocess IN=$(IN) OUT=$(PREPROC_FILE) KEY_SIZE=$(KEY_SIZE) BETA=$(BETA)
+	make compile-all IN=$(PREPROC_FILE) OUT=$(BINARY_FILE)
+	cp $(CS_FILE) $(CS_FILE_BACKUP)
+	make run IN=$(BINARY_FILE) OUT=$(OUTPUT_ENC) SAVE_TIME=1
+	make decrypt IN=$(OUTPUT_ENC) OUT=$(OUTPUT_DEC) CS=$(CS_FILE_BACKUP)
+
+magic-all:
+	make magic IN=$(IN) KEY_SIZE=16 BETA=$(BETA)
+	make magic IN=$(IN) KEY_SIZE=32 BETA=$(BETA)
+	make magic IN=$(IN) KEY_SIZE=64 BETA=$(BETA)
+#	make magic IN=$(IN) KEY_SIZE=128 BETA=$(BETA)
+#	make magic IN=$(IN) KEY_SIZE=256 BETA=$(BETA)
+#	make magic IN=$(IN) KEY_SIZE=512 BETA=$(BETA)
+#	make magic IN=$(IN) KEY_SIZE=1024 BETA=$(BETA)
 
 preprocess: ## Preprocess code. Usage: make preprocessor IN=path/to/code OUT=path/to/output [KEY_SIZE=1024] [BETA=16]
 	$(BIN)/preprocessor $(IN) $(OUT) $(KEY_SIZE) $(BETA)
 
 
-run: ## Run program. Usage: make run IN=path/to/file
+run: ## Run program. Usage: make run IN=path/to/file [OUT=output.txt] [SAVE_TIME=1]
 	cp -f $(LIB)/libg.so $(FILE_DIR)
-	cd $(FILE_DIR); ./$(FILENAME)
+	cd $(FILE_DIR); time ./$(FILENAME) $(RUN_OUT) $(TIME_OUT)
 

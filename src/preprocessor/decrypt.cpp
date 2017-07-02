@@ -52,9 +52,25 @@ void decrypt(string filenameIn, string filenameOut, SensitiveInformation sinfo)
 		trim(line);
 		if (!line.empty())
 		{
-			Unumber encValue (line);
-			result = sinfo.decrypt(encValue, &R);
-			out << result.str();
+			vector<string> items = explode(line, ' ');
+			for (unsigned i = 0; i < items.size(); )
+			{
+				//cout << items[i];
+				if (isNumber(items[i]))
+				{
+					//cout << " is number\n";
+					Unumber encValue (items[i]);
+					result = sinfo.decrypt(encValue, &R);
+					out << result.str();
+				}
+				else
+				{
+					//cout << " NET\n";
+					out << items[i];
+				}
+				
+				if (++i < items.size()) out << " ";
+			}
 		}
 		out << "\n";
 		getline(in, line);
@@ -82,7 +98,7 @@ SensitiveInformation loadCryptosystemParams(string filename)
 	{
 		semicolon[i] = text.find(";", semicolon[i-1]) + 1;
 	}
-	int newLine = text.find("\n") + 1;
+	//int newLine = text.find("\n") + 1;
 
 	string strP	= text.substr(semicolon[0], semicolon[1]-semicolon[0]-1);
 	string strQ	= text.substr(semicolon[1], semicolon[2]-semicolon[1]-1);

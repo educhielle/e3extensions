@@ -64,6 +64,17 @@ bool isLineComment(const string & code, const int pos)
 	return ((lineComment != -1) && (lineComment < newLineBefore));
 }
 
+/* Check if a string contains only numbers */
+bool isNumber(string & s)
+{
+	for (unsigned i = 0; i < s.length(); i++)
+	{
+		if ((s[i] < '0') || (s[i] > '9')) return false;
+	}
+
+	return true;
+}
+
 /* Remove the leading and trailing spaces */
 void trim(string & s)
 {

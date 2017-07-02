@@ -18,6 +18,7 @@ int indexOf(vector<string>, const string &);
 bool isBlockComment(const string &, const int);
 bool isComment(const string &, const int);
 bool isLineComment(const string &, const int);
+bool isNumber(string &);
 void trim(string &);
 
 #endif
