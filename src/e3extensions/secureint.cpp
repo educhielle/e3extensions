@@ -73,6 +73,13 @@ void SecureInt::operator>>= (unsigned shift)
 	for (unsigned i = 0; i < shift; i++) *this = div2();
 }
 
+/* Encrypted increment */
+/* Equivalent to a modular multiplication */
+void SecureInt::operator++ ()
+{
+	x = x.mul(cryptosystem.getOne(), cryptosystem.getN2());
+}
+
 /* Equal */
 /* Compare if two encrypted numbers are equal */
 /* Return encrypted one if true, and encrypted zero otherwise */

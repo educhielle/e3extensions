@@ -38,6 +38,7 @@ class SecureInt
 	void operator*= (const SecureInt &);
 	void operator<<= (unsigned);
 	void operator>>= (unsigned);
+	void operator++ ();
 	
 	friend SecureInt operator+ (const SecureInt & n1, const SecureInt & n2)
 	{ SecureInt r(n1); r += n2; return r; }

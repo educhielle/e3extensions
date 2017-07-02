@@ -75,21 +75,29 @@ SensitiveInformation loadCryptosystemParams(string filename)
 	string text = buffer.str();
 	in.close();
 
-	int semicolon[4];
+	int len = 9;
+	int semicolon[len];
 	semicolon[0] = text.find(";") + 1;
-	semicolon[1] = text.find(";", semicolon[0]) + 1;
-	semicolon[2] = text.find(";", semicolon[1]) + 1;
-	semicolon[3] = text.find(";", semicolon[2]) + 1;
+	for (int i = 1; i < len; i++)
+	{
+		semicolon[i] = text.find(";", semicolon[i-1]) + 1;
+	}
+	int newLine = text.find("\n") + 1;
 
-	string strP = text.substr(semicolon[0], semicolon[1]-semicolon[0]-1);
-	string strQ = text.substr(semicolon[1], semicolon[2]-semicolon[1]-1);
-	string strK = text.substr(semicolon[2], semicolon[3]-semicolon[2]-1);
+	string strP	= text.substr(semicolon[0], semicolon[1]-semicolon[0]-1);
+	string strQ	= text.substr(semicolon[1], semicolon[2]-semicolon[1]-1);
+	string strK 	= text.substr(semicolon[2], semicolon[3]-semicolon[2]-1);
+	string strBeta	= text.substr(semicolon[3], semicolon[4]-semicolon[3]-1);
 
-	Unumber p,q,k;
+	Unumber p,q,k, beta;
 	p = Unumber(strP);
 	q = Unumber(strQ);
 	k = Unumber(strK);
+	beta = Unumber(strBeta);
 
-	return SensitiveInformation(p,q,k);
+	SensitiveInformation si(p,q,k);
+	si.setBeta(beta.to_ull());
+
+	return si;
 }
 

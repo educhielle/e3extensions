@@ -32,6 +32,7 @@ using namespace std;
 int keySize = 1024;
 int primeMaxExp = keySize / 2;
 int primeMinExp = primeMaxExp - 1;
+unsigned paramBeta = 0;
 vector<string> csList;
 vector<SensitiveInformation> sinfoList;
 SensitiveInformation sinfo;
@@ -56,12 +57,17 @@ int main(int argc, char *argv[])
 	string filename = argv[1];
 	string filenameOut = argv[2];
 
-	if (argc == 4)
+	if (argc >= 4)
 	{
 		keySize = (int) (Unumber(argv[3]).to_ull());
 		primeMaxExp = keySize / 2;
 		primeMinExp = primeMaxExp - 1;
 		
+	}
+
+	if (argc >= 5)
+	{
+		paramBeta = (unsigned) (Unumber(argv[4]).to_ull());
 	}
 
 	int lastSlash = filename.find_last_of("/\\");
@@ -111,7 +117,7 @@ int main(int argc, char *argv[])
 					{
 						csList.push_back(objName);
 						sinfoList.push_back(sinfo);
-						out << objName << ";" << sinfo.getP() << ";" << sinfo.getQ() << ";" << sinfo.getK() << ";" << sinfo.fkf() << ";" << sinfo.access_g() << ";" << sinfo.getN() << ";" << sinfo.getXp1() << ";" << sinfo.getXp2() << "\n";
+						out << objName << ";" << sinfo.getP().str() << ";" << sinfo.getQ().str() << ";" << sinfo.getK().str() << ";" << sinfo.getBeta().str() << ";" << sinfo.fkf().str() << ";" << sinfo.access_g().str() << ";" << sinfo.getN().str() << ";" << sinfo.getXp1().str() << ";" << sinfo.getXp2().str() << "\n";
 					}
 					Unumber f = sinfo.fkf();
 					cout << "The fkf of '" << objName << "' is " << f.str() << ". Use it in the G function.\n";
@@ -186,10 +192,14 @@ string calcNewParamsCS(string params)
 		sinfo = mountSensitiveInformation(strPQ);
 		
 		trim(strBeta);
-		if (strBeta.compare("__BETA__"))
+		if (strBeta.compare("__BETA"))
 		{
 			Unumber b(strBeta);
 			sinfo.setBeta(b.to_ull());
+		}
+		else if (paramBeta != 0)
+		{
+			sinfo.setBeta(paramBeta);
 		}
 
 		Unumber n = sinfo.getN();
@@ -291,7 +301,7 @@ string findObjectNameBefore(const string & code, int posF)
 /* Check if the string is a tag of a SecureInt value */
 bool isSecureIntPrecompilerTag(const string & str)
 {
-	std::regex re("__N\\([0-9]+\\)__");
+	std::regex re("__E\\([0-9]+\\)");
 	std::cmatch m;
 	return std::regex_match(str.c_str(), m, re);
 }
@@ -303,9 +313,6 @@ bool isValidPQ(const string & pqkrnd)
 	{
 		string part = pqkrnd.substr(0,4);
 		if (part.compare("__PQ")) return false;
-
-		part = pqkrnd.substr(pqkrnd.length()-2, pqkrnd.length());
-		if (part.compare("__")) return false;
 
 		return true; //ish
 	}

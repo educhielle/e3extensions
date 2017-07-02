@@ -235,8 +235,8 @@ decrypt: ## Decrypt file. Usage: make decrypt IN=path/to/inputfile OUT=path/to/o
 install: clean compile-unumber compile-sensitive-information compile-preprocessor compile-decrypt compile-shared-libg compile-static-libg compile-e3extensions ## Install all basic components. Usage: make install [ARCH=64] [GMP=1]
 
 
-preprocess: ## Preprocess code. Usage: make preprocessor IN=path/to/code OUT=path/to/output [KEY_SIZE=1024]
-	$(BIN)/preprocessor $(IN) $(OUT) $(KEY_SIZE)
+preprocess: ## Preprocess code. Usage: make preprocessor IN=path/to/code OUT=path/to/output [KEY_SIZE=1024] [BETA=16]
+	$(BIN)/preprocessor $(IN) $(OUT) $(KEY_SIZE) $(BETA)
 
 
 run: ## Run program. Usage: make run IN=path/to/file

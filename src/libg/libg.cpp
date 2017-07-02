@@ -168,25 +168,24 @@ void loadCryptosystemParams()
 	string text = buffer.str();
 	in.close();
 
-	int semicolon[8];
+	int len = 9;
+	int semicolon[len];
 	semicolon[0] = text.find(";") + 1;
-	semicolon[1] = text.find(";", semicolon[0]) + 1;
-	semicolon[2] = text.find(";", semicolon[1]) + 1;
-	semicolon[3] = text.find(";", semicolon[2]) + 1;
-	semicolon[4] = text.find(";", semicolon[3]) + 1;
-	semicolon[5] = text.find(";", semicolon[4]) + 1;
-	semicolon[6] = text.find(";", semicolon[5]) + 1;
-	semicolon[7] = text.find(";", semicolon[6]) + 1;
+	for (int i = 1; i < len; i++)
+	{
+		semicolon[i] = text.find(";", semicolon[i-1]) + 1;
+	}
 	int newLine = text.find("\n") + 1;
 
 	//string strP   = text.substr(semicolon[0], semicolon[1]-semicolon[0]-1);
 	//string strQ   = text.substr(semicolon[1], semicolon[2]-semicolon[1]-1);
 	//string strK   = text.substr(semicolon[2], semicolon[3]-semicolon[2]-1);
-	string strFKF = text.substr(semicolon[3], semicolon[4]-semicolon[3]-1);
-	string strG   = text.substr(semicolon[4], semicolon[5]-semicolon[4]-1);
-	string strN   = text.substr(semicolon[5], semicolon[6]-semicolon[5]-1);
-	string strXp1 = text.substr(semicolon[6], semicolon[7]-semicolon[6]-1);
-	string strXp2 = text.substr(semicolon[7], newLine     -semicolon[7]-1);
+	//string strBeta	= text.substr(semicolon[3], semicolon[4]-semicolon[3]-1);
+	string strFKF = text.substr(semicolon[4], semicolon[5]-semicolon[4]-1);
+	string strG   = text.substr(semicolon[5], semicolon[6]-semicolon[5]-1);
+	string strN   = text.substr(semicolon[6], semicolon[7]-semicolon[6]-1);
+	string strXp1 = text.substr(semicolon[7], semicolon[8]-semicolon[7]-1);
+	string strXp2 = text.substr(semicolon[8], newLine     -semicolon[8]-1);
 
 	//cout << text << "\n";
 
