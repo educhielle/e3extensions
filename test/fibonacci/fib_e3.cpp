@@ -28,7 +28,7 @@ int main()
 		f2 = fi;
 		++i;
 	} while (++counter != MAX_NUM);	
-	cout << "fib(" << num.str() << ") = " << result.str() << "\n";
+	cout << "fib( " << num.str() << " ) = " << result.str() << "\n";
 
 	return 0;
 }

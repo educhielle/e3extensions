@@ -13,19 +13,19 @@ string gFunctionName = "libg";
 ********************************************************/
 
 void sieveOfEratosthenes(int n) {
-	Cryptosystem cs("1733595293","8","637424735874439811","1798972443523618810","2659546562735005577", libgDir, gFunctionName);
+	Cryptosystem cs("2083898629","8","4078733710040889157","620583690323767813","4168729619594923123", libgDir, gFunctionName);
 
 	SecureInt prime[n+1];
 	for (int i = 0 ; i < n+1 ; i++) 
-        	prime[i] = SecureInt("2546345165116307665",cs);
+        	prime[i] = SecureInt("1073317415650008687",cs);
 
 	for (int p = 2; p*p < n+1 ; p++)
 	{
 		for (int i = 2*p; i < n+1 ; i += p)	// Update all multiples of p
-			prime[i] = SecureInt("1139884734381544628",cs);
+			prime[i] = SecureInt("42660552136158656",cs);
 	}
 
-	SecureInt pe = SecureInt("1092955738019183628",cs);
+	SecureInt pe = SecureInt("1644316854567821878",cs);
 	for (int p = 2; p < n+1; p++, ++pe) // Print all prime numbers
 	{
 		cout << (pe * prime[p]).str() << " ";

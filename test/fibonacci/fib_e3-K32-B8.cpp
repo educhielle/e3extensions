@@ -11,14 +11,14 @@ string gFunctionName = "libg";
 
 int main()
 {
-	Cryptosystem cs("1964544733","8","2452921144653521230","2005287370945113984","872984876783875923", libgDir, gFunctionName);
+	Cryptosystem cs("2384826937","8","2061214969615387396","4499958728448017020","1416884809261877505", libgDir, gFunctionName);
 
-	SecureInt num("1672027984499783162",cs);
-	SecureInt f1("2031454095900471500",cs);
-	SecureInt f2("766108461817647632",cs);
-	SecureInt fi("2988748162329814174",cs);
-	SecureInt i("547916034595984433",cs);
-	SecureInt result("2990273723928686749",cs);
+	SecureInt num("4023909639314263587",cs);
+	SecureInt f1("772830953642824060",cs);
+	SecureInt f2("1434334382902763024",cs);
+	SecureInt fi("5291383208616069775",cs);
+	SecureInt i("5525370405309575428",cs);
+	SecureInt result("2572758952974634055",cs);
 
 	int counter = 1;
 	do {
@@ -28,7 +28,7 @@ int main()
 		f2 = fi;
 		++i;
 	} while (++counter != MAX_NUM);	
-	cout << "fib(" << num.str() << ") = " << result.str() << "\n";
+	cout << "fib( " << num.str() << " ) = " << result.str() << "\n";
 
 	return 0;
 }
