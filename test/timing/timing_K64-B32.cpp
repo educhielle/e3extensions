@@ -17,17 +17,17 @@ int main()
 	cout << "For loop: " << (e-s) << " cycles\n";
 
 	s = PAPI_get_real_cyc();
-	Cryptosystem cs("10448540135343809377","8","50482723224222825458732256525582855449","98062730853387842498259615674450870878","103062647428703756102446493230021026513", libgDir, gFunctionName);
+	Cryptosystem cs("11250079907966882077","32","123365142821507199118390004589680536140","78846957863328881676062926652177735471","52485438128362088680836710061729920920", libgDir, gFunctionName);
 	e = PAPI_get_real_cyc();
 	cout << "Cryptosystem cs: " << (e-s) << " cycles\n";
 
 	s = PAPI_get_real_cyc();
-	SecureInt a("44450848874158674870856779863226607149",cs);
+	SecureInt a("73837865343079935324143361065149343314",cs);
 	e = PAPI_get_real_cyc();
 	cout << "SecureInt a: " << (e-s) << " cycles\n";
 
 	s = PAPI_get_real_cyc();
-	SecureInt b("3997332534927152391357052782063838561",cs);
+	SecureInt b("27594142486922073498726053504612541764",cs);
 	e = PAPI_get_real_cyc();
 	cout << "SecureInt b: " << (e-s) << " cycles\n";
 
