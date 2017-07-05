@@ -1,7 +1,18 @@
 #include <iostream>
 #include <istream>
 #include "unumberzx.h"
-#include "unumberzx2048asm.h"
+
+#if HWACC == 4096
+	#include "unumberzx4096asm.h"
+#elif HWACC == 2048
+	#include "unumberzx2048asm.h"
+#elif HWACC == 1024
+	#include "unumberzx1024asm.h"
+#elif HWACC == 512
+	#include "unumberzx512asm.h"
+#else
+	#include "unumberzx2048asm.h"
+#endif
 
 const bool NP_DBG = false;
 
@@ -118,10 +129,12 @@ Unumber Unumber::mul(const Unumber & b, const Unumber & m) const
 	mpz_mod(r.z.get_mpz_t(), r.z.get_mpz_t(), m.z.get_mpz_t());
 */
 
+	//std::cout << "Unumber::mul in\n";
+
 	if (!mpz_cmp_ui(z.get_mpz_t(), 0) || !mpz_cmp_ui(b.z.get_mpz_t(), 0)) mpz_set_ui(r.z.get_mpz_t(), 0);
 	else
 	{
-		unsigned length = 64;
+		unsigned length = HW_NUMWORDS;
 		size_t *countp;
 		unsigned order = 1;
 		unsigned endianess = 1;
@@ -135,16 +148,18 @@ Unumber Unumber::mul(const Unumber & b, const Unumber & m) const
 		if (mpz_cmp_ui(m.z.get_mpz_t(), 0)) mpz_export(mC, countp, order, size, endianess, nails, m.z.get_mpz_t());
 		else for (unsigned i = 0; i < length; i++) mC[i] = 0;
 
-		mter_ye1(mA);
-		mter_ye2(mB);
-		mter_ye3(mC);
+		mter_e1(mA);
+		mter_e2(mB);
+		mter_e3(mC);
 
-		__asm__ ("le3.modmul ye0,ye1,ye2,ye3");
+		hw_modmul();
 
-		mfer_ye0(mD);
+		mfer_e0(mD);
 
 		mpz_import(r.z.get_mpz_t(), length, order, sizeof(unsigned), endianess, nails, mD);
 	}
+
+	//std::cout << "Unumber::mul out\n";
 
 	return r;
 }
@@ -178,14 +193,17 @@ void Unumber::pow(Unumber e, const Unumber & mod)
 /*stats_pow++;*/
 //std::cout << "pow\n";
 //	mpz_powm(z.get_mpz_t(), z.get_mpz_t(), e.z.get_mpz_t(), mod.z.get_mpz_t());
+	//std::cout << "Unumber::pow in\n";
 
-	unsigned length = 64;
+	unsigned length = HW_NUMWORDS;
 	size_t *countp;
 	unsigned order = 1;
 	unsigned endianess = 1;
 	unsigned nails = 0;
 	unsigned mA[length], mB[length], mC[length], mD[length];
 	unsigned size = length * sizeof(unsigned);
+
+	//gmp_printf("mA: %Zx\tmB: %Zx\tmC: %Zx\n", z.get_mpz_t(), e.z.get_mpz_t(), mod.z.get_mpz_t());
 
 	if (mpz_cmp_ui(z.get_mpz_t(), 0)) mpz_export(mA, countp, order, size, endianess, nails, z.get_mpz_t());
 	else for (unsigned i = 0; i < length; i++) mA[i] = 0;
@@ -196,15 +214,17 @@ void Unumber::pow(Unumber e, const Unumber & mod)
 	if (mpz_cmp_ui(mod.z.get_mpz_t(), 0)) mpz_export(mC, countp, order, size, endianess, nails, mod.z.get_mpz_t());
 	else for (unsigned i = 0; i < length; i++) mC[i] = 0;
 
-	mter_ye1(mA);
-	mter_ye2(mB);
-	mter_ye3(mC);
+	mter_e1(mA);
+	mter_e2(mB);
+	mter_e3(mC);
 
-	__asm__ ("le3.modexp ye0,ye1,ye2,ye3");
+	hw_modexp();
 
-	mfer_ye0(mD);
+	mfer_e0(mD);
 
 	mpz_import(z.get_mpz_t(), length, order, sizeof(unsigned), endianess, nails, mD);
+
+	//std::cout << "Unumber::pow out\n";
 }
 
 void Unumber::swap(Unumber & n) { /*stats_swap++;*/ mpz_class t = z; z=n.z; n.z=t; }

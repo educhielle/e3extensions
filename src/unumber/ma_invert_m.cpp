@@ -59,21 +59,22 @@ bool ma::invert(const Unumber & x, const Unumber & mod, Unumber * xm1)
 //	std::cout << "ma::invert 4\n";
     return true;
 #else
-//std::cout << "ma::invert\n";
-	unsigned length = 64;
+	//std::cout << "ma::invert in\n";
+	unsigned length = Unumber::HW_NUMWORDS;
 	unsigned mA[length], mB[length], mD[length];
 
 	Unumber::exportArray(mA, length, x);
 	Unumber::exportArray(mB, length, mod);
 
-	Unumber::mter_ye1(mA);
-	Unumber::mter_ye2(mB);
+	Unumber::mter_e1(mA);
+	Unumber::mter_e2(mB);
 
-	__asm__ ("le3.inv ye0,ye1,ye2");
+	Unumber::hw_inv();
 
-	Unumber::mfer_ye0(mD);
+	Unumber::mfer_e0(mD);
 
 	*xm1 = Unumber::importArray(mD, length);
+	//std::cout << "ma::invert out\n";
 	return true;
 #endif
 }
@@ -88,21 +89,23 @@ Unumber ma::gcd(const Unumber & x, const Unumber & y)
 
     return iuc.gcd().x;
 #else
-//std::cout << "ma::gcd\n";
-	unsigned length = 64;
+	//std::cout << "ma::gcd in\n";
+
+	unsigned length = Unumber::HW_NUMWORDS;
 	unsigned mA[length], mB[length], mD[length];
 
 	Unumber::exportArray(mA, length, x);
 	Unumber::exportArray(mB, length, y);
 
-	Unumber::mter_ye1(mA);
-	Unumber::mter_ye2(mB);
+	Unumber::mter_e1(mA);
+	Unumber::mter_e2(mB);
 
-	__asm__ ("le3.gcd ye0,ye1,ye2");
+	Unumber::hw_gcd();
 
-	Unumber::mfer_ye0(mD);
+	Unumber::mfer_e0(mD);
 
 	Unumber r = Unumber::importArray(mD, length);
+	//std::cout << "ma::gcd out\n";
 	return r;
 #endif
 }

@@ -109,17 +109,27 @@ class Unumber
 	//void prita();
 
 	/* Assembly support */
+	static unsigned HW_NUMWORDS;
+
 	static void exportArray(unsigned[], unsigned, Unumber);
 	static Unumber importArray(unsigned[], unsigned);
 
-	static void mfer_ye0(unsigned[]);
-	static void mfer_ye1(unsigned[]);
-	static void mfer_ye2(unsigned[]);
-	static void mfer_ye3(unsigned[]);
-	static void mter_ye0(unsigned[]);
-	static void mter_ye1(unsigned[]);
-	static void mter_ye2(unsigned[]);
-	static void mter_ye3(unsigned[]);
+	static void mfer_e0(unsigned[]);
+	static void mfer_e1(unsigned[]);
+	static void mfer_e2(unsigned[]);
+	static void mfer_e3(unsigned[]);
+	static void mter_e0(unsigned[]);
+	static void mter_e1(unsigned[]);
+	static void mter_e2(unsigned[]);
+	static void mter_e3(unsigned[]);
+
+	static void hw_modmul();
+	static void hw_modexp();
+
+	static void hw_gcd();
+	static void hw_inv();
+
+	static void hw_gfun();
 };
 
 

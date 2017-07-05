@@ -39,10 +39,10 @@
 	#define LIBG_SPEED MAX_LIBG_SPEED
 #endif
 
-Unumber fkf, _g, n, xp1, xp2, n2;
+//Unumber fkf, _g, n, xp1, xp2, n2;
 
-//Unumber fkf(3480), _g(430), n(143), xp1(144), xp2(18304);
-//Unumber n2 = n*n;
+Unumber fkf(3480), _g(430), n(143), xp1(144), xp2(18304);
+Unumber n2 = n*n;
 
 #ifdef FAST_RANDOM
 Unumber rN(0);
@@ -62,9 +62,9 @@ Unumber libg(Unumber x, Unumber y)
 #ifndef HWACC
 
 /* Software libg */
-//#ifndef STATIC_LIBG
+#ifndef STATIC_LIBG
 	if (!loaded) loadCryptosystemParams(); // Used if libg is a shared object
-//#endif
+#endif
 
 	Unumber ox = Unumber(x);
 	ox.pow(fkf, n2);
@@ -87,23 +87,25 @@ Unumber libg(Unumber x, Unumber y)
 
 /* Hardware libg */
 #else
-//std::cout << "libg\n";
-	unsigned length = 64;
+	//std::cout << "libg in\n";
+	unsigned length = Unumber::HW_NUMWORDS;
 	unsigned mA[length], mB[length], mC[length], mD[length];
 
 	Unumber::exportArray(mA, length, x);
 	Unumber::exportArray(mB, length, y);
 	Unumber::exportArray(mC, length, n2);
 
-	Unumber::mter_ye1(mA);
-	Unumber::mter_ye2(mB);
-	Unumber::mter_ye3(mC);
+	Unumber::mter_e1(mA);
+	Unumber::mter_e2(mB);
+	Unumber::mter_e3(mC);
 
-	__asm__ ("le3.gfun ye0,ye1,ye2,ye3");
+	Unumber::hw_gfun();
 
-	Unumber::mfer_ye0(mD);
+	Unumber::mfer_e0(mD);
 
 	Unumber r = Unumber::importArray(mD, length);
+
+	//std::cout << "libg out\n";
 	return r;
 #endif
 }

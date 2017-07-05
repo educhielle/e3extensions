@@ -85,8 +85,8 @@ LDF := -lgmpxx -lgmp $(LDF)
 endif
 
 # Hardware Acceleration
-ifeq ($(HWACC),1)
-OPT := -DHWACC $(OPT)
+ifdef HWACC
+OPT := -DHWACC=$(HWACC) $(OPT)
 endif
 
 # Fast Random
