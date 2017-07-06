@@ -371,7 +371,9 @@ SensitiveInformation mountSensitiveInformation(string & pqkrnd, unsigned beta)
 
 		cout << "P: " << p.str() << "\tQ: " << q.str() << "\tK: " << k.str() << "\tRND: " << rnd.str() << "\n";
 
-		return SensitiveInformation(p,q,k,rnd,beta);
+		SensitiveInformation si(p,q,k,rnd,beta);
+		si.calcHalfTable();
+		return si;
 	}
 	catch (std::exception & e) { }
 

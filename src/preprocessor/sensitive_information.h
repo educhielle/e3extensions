@@ -24,7 +24,7 @@ class SensitiveInformation
 	Unumber rnd;
 	Unumber n, n2;
 	
-	Unumber twoToBeta;	
+	Unumber unTwoToBeta, twoToBeta;	
 	Unumber xp1, xp2;
 	Unumber a2, b2;
 	unsigned beta, high_bit_posN, high_bit_posN2;
@@ -54,6 +54,7 @@ class SensitiveInformation
 
     /* Public functions */
     public:
+	void calcHalfTable();
 	Unumber decrypt(Unumber, Unumber *);
 	Unumber encrypt(Unumber, Unumber);
 	Unumber encrypt(Unumber);

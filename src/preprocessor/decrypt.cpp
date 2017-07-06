@@ -105,7 +105,7 @@ SensitiveInformation loadCryptosystemParams(string filename)
 	string strK 	= text.substr(semicolon[2], semicolon[3]-semicolon[2]-1);
 	string strBeta	= text.substr(semicolon[3], semicolon[4]-semicolon[3]-1);
 
-	Unumber p,q,k, beta;
+	Unumber p,q,k,beta;
 	p = Unumber(strP);
 	q = Unumber(strQ);
 	k = Unumber(strK);

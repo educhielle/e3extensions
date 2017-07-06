@@ -11,7 +11,7 @@ string gFunctionName = "libg";
 
 int main()
 {
-	Cryptosystem cs(__PQ()()()(), __BETA, __2TOBETA, __ENC0, __ENC1, libgDir, gFunctionName);
+	Cryptosystem cs(__PQ()()()(), __BETA, __2TOBETA, __HALFTABLE, __ENC0, __ENC1, libgDir, gFunctionName);
 
 	SecureInt num(__E(12),cs);
 	SecureInt f1(__E(0),cs);

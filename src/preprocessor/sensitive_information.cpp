@@ -224,6 +224,18 @@ void SensitiveInformation::setB2Beta(unsigned b)
 	twoToBeta = Unumber(2);
 	twoToBeta.pow(beta, n2);
 
+	unTwoToBeta = twoToBeta;
+
+	twoToBeta = encrypt(twoToBeta);
+}
+
+/****************************
+ *     PUBLIC FUNCTIONS     *
+ ****************************/
+
+/* Calc Half Table */
+void SensitiveInformation::calcHalfTable()
+{
 	int length = beta;
 	Unumber param = twoToBeta;
 	Unumber encParam;
@@ -234,13 +246,7 @@ void SensitiveInformation::setB2Beta(unsigned b)
 		encParam = encrypt(param);
 		halfTable.push_back(encParam.str());
 	}
-
-	twoToBeta = encrypt(twoToBeta);
 }
-
-/****************************
- *     PUBLIC FUNCTIONS     *
- ****************************/
 
 /* Decrypt */
 /* a is the encrypted value */
