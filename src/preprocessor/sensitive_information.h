@@ -8,7 +8,10 @@
 #ifndef __SENSITIVE_INFORMATION_H__
 #define __SENSITIVE_INFORMATION_H__
 
+#include <vector>
 #include "../unumber/unumberg.h"
+
+using namespace std;
 
 class SensitiveInformation
 {
@@ -26,6 +29,8 @@ class SensitiveInformation
 	Unumber a2, b2;
 	unsigned beta, high_bit_posN, high_bit_posN2;
 
+	vector<string> halfTable;
+
     /* Public variables */
 	Unumber sneak;
 
@@ -33,9 +38,11 @@ class SensitiveInformation
     public:
 	SensitiveInformation() {}
 	SensitiveInformation(const string &, const string &, const string &);
-	SensitiveInformation(const string &, const string &, const string &, const string &);	
+	SensitiveInformation(const string &, const string &, const string &, const string &);
+	SensitiveInformation(const string &, const string &, const string &, const string &, unsigned);
 	SensitiveInformation(const Unumber, const Unumber, const Unumber);
 	SensitiveInformation(const Unumber, const Unumber, const Unumber, const Unumber);
+	SensitiveInformation(const Unumber, const Unumber, const Unumber, const Unumber, unsigned);
 	SensitiveInformation(unsigned long long, unsigned long long, unsigned long long);
 	SensitiveInformation(unsigned long long, unsigned long long, unsigned long long, unsigned long long);
 
@@ -55,7 +62,8 @@ class SensitiveInformation
         Unumber access_p1Nk1N() const { return p1Nk1N; }
         Unumber access_phi() const { return phi; }
         Unumber fkf() const;
-	Unumber getBeta() const;
+	unsigned getBeta() const;
+	vector<string> getHalfTable() const;
 	unsigned getHighBitPosN() const;
 	Unumber getK() const;	
 	Unumber getN() const;

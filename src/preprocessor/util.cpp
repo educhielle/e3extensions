@@ -86,3 +86,20 @@ void trim(string & s)
 		s.erase(p+1);
 }
 
+/* Convert a vector to a string (elements are separated by comma */
+string vectorToString(vector<string> v)
+{
+	string s = "";
+
+	if (!v.empty())
+	{
+		for (unsigned i = 0; i < v.size()-1; i++)
+		{
+			s.append("\"" + v[i] + "\",");
+		}
+		s.append("\"" + v[v.size()-1] + "\"");
+	}
+
+	return s;
+}
+

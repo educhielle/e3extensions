@@ -28,9 +28,28 @@ vector <Unumber> Cryptosystem::rndN;
  *     PRIVATE FUNCTIONS     *
  *****************************/
 
+int Cryptosystem::addLocalHalfTable(vector<string> localHalfTable)
+{
+	if (localHalfTable.empty()) return INVALID_ID;
+
+	vector<Unumber> newHalfTable;
+	for (unsigned i = 0; i < localHalfTable.size(); i++)
+	{
+		newHalfTable.push_back(Unumber(localHalfTable[i]));
+	}
+
+	halfTable.push_back(newHalfTable);
+
+#ifdef FAST_RANDOM
+	rndN.push_back(0);
+#endif
+
+	return idCount++;
+}
+
 void Cryptosystem::calcHalfs()
 {
-	int length = int_beta;
+	unsigned length = beta;
 	vector<Unumber> newHalfTable;
 	Unumber param = twoToBeta;
 
@@ -58,7 +77,7 @@ Unumber Cryptosystem::half(Unumber x)
 	Unumber mx = invert(x);
 
 	// Beta times
-	int b = int_beta;
+	unsigned b = beta;
 
 	while (b-- > 0)
 	{
@@ -96,7 +115,6 @@ Unumber Cryptosystem::half(Unumber x)
 void Cryptosystem::init()
 {
 	n2 = n * n;
-	int_beta = (int) beta.to_ull();
 
 	high_bit_posN = 0;
 	Unumber x = n - 1;
@@ -162,7 +180,7 @@ Unumber Cryptosystem::g(Unumber x, Unumber y) const
 }
 
 /* Return Beta */
-Unumber Cryptosystem::getBeta() const
+unsigned Cryptosystem::getBeta() const
 {
 	return beta;
 }
@@ -187,13 +205,12 @@ Unumber Cryptosystem::getOne() const
 
 Unumber Cryptosystem::getPowerOfTwo(int index) const
 {
-	return halfTable[id][int_beta-index-1];
+	return halfTable[id][beta-index-1];
 }
 
 /* Return reencrypted 2^Beta */
 Unumber Cryptosystem::getTwoToBeta() const
 {
-	//return reencrypt(twoToBeta);
 	return twoToBeta;
 }
 

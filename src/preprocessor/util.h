@@ -20,6 +20,7 @@ bool isComment(const string &, const int);
 bool isLineComment(const string &, const int);
 bool isNumber(string &);
 void trim(string &);
+string vectorToString(vector<string>);
 
 #endif
 

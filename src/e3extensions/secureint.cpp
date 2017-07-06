@@ -35,7 +35,7 @@ void SecureInt::operator*= (const SecureInt& param)
 	SecureInt sum(uzero, cryptosystem);
 
 	// Beta+1 times
-	Unumber betap1 = cryptosystem.getBeta() + 2;
+	unsigned betap1 = cryptosystem.getBeta() + 2;
 
 	// for (B+1) times do
 	while (--betap1 > 0)
@@ -131,7 +131,7 @@ SecureInt SecureInt::div2()
 
 	// Beta
 	//Unumber beta = cryptosystem.getBeta() + 1;
-	int beta = (int) cryptosystem.getBeta().to_ull();
+	unsigned beta = cryptosystem.getBeta();
 	
 	// for Beta times do
 	while (beta-- > 0)
@@ -170,7 +170,7 @@ SecureInt SecureInt::half2()
 	SecureInt y, my;
 	
 	// Beta times
-	Unumber beta = cryptosystem.getBeta() + 1;
+	unsigned beta = cryptosystem.getBeta() + 1;
 	
 	while (--beta > 0)
 	{

@@ -16,7 +16,7 @@
 
 using namespace std;
 
-#define NUMBER_OF_CS_PARAMETERS 7
+#define NUMBER_OF_CS_PARAMETERS 8
 #define NUMBER_OF_SI_PARAMETERS 2
 
 //#define PRIME_FROM "11"
@@ -43,7 +43,7 @@ int findClosingBracket(const string &, int);
 string findObjectNameBefore(const string &, int);
 bool isSecureIntPrecompilerTag(const string &);
 bool isValidPQ(const string &);
-SensitiveInformation mountSensitiveInformation(string &);
+SensitiveInformation mountSensitiveInformation(string &, unsigned);
 
 /* Transform Cryptosystem values, then encrypt SecureInt values */
 int main(int argc, char *argv[])
@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
 					{
 						csList.push_back(objName);
 						sinfoList.push_back(sinfo);
-						out << objName << ";" << sinfo.getP().str() << ";" << sinfo.getQ().str() << ";" << sinfo.getK().str() << ";" << sinfo.getBeta().str() << ";" << sinfo.fkf().str() << ";" << sinfo.access_g().str() << ";" << sinfo.getN().str() << ";" << sinfo.getXp1().str() << ";" << sinfo.getXp2().str() << "\n";
+						out << objName << ";" << sinfo.getP().str() << ";" << sinfo.getQ().str() << ";" << sinfo.getK().str() << ";" << sinfo.getBeta() << ";" << sinfo.fkf().str() << ";" << sinfo.access_g().str() << ";" << sinfo.getN().str() << ";" << sinfo.getXp1().str() << ";" << sinfo.getXp2().str() << "\n";
 					}
 					Unumber f = sinfo.fkf();
 					cout << "The fkf of '" << objName << "' is " << f.str() << ". Use it in the G function.\n";
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
 string calcNewParamsCS(string params)
 {
 	Unumber p,q,k,rnd;
-	string strPQ, strBeta, strTwoToBeta, strEnc0, strEnc1, libgFilename, libgFunction;
+	string strPQ, strBeta, strTwoToBeta, strHalf, strEnc0, strEnc1, libgFilename, libgFunction;
 
 	vector<string> v{explode(params,',')};
 	switch (v.size())
@@ -176,10 +176,11 @@ string calcNewParamsCS(string params)
 			strPQ = v[0];
 			strBeta = v[1];
 			strTwoToBeta = v[2];
-			strEnc0 = v[3];
-			strEnc1 = v[4];
-			libgFilename = v[5];
-			libgFunction = v[6];
+			strHalf = v[3];
+			strEnc0 = v[4];
+			strEnc1 = v[5];
+			libgFilename = v[6];
+			libgFunction = v[7];
 			break;
 		default:
 			return params;
@@ -189,27 +190,31 @@ string calcNewParamsCS(string params)
 
 	try
 	{
-		sinfo = mountSensitiveInformation(strPQ);
-		
+		unsigned beta = 0;
 		trim(strBeta);
 		if (strBeta.compare("__BETA"))
 		{
 			Unumber b(strBeta);
-			sinfo.setBeta(b.to_ull());
+			beta = (unsigned) b.to_ull();
 		}
 		else if (paramBeta != 0)
 		{
-			sinfo.setBeta(paramBeta);
+			beta = paramBeta;
 		}
 
+		sinfo = mountSensitiveInformation(strPQ, beta);
+
 		Unumber n = sinfo.getN();
-		Unumber beta = sinfo.getBeta();
+		beta = sinfo.getBeta();
 		Unumber twoToBeta = sinfo.getTwoToBeta();
 		Unumber zero = sinfo.encrypt(Unumber(0));
 		Unumber one = sinfo.encrypt(Unumber(1));
 
-		string newParams = "\"" + n.str() + "\",\"" + beta.str() + "\",\""
-			+ twoToBeta.str() + "\",\"" + zero.str() + "\",\"" + one.str() + "\","
+		vector<string> localHalfTable = sinfo.getHalfTable();
+		string strLocalHalfTable = "{" + vectorToString(localHalfTable) + "}";
+
+		string newParams = "\"" + n.str() + "\"," + std::to_string(beta) + ",\""
+			+ twoToBeta.str() + "\"," + strLocalHalfTable + ",\"" + zero.str() + "\",\"" + one.str() + "\","
 			+ libgFilename + "," + libgFunction; // + "," + libgInit;
 
 		return newParams;
@@ -323,7 +328,7 @@ bool isValidPQ(const string & pqkrnd)
 
 /* Create a SensitiveInformation object based on a string in the format __PQ(p)(q)(k)(r)__ */
 /* p, q, k, and r are optional */
-SensitiveInformation mountSensitiveInformation(string & pqkrnd)
+SensitiveInformation mountSensitiveInformation(string & pqkrnd, unsigned beta)
 {
 	try
 	{
@@ -366,7 +371,7 @@ SensitiveInformation mountSensitiveInformation(string & pqkrnd)
 
 		cout << "P: " << p.str() << "\tQ: " << q.str() << "\tK: " << k.str() << "\tRND: " << rnd.str() << "\n";
 
-		return SensitiveInformation(p,q,k,rnd);
+		return SensitiveInformation(p,q,k,rnd,beta);
 	}
 	catch (std::exception & e) { }
 

@@ -33,6 +33,17 @@ SensitiveInformation::SensitiveInformation(const string & p, const string & q, c
 	init();
 }
 
+SensitiveInformation::SensitiveInformation(const string & p, const string & q, const string & k, const string & rnd, unsigned beta)
+{
+	this->p = Unumber(p);
+	this->q = Unumber(q);
+	this->k = Unumber(k);
+	this->rnd = Unumber(rnd);
+	this->beta = beta;
+
+	init();
+}
+
 SensitiveInformation::SensitiveInformation(const Unumber p, const Unumber q, const Unumber k)
 {
 	this->p = p;
@@ -49,6 +60,17 @@ SensitiveInformation::SensitiveInformation(const Unumber p, const Unumber q, con
 	this->q = q;
 	this->k = k;
 	this->rnd = rnd;
+
+	init();
+}
+
+SensitiveInformation::SensitiveInformation(const Unumber p, const Unumber q, const Unumber k, const Unumber rnd, unsigned beta)
+{
+	this->p = p;
+	this->q = q;
+	this->k = k;
+	this->rnd = rnd;
+	this->beta = beta;
 
 	init();
 }
@@ -175,7 +197,8 @@ void SensitiveInformation::init()
 	Unumber m = n - a2;
 	if (m.iszero())
 	{
-		if (high_bit_posN > 1) setB2Beta(high_bit_posN - 1);
+		if (beta && (beta < high_bit_posN)) setB2Beta(beta);
+		else if (high_bit_posN > 1) setB2Beta(high_bit_posN - 1);
 		else {}
 	}
 	else
@@ -183,10 +206,12 @@ void SensitiveInformation::init()
 		nbit = 0;
 		while ((m >> ++nbit) > 1);
 
-		setB2Beta(nbit);
-
-		if (b2 * 2 < a2) {}
-		else setB2Beta(nbit - 1);
+		if (beta && (beta < nbit)) setB2Beta(beta);
+		else
+		{
+			if (b2 * 2 < a2) setB2Beta(nbit);
+			else setB2Beta(nbit - 1);
+		}
 	}
 //	std::cout << "SensitiveInformation::init 8\n";
 }
@@ -198,6 +223,18 @@ void SensitiveInformation::setB2Beta(unsigned b)
 	b2 = (Unumber(1) << b);
 	twoToBeta = Unumber(2);
 	twoToBeta.pow(beta, n2);
+
+	int length = beta;
+	Unumber param = twoToBeta;
+	Unumber encParam;
+
+	for (length -= - 1; length > 0; length--)
+	{
+		param = param / 2;
+		encParam = encrypt(param);
+		halfTable.push_back(encParam.str());
+	}
+
 	twoToBeta = encrypt(twoToBeta);
 }
 
@@ -291,9 +328,15 @@ unsigned SensitiveInformation::getHighBitPosN() const
 }
 
 /* Return beta */
-Unumber SensitiveInformation::getBeta() const
+unsigned SensitiveInformation::getBeta() const
 {
 	return beta;
+}
+
+/* Return Half Table */
+vector<string> SensitiveInformation::getHalfTable() const
+{
+	return halfTable;
 }
 
 /* Return k */
