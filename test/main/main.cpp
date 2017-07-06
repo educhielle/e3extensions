@@ -66,7 +66,7 @@ int main()
         cout << "p1Nk1N: " << si.access_p1Nk1N().str() << "\n";
         cout << "phi: " << si.access_phi().str() << "\n";
         cout << "fkf: " << si.fkf().str() << "\n";
-        cout << "B: " << si.getBeta().str() << "\n";
+        cout << "B: " << si.getBeta() << "\n";
         cout << "highBitPosN: " << si.getHighBitPosN() << "\n";
         cout << "K: " << si.getK().str() << "\n";
         cout << "N: " << si.getN().str() << "\n";
@@ -79,7 +79,7 @@ int main()
 
 	/* SecureInt and Cryptosystem test area */
 
-	Cryptosystem cs(__PQ(13)(11)(3)(), 3, __2TOBETA, __ENC0, __ENC1, libgDir, "g");
+	Cryptosystem cs(__PQ(13)(11)(3)(), 3, __2TOBETA, __HALFTABLE, __ENC0, __ENC1, libgDir, "g");
 	SecureInt a(__E(11),cs), b(__E(3),cs), c[20];
 
 	//aaa = Cryptosystem(__PQ()()()()__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, libgDir, "g");

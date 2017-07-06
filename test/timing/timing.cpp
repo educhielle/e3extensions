@@ -17,7 +17,7 @@ int main()
 	cout << "For loop: " << (e-s) << " cycles\n";
 
 	s = PAPI_get_real_cyc();
-	Cryptosystem cs(__PQ()()()(), __BETA, __2TOBETA, __ENC0, __ENC1, libgDir, gFunctionName);
+	Cryptosystem cs(__PQ()()()(), __BETA, __2TOBETA, __HALFTABLE, __ENC0, __ENC1, libgDir, gFunctionName);
 	e = PAPI_get_real_cyc();
 	cout << "Cryptosystem cs: " << (e-s) << " cycles\n";
 
