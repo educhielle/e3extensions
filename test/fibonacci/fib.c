@@ -1,7 +1,7 @@
 #include <stdio.h>
  
-#define MAX_NUM 50
-#define NUM 12
+#define MAX_NUM 10
+#define NUM 7
 
 int main(void) {
     int f1 = 0, f2 = 1, fi = 1;

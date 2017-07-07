@@ -6,19 +6,19 @@ using namespace std;
 string libgDir = "./libg.so";
 string gFunctionName = "libg";
 
-#define MAX_NUM 50
-//#define NUM 12
+#define MAX_NUM 10
+//#define NUM 7
 
 int main()
 {
-	Cryptosystem cs("49949","8","1017452159","1595814936","1194111059", libgDir, gFunctionName);
+	Cryptosystem cs("56977",8,"1675233188",{"2311524710","3078926230","2305949533","3240671666","1979708092","298460647","1990097257","1379982416","1510787460"},"1641148093","2863041070", libgDir, gFunctionName);
 
-	SecureInt num("2038176089",cs);
-	SecureInt f1("48559983",cs);
-	SecureInt f2("264051503",cs);
-	SecureInt fi("1712457001",cs);
-	SecureInt i("2389984994",cs);
-	SecureInt result("1257148974",cs);
+	SecureInt num("2543689629",cs);
+	SecureInt f1("1943230801",cs);
+	SecureInt f2("2323453865",cs);
+	SecureInt fi("2506079400",cs);
+	SecureInt i("1781418072",cs);
+	SecureInt result("1961448322",cs);
 
 	int counter = 1;
 	do {

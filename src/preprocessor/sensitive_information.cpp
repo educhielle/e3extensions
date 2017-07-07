@@ -237,10 +237,12 @@ void SensitiveInformation::setB2Beta(unsigned b)
 void SensitiveInformation::calcHalfTable()
 {
 	int length = beta;
-	Unumber param = twoToBeta;
+	Unumber param = unTwoToBeta;
 	Unumber encParam;
 
-	for (length -= - 1; length > 0; length--)
+	encParam = encrypt(param);
+	halfTable.push_back(encParam.str());
+	for (length -= 1; length >= 0; length--)
 	{
 		param = param / 2;
 		encParam = encrypt(param);

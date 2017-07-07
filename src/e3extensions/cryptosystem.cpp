@@ -53,7 +53,7 @@ void Cryptosystem::calcHalfs()
 	vector<Unumber> newHalfTable;
 	Unumber param = twoToBeta;
 
-	for (length -= - 1; length > 0; length--)
+	for (length -= 1; length > 0; length--)
 	{
 		param = half(param);
 		newHalfTable.push_back(param);
@@ -205,7 +205,7 @@ Unumber Cryptosystem::getOne() const
 
 Unumber Cryptosystem::getPowerOfTwo(int index) const
 {
-	return halfTable[id][beta-index-1];
+	return halfTable[id][beta-index];
 }
 
 /* Return reencrypted 2^Beta */

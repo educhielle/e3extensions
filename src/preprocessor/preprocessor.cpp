@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
 					{
 						csList.push_back(objName);
 						sinfoList.push_back(sinfo);
-						out << objName << ";" << sinfo.getP().str() << ";" << sinfo.getQ().str() << ";" << sinfo.getK().str() << ";" << sinfo.getBeta() << ";" << sinfo.fkf().str() << ";" << sinfo.access_g().str() << ";" << sinfo.getN().str() << ";" << sinfo.getXp1().str() << ";" << sinfo.getXp2().str() << "\n";
+						out << objName << ";" << sinfo.getP().str() << ";" << sinfo.getQ().str() << ";" << sinfo.getK().str() << ";" << sinfo.getBeta() << ";" << sinfo.fkf().str() << ";" << sinfo.access_g().str() << ";" << sinfo.getN().str() << ";" << sinfo.getXp1().str() << ";" << sinfo.getXp2().str() << ";" << sinfo.encrypt(Unumber(0)).str() << ";" << sinfo.encrypt(Unumber(1)).str() << "\n";
 					}
 					Unumber f = sinfo.fkf();
 					cout << "The fkf of '" << objName << "' is " << f.str() << ". Use it in the G function.\n";

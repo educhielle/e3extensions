@@ -43,12 +43,13 @@ Unumber rN(0);
  * else return the reencryption of y */	
 Unumber libg(Unumber x, Unumber y)
 {
+	if (!loaded) loadCryptosystemParams(); // Used if libg is a shared object
+
 /* Software libg */
 #ifndef HWACC
 
 /* Software libg */
 //#ifndef STATIC_LIBG
-	if (!loaded) loadCryptosystemParams(); // Used if libg is a shared object
 //#endif
 
 	Unumber ox = Unumber(x);
@@ -145,14 +146,14 @@ void loadCryptosystemParams()
 	string text = buffer.str();
 	in.close();
 
-	int len = 9;
+	int len = 11;
 	int semicolon[len];
 	semicolon[0] = text.find(";") + 1;
 	for (int i = 1; i < len; i++)
 	{
 		semicolon[i] = text.find(";", semicolon[i-1]) + 1;
 	}
-	int newLine = text.find("\n") + 1;
+	//int newLine = text.find("\n") + 1;
 
 	//string strP   = text.substr(semicolon[0], semicolon[1]-semicolon[0]-1);
 	//string strQ   = text.substr(semicolon[1], semicolon[2]-semicolon[1]-1);
@@ -162,7 +163,7 @@ void loadCryptosystemParams()
 	string strG   = text.substr(semicolon[5], semicolon[6]-semicolon[5]-1);
 	string strN   = text.substr(semicolon[6], semicolon[7]-semicolon[6]-1);
 	string strXp1 = text.substr(semicolon[7], semicolon[8]-semicolon[7]-1);
-	string strXp2 = text.substr(semicolon[8], newLine     -semicolon[8]-1);
+	string strXp2 = text.substr(semicolon[8], semicolon[9]-semicolon[8]-1);
 
 	//cout << text << "\n";
 
