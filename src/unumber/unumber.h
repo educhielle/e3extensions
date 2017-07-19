@@ -20,11 +20,13 @@ class Unumber
         Unumber(unsigned long long x);
         Unumber() {}
 
-        enum StringType { Binary, Decimal };
+        enum StringType { Binary, Decimal, Hexadecimal };
         Unumber(const string & s, StringType st);
-	Unumber(const string & s, unsigned int base=10);
+	Unumber(const string & s, unsigned int base);
+	Unumber(const string & s);
 	Unumber(const Unumber & n);
 
+	void init(const char *, unsigned);
         void init10(const char * s);
         void initBin(const string & s);
 
@@ -129,6 +131,7 @@ Unumber::Unumber(const string & s, StringType st)
 {
     if ( st == Decimal ) init10(s.c_str());
     if ( st == Binary ) initBin(s);
+    if ( st == Hexadecimal ) init(s.c_str(), 16);
 }
 
 inline
@@ -136,12 +139,40 @@ Unumber::Unumber(const string & s, unsigned int base)
 {
 	if ( base == 10 ) init10(s.c_str());
 	if ( base == 2 ) initBin(s);
+	if ( base == 16 ) init(s.c_str(), 16);
+}
+
+inline
+Unumber::Unumber(const string & s)
+{
+	if ((s.length() >= 2) && (s[0] == '0') && (tolower(s[1]) == 'x')) init(s.substr(2).c_str(), 16);
+	init10(s.c_str());
 }
 
 inline
 Unumber::Unumber(const Unumber & n)
 {
 	init10(n.str().c_str());
+}
+
+inline
+void Unumber::init(const char * s, unsigned b)
+{
+    ctozero(&z);
+    Unumber base(b);
+    unsigned char top = '0' + (unsigned char) b;
+
+    while (*s)
+    {
+        if ( *s >= '0' && *s < top )
+        {
+            unsigned x = (unsigned char)(tolower(*s)) - (unsigned char)('0');
+            Unumber c(x);
+            z = cmul(&z, &base.z, 0);
+            z = cadd(&z, &c.z);
+        }
+        ++s;
+    }	
 }
 
 inline

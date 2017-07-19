@@ -11,14 +11,14 @@ string gFunctionName = "libg";
 
 int main()
 {
-	Cryptosystem cs("56977",8,"1675233188",{"2311524710","3078926230","2305949533","3240671666","1979708092","298460647","1990097257","1379982416","1510787460"},"1641148093","2863041070", libgDir, gFunctionName);
+	Cryptosystem cs("33221",8,"981734317",{"203927763","489428678","913897938","904762085","922273258","219629361","389790507","627048850","416853675"},"31265380","195201459", libgDir, gFunctionName);
 
-	SecureInt num("2543689629",cs);
-	SecureInt f1("1943230801",cs);
-	SecureInt f2("2323453865",cs);
-	SecureInt fi("2506079400",cs);
-	SecureInt i("1781418072",cs);
-	SecureInt result("1961448322",cs);
+	SecureInt num("520733391",cs);
+	SecureInt f1("88571303",cs);
+	SecureInt f2("489069373",cs);
+	SecureInt fi("652249316",cs);
+	SecureInt i("1062051348",cs);
+	SecureInt result("401914908",cs);
 
 	int counter = 1;
 	do {

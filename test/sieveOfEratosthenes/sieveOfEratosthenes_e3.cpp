@@ -13,7 +13,7 @@ string gFunctionName = "libg";
 ********************************************************/
 
 void sieveOfEratosthenes(int n) {
-	Cryptosystem cs(__PQ()()()(), __BETA, __2TOBETA, __ENC0, __ENC1, libgDir, gFunctionName);
+	Cryptosystem cs(__PQ()()()(), __BETA, __2TOBETA, __HALFTABLE, __ENC0, __ENC1, libgDir, gFunctionName);
 
 	SecureInt prime[n+1];
 	for (int i = 0 ; i < n+1 ; i++) 

@@ -31,11 +31,12 @@ class Unumber
         Unumber(unsigned long long x);
         Unumber();
 
-        enum StringType { Binary, Decimal };
+        enum StringType { Binary, Decimal, Hexadecimal };
         Unumber(const string & s, StringType st);
-	Unumber(const string & s, unsigned int base=10);
+	Unumber(const string & s, unsigned int base=0);
 	Unumber(const Unumber & n);
 
+	void init(const char *, unsigned);
         void init10(const char * s);
         void initBin(const string & s);
 

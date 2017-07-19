@@ -3,7 +3,7 @@
 
 using namespace std;
 
-#define MAX_NUM 50
+#define MAX_NUM 10
 //#define NUM 5
 
 string libgDir = "./libg.so";
@@ -11,7 +11,7 @@ string gFunctionName = "libg";
 
 int main()
 {
-	Cryptosystem cs(__PQ()()()(), __BETA, __2TOBETA, __ENC0, __ENC1, libgDir, gFunctionName);
+	Cryptosystem cs(__PQ()()()(), __BETA, __2TOBETA, __HALFTABLE, __ENC0, __ENC1, libgDir, gFunctionName);
 
 	SecureInt num(__E(5),cs);
 	SecureInt fact(__E(1),cs);

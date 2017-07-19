@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 			for (int sii; ((sii = code.find("(", sid)) != -1) && (sii < semicolon);)
 			{
 				string objName = code.substr(sid, sii-sid);
-				int sio = objName.find_first_of(" \t");
+				int sio = objName.find_last_of(" \t");
 				if (sio > 0) objName = objName.substr(sio);
 				if (!objName.compare("SecureInt")) objName = findObjectNameBefore(code, sid);
 				///int sif = code.find(")", sii);
@@ -297,6 +297,8 @@ string findObjectNameBefore(const string & code, int posF)
 	if (posE > posI)
 	{
 		str = code.substr(posI+1,posE-posI-1);
+		posI = str.find_last_of("\n");
+		if (posI >= 0) str = str.substr(posI);
 		trim(str);
 	}
 	
@@ -306,7 +308,7 @@ string findObjectNameBefore(const string & code, int posF)
 /* Check if the string is a tag of a SecureInt value */
 bool isSecureIntPrecompilerTag(const string & str)
 {
-	std::regex re("__E\\([0-9]+\\)");
+	std::regex re("__E\\((0[xX])?[0-9a-fA-F]+\\)");
 	std::cmatch m;
 	return std::regex_match(str.c_str(), m, re);
 }

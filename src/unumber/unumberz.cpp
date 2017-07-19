@@ -70,14 +70,26 @@ bool operator<(const Unumber & n1, const Unumber & n2) { return n1.z < n2.z; }
 
 Unumber::Unumber(const string & s, Unumber::StringType st)
 {
+/*
     if ( st == Decimal ) z = s;
     if ( st == Binary ) throw "GMP binary initialization not implemented";
+*/
+	unsigned int base = 0;
+	switch ( st )
+	{
+		case Decimal: base = 10; break;
+		case Binary: base = 2; break;
+		case Hexadecimal: base = 16; break;
+	}
+	mpz_set_str(z.get_mpz_t(), s.c_str(), base);
 }
 
 Unumber::Unumber(const string & s, unsigned int base)
 {
-	if ( base == 10 ) z = s;
+	mpz_set_str(z.get_mpz_t(), s.c_str(), base);
+/*	if ( base == 10 ) z = s;
 	if ( base == 2 ) throw "GMP binary initialization not implemented";
+*/
 }
 
 Unumber::Unumber(const Unumber & n)

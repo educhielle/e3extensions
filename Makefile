@@ -255,10 +255,14 @@ install: clean compile-unumber compile-sensitive-information compile-preprocesso
 
 magic:
 	make preprocess IN=$(IN) OUT=$(PREPROC_FILE) KEY_SIZE=$(KEY_SIZE) BETA=$(BETA)
-	make compile-all IN=$(PREPROC_FILE) OUT=$(BINARY_FILE)
+	make compile-all IN=$(PREPROC_FILE) OUT=$(basename $(BINARY_FILE))-GMP$(suffix $(BINARY_FILE)) FAST_RANDOM=1 GMP=1 STATIC_LIBG=1 STATIC_LIBGCC=1 STATIC_LIBSTDCPP=1 STATIC=1
+	make compile-all IN=$(PREPROC_FILE) OUT=$(basename $(BINARY_FILE))-H512$(suffix $(BINARY_FILE)) FAST_RANDOM=1 GMP=1 STATIC_LIBG=1 STATIC_LIBGCC=1 STATIC_LIBSTDCPP=1 STATIC=1 HWACC=512
+	make compile-all IN=$(PREPROC_FILE) OUT=$(basename $(BINARY_FILE))-H1024$(suffix $(BINARY_FILE)) FAST_RANDOM=1 GMP=1 STATIC_LIBG=1 STATIC_LIBGCC=1 STATIC_LIBSTDCPP=1 STATIC=1 HWACC=1024
+	make compile-all IN=$(PREPROC_FILE) OUT=$(basename $(BINARY_FILE))-H2048$(suffix $(BINARY_FILE)) FAST_RANDOM=1 GMP=1 STATIC_LIBG=1 STATIC_LIBGCC=1 STATIC_LIBSTDCPP=1 STATIC=1 HWACC=2048
+	make compile-all IN=$(PREPROC_FILE) OUT=$(basename $(BINARY_FILE))-H4096$(suffix $(BINARY_FILE)) FAST_RANDOM=1 GMP=1 STATIC_LIBG=1 STATIC_LIBGCC=1 STATIC_LIBSTDCPP=1 STATIC=1 HWACC=4096
 	cp $(CS_FILE) $(CS_FILE_BACKUP)
-	make run IN=$(BINARY_FILE) OUT=$(OUTPUT_ENC) SAVE_TIME=1
-	make decrypt IN=$(OUTPUT_ENC) OUT=$(OUTPUT_DEC) CS=$(CS_FILE_BACKUP)
+#	make run IN=$(BINARY_FILE) OUT=$(OUTPUT_ENC) SAVE_TIME=1
+#	make decrypt IN=$(OUTPUT_ENC) OUT=$(OUTPUT_DEC) CS=$(CS_FILE_BACKUP)
 
 magic-all:
 	make magic IN=$(IN) KEY_SIZE=16 BETA=$(BETA)
@@ -268,6 +272,12 @@ magic-all:
 	make magic IN=$(IN) KEY_SIZE=256 BETA=$(BETA)
 	make magic IN=$(IN) KEY_SIZE=512 BETA=$(BETA)
 	make magic IN=$(IN) KEY_SIZE=1024 BETA=$(BETA)
+	make magic IN=$(IN) KEY_SIZE=2048 BETA=$(BETA)
+
+magic-all-all:
+	make magic-all IN=$(IN) BETA=8
+	make magic-all IN=$(IN) BETA=16
+	make magic-all IN=$(IN) BETA=32
 
 preprocess: ## Preprocess code. Usage: make preprocessor IN=path/to/code OUT=path/to/output [KEY_SIZE=1024] [BETA=16]
 	$(BIN)/preprocessor $(IN) $(OUT) $(KEY_SIZE) $(BETA)
