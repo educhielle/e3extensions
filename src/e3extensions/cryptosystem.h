@@ -44,6 +44,7 @@ class Cryptosystem
 	Unumber n, n2, twoToBeta, zero, one;
 	unsigned beta, high_bit_posN; //, high_bit_posN2;
 	//Unumber rndN;
+	Unumber gen;
 
 	string libgFilename, libgFunction, libgInit;
 #ifndef STATIC_LIBG
@@ -62,7 +63,7 @@ class Cryptosystem
     public:
 	Cryptosystem() {}
 	Cryptosystem(const Cryptosystem &);
-	Cryptosystem(const string &, unsigned, const string &, const vector<string>, const string &, const string &, const string &, const string &);
+	Cryptosystem(const string &, unsigned, const string &, const vector<string>, const string &, const string &, const string &, const string &, const string & gen = "0");
 	Cryptosystem(const Unumber, unsigned, const Unumber, const Unumber, const Unumber, const string &, const string &);
 	Cryptosystem(unsigned long long, unsigned, unsigned long long, unsigned long long, unsigned long long, const string &, const string &);
 
@@ -70,12 +71,15 @@ class Cryptosystem
     private:
 	int addLocalHalfTable(vector<string>);
 	void calcHalfs();
+	Unumber congruence(Unumber, const Unumber &);
 	Unumber half(Unumber);
 	void init();
 
     /* Public functions */
     public:
 	void close();
+	//Unumber encrypt(const int) const;
+	Unumber encrypt(const Unumber &);
 	Unumber g(Unumber, Unumber) const;
 	unsigned getBeta() const;
 	Unumber getN() const;
@@ -104,6 +108,7 @@ Cryptosystem::Cryptosystem(const Cryptosystem & param)
 	this->one = param.one;
 	this->libgFilename = param.libgFilename;
 	this->libgFunction = param.libgFunction;
+	this->gen = param.gen;
 	//this->libgInit = param.libgInit;
 	this->id = param.id;
 
@@ -111,7 +116,7 @@ Cryptosystem::Cryptosystem(const Cryptosystem & param)
 }
 
 inline
-Cryptosystem::Cryptosystem(const string & n, unsigned beta, const string & twoToBeta, const vector<string> localHalfTable, const string & zero, const string & one, const string & libgFilename, const string & libgFunction)
+Cryptosystem::Cryptosystem(const string & n, unsigned beta, const string & twoToBeta, const vector<string> localHalfTable, const string & zero, const string & one, const string & libgFilename, const string & libgFunction, const string & gen)
 {
 	this->n = Unumber(n);
 	this->beta = beta;
@@ -120,6 +125,7 @@ Cryptosystem::Cryptosystem(const string & n, unsigned beta, const string & twoTo
 	this->one = Unumber(one);
 	this->libgFilename = libgFilename;
 	this->libgFunction = libgFunction;
+	this->gen = gen;
 	//this->libgInit = libgInit;
 	//this->id = INVALID_ID;
 	this->id = addLocalHalfTable(localHalfTable);

@@ -62,6 +62,24 @@ void Cryptosystem::calcHalfs()
 	halfTable.push_back(newHalfTable);
 }
 
+/* Return (x % n) */
+/* It is used to make sure x < n */
+Unumber Cryptosystem::congruence(Unumber x, const Unumber & n)
+{
+	if ( n.iszero() ) return x;
+
+	Unumber nn(n);
+	nn <<= 2;
+	if (nn > x)
+	{
+		while (n < x) x -= n;
+		return x;
+	}
+
+	x.divABRQ(n, &nn, 0);
+	return nn;
+}
+
 Unumber Cryptosystem::half(Unumber x)
 {
 	// sum = ~0
@@ -170,6 +188,26 @@ void Cryptosystem::close()
 #ifndef STATIC_LIBG
 	dlclose(libgHandle);
 #endif
+}
+
+/* Encrypt following equation x = r^N * (1 + N*k*m) % N2 */
+Unumber Cryptosystem::encrypt(const Unumber & m)
+{
+#ifdef FAST_RANDOM
+	if (rndN[id] == 0)
+	{
+		rndN[id] = invertibleRandom();
+		rndN[id].pow(n,n2);
+	}
+	else rndN[id].mul(rndN[id],n2);
+	Unumber rN = rndN[id];
+#else
+	Unumber rN = invertibleRandom();
+	rN.pow(n,n2);
+#endif
+	Unumber gm = (congruence(m, n) * (gen - 1) + 1) % n2; // (1 + N*k*m) % N2
+	Unumber x = rN.mul(gm, n2); // r^N * (1 + N*k*m) % N2
+	return x;
 }
 
 /* G function */
