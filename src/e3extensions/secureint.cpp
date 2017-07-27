@@ -18,11 +18,23 @@ void SecureInt::operator+= (const SecureInt & param)
 	x = x.mul(param.x, cryptosystem.getN2());
 }
 
+void SecureInt::operator+= (unsigned long long param)
+{
+	Unumber y = cryptosystem.encrypt(Unumber(param));
+	x = x.mul(y, cryptosystem.getN2());
+}
+
 /* Encrypted subtraction */
 /* Equivalent to a modular multiplication of the minuend with the inverse of the subtrahend */
 void SecureInt::operator-= (const SecureInt & param)
 {
 	*this += SecureInt::invert(param);
+}
+
+void SecureInt::operator-= (unsigned long long param)
+{
+	Unumber y = cryptosystem.encrypt(Unumber(-param));
+	x = x.mul(y, cryptosystem.getN2());
 }
 
 /* Encrypted multiplication */
@@ -59,8 +71,25 @@ void SecureInt::operator*= (const SecureInt& param)
 	*this = sum;
 }
 
+void SecureInt::operator*= (unsigned long long param)
+{
+	SecureInt y (cryptosystem.encrypt(Unumber(param)), cryptosystem);
+	*this *= y;
+}
+
 /* Shift left */
 /* Multiply number by a power of two */
+void SecureInt::operator<<= (const SecureInt& param)
+{
+	SecureInt s (param);
+	unsigned beta = cryptosystem.getBeta();
+	while (beta-- > 0)
+	{
+		*this = *this + SecureInt::G(s, *this);
+		--s;
+	}
+}
+
 void SecureInt::operator<<= (unsigned shift)
 {
 	for (unsigned i = 0; i < shift; i++) *this += *this;
@@ -68,6 +97,20 @@ void SecureInt::operator<<= (unsigned shift)
 
 /* Shift right */
 /* Divide number by a power of two */
+void SecureInt::operator>>= (const SecureInt& param)
+{
+	SecureInt s (param);
+	Unumber uone = cryptosystem.getOne();
+	SecureInt one (uone, cryptosystem);
+	unsigned beta = cryptosystem.getBeta();
+	while (beta-- > 0)
+	{
+		SecureInt d2 (*this);
+		*this = SecureInt::G(s, d2.div2()) + SecureInt::G(one-s, *this);
+		--s;
+	}
+}
+
 void SecureInt::operator>>= (unsigned shift)
 {
 	for (unsigned i = 0; i < shift; i++) *this = div2();
@@ -79,6 +122,14 @@ void SecureInt::operator++ ()
 {
 	x = x.mul(cryptosystem.getOne(), cryptosystem.getN2());
 }
+
+/* Encrypted decrement */
+/* Equivalent to a inverse followed by modular multiplication */
+void SecureInt::operator-- ()
+{
+	x = x.mul(cryptosystem.invert(cryptosystem.getOne()), cryptosystem.getN2());
+}
+
 
 /* Equal */
 /* Compare if two encrypted numbers are equal */
@@ -105,6 +156,62 @@ SecureInt operator!= (const SecureInt & n1, const SecureInt & n2)
 	Unumber uone = n1.cryptosystem.getOne();
 	SecureInt one (uone,n1.cryptosystem);
 	SecureInt r = SecureInt::G(n1-n2,one) + SecureInt::G(n2-n1,one);
+	return r;
+}
+
+/* Different */
+/* Compare if two encrypted numbers are different */
+/* Return encrypted one if true, and encrypted zero otherwise */
+/* Different(x,y) = G(x-y,~1) + G(y-x,~1) */
+SecureInt operator> (const SecureInt & n1, const SecureInt & n2)
+{
+	//Cryptosystem cs(n1.cryptosystem);
+	//Unumber uone = cs.getOne();
+	Unumber uone = n1.cryptosystem.getOne();
+	SecureInt one (uone,n1.cryptosystem);
+	SecureInt r = SecureInt::G(n1-n2,one);
+	return r;
+}
+
+/* Different */
+/* Compare if two encrypted numbers are different */
+/* Return encrypted one if true, and encrypted zero otherwise */
+/* Different(x,y) = G(x-y,~1) + G(y-x,~1) */
+SecureInt operator< (const SecureInt & n1, const SecureInt & n2)
+{
+	//Cryptosystem cs(n1.cryptosystem);
+	//Unumber uone = cs.getOne();
+	Unumber uone = n1.cryptosystem.getOne();
+	SecureInt one (uone,n1.cryptosystem);
+	SecureInt r = SecureInt::G(n2-n1,one);
+	return r;
+}
+
+/* Different */
+/* Compare if two encrypted numbers are different */
+/* Return encrypted one if true, and encrypted zero otherwise */
+/* Different(x,y) = G(x-y,~1) + G(y-x,~1) */
+SecureInt operator>= (const SecureInt & n1, const SecureInt & n2)
+{
+	//Cryptosystem cs(n1.cryptosystem);
+	//Unumber uone = cs.getOne();
+	Unumber uone = n1.cryptosystem.getOne();
+	SecureInt one (uone,n1.cryptosystem);
+	SecureInt r = one - SecureInt::G(n2-n1,one);
+	return r;
+}
+
+/* Different */
+/* Compare if two encrypted numbers are different */
+/* Return encrypted one if true, and encrypted zero otherwise */
+/* Different(x,y) = G(x-y,~1) + G(y-x,~1) */
+SecureInt operator<= (const SecureInt & n1, const SecureInt & n2)
+{
+	//Cryptosystem cs(n1.cryptosystem);
+	//Unumber uone = cs.getOne();
+	Unumber uone = n1.cryptosystem.getOne();
+	SecureInt one (uone,n1.cryptosystem);
+	SecureInt r = one - SecureInt::G(n1-n2,one);
 	return r;
 }
 

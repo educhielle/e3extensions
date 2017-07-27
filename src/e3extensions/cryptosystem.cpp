@@ -17,20 +17,27 @@
 	#define INCLUDE_FILE(M)	QUOTEME(M)
 	#include INCLUDE_FILE(STATIC_LIBG) */
 #endif
-
+/*
 int Cryptosystem::idCount = 0;
 vector<vector<Unumber>> Cryptosystem::halfTable;
 #ifdef FAST_RANDOM
 vector <Unumber> Cryptosystem::rndN;
 #endif
+int Cryptosystem::calango = 0;
 
 /*****************************
  *     PRIVATE FUNCTIONS     *
  *****************************/
-
+/*
 int Cryptosystem::addLocalHalfTable(vector<string> localHalfTable)
 {
 	if (localHalfTable.empty()) return INVALID_ID;
+	/*{
+		if (gen == 0) throw "Half table can only be empty if the generator is valid.";
+		else 
+	
+
+	if (localHalfTable.size() <= beta
 
 	vector<Unumber> newHalfTable;
 	for (unsigned i = 0; i < localHalfTable.size(); i++)
@@ -46,8 +53,8 @@ int Cryptosystem::addLocalHalfTable(vector<string> localHalfTable)
 
 	return idCount++;
 }
-
-void Cryptosystem::calcHalfs()
+*/
+void Cryptosystem::calcHalfTable()
 {
 	unsigned length = beta;
 	vector<Unumber> newHalfTable;
@@ -59,7 +66,7 @@ void Cryptosystem::calcHalfs()
 		newHalfTable.push_back(param);
 	}
 
-	halfTable.push_back(newHalfTable);
+	halfTable = newHalfTable;
 }
 
 /* Return (x % n) */
@@ -78,6 +85,12 @@ Unumber Cryptosystem::congruence(Unumber x, const Unumber & n)
 
 	x.divABRQ(n, &nn, 0);
 	return nn;
+}
+
+/* Convert Half Table from string to Unumber */
+void Cryptosystem::convertHalfTable(vector<string> strHalfTable)
+{
+	for (unsigned i = 0; i < strHalfTable.size(); i++) halfTable.push_back(Unumber(strHalfTable[i]));
 }
 
 Unumber Cryptosystem::half(Unumber x)
@@ -139,6 +152,8 @@ void Cryptosystem::init()
 	while (x != 0) { x >>= 1; high_bit_posN++; }
 	high_bit_posN--;
 
+	r = 0;
+
 	/*x = n2;
 	while (x != 0) { x >>= 1; high_bit_posN2++; }
 	high_bit_posN2--;*/
@@ -168,15 +183,24 @@ void Cryptosystem::init()
 	}
 #endif
 
-	if (id == INVALID_ID)
+	if (halfTable.empty())
 	{
-		//idCount = (idCount + 1) % CS_LIMIT;
-		id = idCount++;
-		calcHalfs();
-#ifdef FAST_RANDOM
-		rndN.push_back(0);
-#endif
+		if (gen == 0) throw "Half table can only be empty if the generator is valid.\n";
+		else
+		{
+			twoToBeta = 1;
+			twoToBeta = 1 << beta;
+			twoToBeta = encrypt(twoToBeta);
+			calcHalfTable();
+		}
+	} else
+	{
+		twoToBeta = halfTable[0];
+		if (halfTable.size() <= beta) calcHalfTable();
 	}
+	one = halfTable[halfTable.size()-1];
+	zero = invert(one);
+	zero = zero.mul(one, n2);
 }
 
 /****************************
@@ -193,14 +217,16 @@ void Cryptosystem::close()
 /* Encrypt following equation x = r^N * (1 + N*k*m) % N2 */
 Unumber Cryptosystem::encrypt(const Unumber & m)
 {
+	if (gen == 0) throw "Generator not initialized\n";
+
 #ifdef FAST_RANDOM
-	if (rndN[id] == 0)
+	if (r == 0)
 	{
-		rndN[id] = invertibleRandom();
-		rndN[id].pow(n,n2);
+		r = invertibleRandom();
+		r.pow(n,n2);
 	}
-	else rndN[id].mul(rndN[id],n2);
-	Unumber rN = rndN[id];
+	else r.mul(r,n2);
+	Unumber rN = r;
 #else
 	Unumber rN = invertibleRandom();
 	rN.pow(n,n2);
@@ -238,12 +264,13 @@ Unumber Cryptosystem::getN2() const
 /* Return reencrypted one */
 Unumber Cryptosystem::getOne() const
 {
-	return reencrypt(one);
+	//return reencrypt(one);
+	return one;
 }
 
 Unumber Cryptosystem::getPowerOfTwo(int index) const
 {
-	return halfTable[id][beta-index];
+	return halfTable[beta-index];
 }
 
 /* Return reencrypted 2^Beta */
@@ -255,7 +282,8 @@ Unumber Cryptosystem::getTwoToBeta() const
 /* Return reencrypted zero */
 Unumber Cryptosystem::getZero() const
 {
-	return reencrypt(zero);
+	//return reencrypt(zero);
+	return zero;
 }
 
 Unumber Cryptosystem::invert(Unumber number) const
@@ -312,24 +340,24 @@ Unumber Cryptosystem::invertibleRandom() const
 
 /* Reencrypt a cyphertext with a random invertible number */
 /* Following the equation x' = (r^N * x) % N2 */
-Unumber Cryptosystem::reencrypt(const Unumber x) const
+Unumber Cryptosystem::reencrypt(Unumber x)
 {
 #ifdef FAST_RANDOM
-	if (rndN[id] == 0)
+	if (r == 0)
 	{
-		rndN[id] = invertibleRandom();
-		rndN[id].pow(n,n2);
+		r = invertibleRandom();
+		r.pow(n,n2);
 	}
 	else
 	{
-		rndN[id].mul(rndN[id],n2);
+		r.mul(r,n2);
 	}
 
-	Unumber y = rndN[id].mul(x,n2);
+	Unumber y = r.mul(x,n2);
 #else
 	Unumber y = invertibleRandom();
 	y.pow(n,n2);
-	y = y.mul(x,n2);
+	y.mul(x,n2);
 #endif
 
 	return y;

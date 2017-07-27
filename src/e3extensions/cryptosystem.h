@@ -38,9 +38,9 @@ class Cryptosystem
 
     /* Variables */
     private:
-	int id;
-	static int idCount;
-	static vector<vector<Unumber>> halfTable;
+	//int id;
+	//static int idCount;
+	vector<Unumber> halfTable;
 	Unumber n, n2, twoToBeta, zero, one;
 	unsigned beta, high_bit_posN; //, high_bit_posN2;
 	//Unumber rndN;
@@ -52,25 +52,28 @@ class Cryptosystem
 	libG_t libg;
 #endif
 
-#ifdef FAST_RANDOM
-	static vector<Unumber> rndN;
+//#ifdef FAST_RANDOM
+	//static vector<Unumber> rndN;
+	Unumber r;
 //	static Unumber rndN[CS_LIMIT];
-#endif
+//#endif
 
-#define INVALID_ID -1
+//#define INVALID_ID -1
 	
     /* Constructors */
     public:
+	static int calango;
 	Cryptosystem() {}
 	Cryptosystem(const Cryptosystem &);
-	Cryptosystem(const string &, unsigned, const string &, const vector<string>, const string &, const string &, const string &, const string &, const string & gen = "0");
+	Cryptosystem(const string &, unsigned, const vector<string>, const string &, const string &, const string & gen = "0");
 	Cryptosystem(const Unumber, unsigned, const Unumber, const Unumber, const Unumber, const string &, const string &);
 	Cryptosystem(unsigned long long, unsigned, unsigned long long, unsigned long long, unsigned long long, const string &, const string &);
 
     /* Private functions */
     private:
-	int addLocalHalfTable(vector<string>);
-	void calcHalfs();
+	//int addLocalHalfTable(vector<string>);
+	void convertHalfTable(vector<string>);
+	void calcHalfTable();
 	Unumber congruence(Unumber, const Unumber &);
 	Unumber half(Unumber);
 	void init();
@@ -90,7 +93,7 @@ class Cryptosystem
 	Unumber getZero() const;
 	Unumber invert(Unumber) const;
 	Unumber invertibleRandom() const;
-	Unumber reencrypt(const Unumber) const;
+	Unumber reencrypt(Unumber);
 	//void prita();
 };
 
@@ -103,32 +106,34 @@ Cryptosystem::Cryptosystem(const Cryptosystem & param)
 {
 	this->n = param.n;
 	this->beta = param.beta;
-	this->twoToBeta = param.twoToBeta;
-	this->zero = param.zero;
-	this->one = param.one;
+	//this->twoToBeta = param.twoToBeta;
+	this->halfTable = param.halfTable;
+	//this->zero = param.zero;
+	//this->one = param.one;
 	this->libgFilename = param.libgFilename;
 	this->libgFunction = param.libgFunction;
 	this->gen = param.gen;
 	//this->libgInit = param.libgInit;
-	this->id = param.id;
+	//this->id = param.id;
 
 	init();
 }
 
 inline
-Cryptosystem::Cryptosystem(const string & n, unsigned beta, const string & twoToBeta, const vector<string> localHalfTable, const string & zero, const string & one, const string & libgFilename, const string & libgFunction, const string & gen)
+Cryptosystem::Cryptosystem(const string & n, unsigned beta, const vector<string> halfTable, const string & libgFilename, const string & libgFunction, const string & gen)
 {
 	this->n = Unumber(n);
 	this->beta = beta;
-	this->twoToBeta = Unumber(twoToBeta);
-	this->zero = Unumber(zero);
-	this->one = Unumber(one);
+	//this->twoToBeta = Unumber(twoToBeta);
+	convertHalfTable(halfTable);
+	//this->zero = Unumber(zero);
+	//this->one = Unumber(one);
 	this->libgFilename = libgFilename;
 	this->libgFunction = libgFunction;
 	this->gen = gen;
 	//this->libgInit = libgInit;
 	//this->id = INVALID_ID;
-	this->id = addLocalHalfTable(localHalfTable);
+	//this->id = addLocalHalfTable(localHalfTable);
 
 	init();
 }
@@ -144,7 +149,7 @@ Cryptosystem::Cryptosystem(const Unumber n, unsigned beta, const Unumber twoToBe
 	this->libgFilename = libgFilename;
 	this->libgFunction = libgFunction;
 	//this->libgInit = libgInit;
-	this->id = INVALID_ID;
+	//this->id = INVALID_ID;
 
 	init();
 }
@@ -160,7 +165,7 @@ Cryptosystem::Cryptosystem(unsigned long long n, unsigned beta, unsigned long lo
 	this->libgFilename = libgFilename;
 	this->libgFunction = libgFunction;
 	//this->libgInit = libgInit;
-	this->id = INVALID_ID;
+	//this->id = INVALID_ID;
 
 	init();
 }

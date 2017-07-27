@@ -24,23 +24,32 @@ class SecureInt
     public:
 	SecureInt() {}
 	SecureInt(const SecureInt &);
-	SecureInt(const Unumber, const Cryptosystem);
-	SecureInt(const string &, const Cryptosystem);
-	SecureInt(const string &, unsigned, const Cryptosystem);
-	SecureInt(const string &, StringType, const Cryptosystem);
-	SecureInt(const string &, Unumber::StringType, const Cryptosystem);
-	SecureInt(unsigned long long, const Cryptosystem);
+	SecureInt(const Unumber, const Cryptosystem &);
+	SecureInt(const string &, const Cryptosystem &);
+	SecureInt(const string &, unsigned, const Cryptosystem &);
+	SecureInt(const string &, StringType, const Cryptosystem &);
+	SecureInt(const string &, Unumber::StringType, const Cryptosystem &);
+	SecureInt(unsigned long long, const Cryptosystem &);
 
     /* Operators */
     public:
 	void operator+= (const SecureInt &);
+	void operator+= (unsigned long long);
 	void operator-= (const SecureInt &);
+	void operator-= (unsigned long long);
 	void operator*= (const SecureInt &);
+	void operator*= (unsigned long long);
+	void operator<<= (const SecureInt &);
 	void operator<<= (unsigned);
+	void operator>>= (const SecureInt &);
 	void operator>>= (unsigned);
 	void operator++ ();
+	void operator-- ();
 	
 	friend SecureInt operator+ (const SecureInt & n1, const SecureInt & n2)
+	{ SecureInt r(n1); r += n2; return r; }
+
+	friend SecureInt operator+ (const SecureInt & n1, unsigned long long n2)
 	{ SecureInt r(n1); r += n2; return r; }
 
 	friend SecureInt operator+ (const SecureInt & n1)
@@ -49,21 +58,41 @@ class SecureInt
 	friend SecureInt operator- (const SecureInt & n1, const SecureInt & n2)
 	{ SecureInt r(n1); r -= n2; return r; }
 
+	friend SecureInt operator- (const SecureInt & n1, unsigned long long n2)
+	{ SecureInt r(n1); r -= n2; return r; }
+
 	friend SecureInt operator- (const SecureInt & n1)
 	{ return SecureInt::invert(n1); }
 
 	friend SecureInt operator* (const SecureInt & n1, const SecureInt & n2)
 	{ SecureInt r(n1); r *= n2; return r; }
 
-	friend SecureInt operator== (const SecureInt &, const SecureInt &);
+	friend SecureInt operator* (const SecureInt & n1, unsigned long long n2)
+	{ SecureInt r(n1); r *= n2; return r; }
 
-	friend SecureInt operator!= (const SecureInt &, const SecureInt &);
+	friend SecureInt operator<< (const SecureInt & n1, const SecureInt & shift)
+	{ SecureInt r(n1); r <<= shift; return r; }
 
 	friend SecureInt operator<< (const SecureInt & n1, unsigned shift)
 	{ SecureInt r(n1); r <<= shift; return r; }
 
+	friend SecureInt operator>> (const SecureInt & n1, const SecureInt & shift)
+	{ SecureInt r(n1); r >>= shift; return r; }
+
 	friend SecureInt operator>> (const SecureInt & n1, unsigned shift)
 	{ SecureInt r(n1); r >>= shift; return r; }
+
+	friend SecureInt operator== (const SecureInt &, const SecureInt &);
+
+	friend SecureInt operator!= (const SecureInt &, const SecureInt &);
+
+	friend SecureInt operator> (const SecureInt &, const SecureInt &);
+
+	friend SecureInt operator< (const SecureInt &, const SecureInt &);
+
+	friend SecureInt operator>= (const SecureInt &, const SecureInt &);
+
+	friend SecureInt operator<= (const SecureInt &, const SecureInt &);
 	
     /* Private object functions */
     private:
@@ -102,28 +131,28 @@ SecureInt::SecureInt(const SecureInt & param)
 }
 
 inline
-SecureInt::SecureInt(const Unumber x, const Cryptosystem cryptosystem)
+SecureInt::SecureInt(const Unumber x, const Cryptosystem & cryptosystem)
 {
 	this->x = x;
 	this->cryptosystem = cryptosystem;
 }
 
 inline
-SecureInt::SecureInt(const string & s, const Cryptosystem cryptosystem)
+SecureInt::SecureInt(const string & s, const Cryptosystem & cryptosystem)
 {
 	this->x = Unumber(s);
 	this->cryptosystem = cryptosystem;
 }
 
 inline
-SecureInt::SecureInt(const string & s, unsigned base, const Cryptosystem cryptosystem)
+SecureInt::SecureInt(const string & s, unsigned base, const Cryptosystem & cryptosystem)
 {
 	this->x = Unumber(s, base);
 	this->cryptosystem = cryptosystem;
 }
 
 inline
-SecureInt::SecureInt(const string & s, StringType st, const Cryptosystem cryptosystem)
+SecureInt::SecureInt(const string & s, StringType st, const Cryptosystem & cryptosystem)
 {
 	switch (st)
 	{
@@ -136,7 +165,7 @@ SecureInt::SecureInt(const string & s, StringType st, const Cryptosystem cryptos
 }
 
 inline
-SecureInt::SecureInt(const string & s, Unumber::StringType st, const Cryptosystem cryptosystem)
+SecureInt::SecureInt(const string & s, Unumber::StringType st, const Cryptosystem & cryptosystem)
 {
 	switch (st)
 	{
@@ -149,7 +178,7 @@ SecureInt::SecureInt(const string & s, Unumber::StringType st, const Cryptosyste
 }
 
 inline
-SecureInt::SecureInt(unsigned long long ull, const Cryptosystem cryptosystem)
+SecureInt::SecureInt(unsigned long long ull, const Cryptosystem & cryptosystem)
 {
 	this->x = Unumber(ull);
 	this->cryptosystem = cryptosystem;
