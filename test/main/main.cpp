@@ -79,7 +79,7 @@ int main()
 
 	/* SecureInt and Cryptosystem test area */
 
-	Cryptosystem cs(__PQ(13)(11)(3)(), 3, __2TOBETA, __HALFTABLE, __ENC0, __ENC1, libgDir, "g");
+	Cryptosystem cs(__PQ(13)(11)(3)(), 3, __HALFTABLE, libgDir, "g");
 	SecureInt a(__E(11),cs), b(__E(3),cs), c[20];
 
 	//aaa = Cryptosystem(__PQ()()()()__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, libgDir, "g");

@@ -16,7 +16,7 @@
 
 using namespace std;
 
-#define NUMBER_OF_CS_PARAMETERS 8
+#define NUMBER_OF_CS_PARAMETERS 6
 #define NUMBER_OF_SI_PARAMETERS 2
 
 //#define PRIME_FROM "11"
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
 string calcNewParamsCS(string params)
 {
 	Unumber p,q,k,rnd;
-	string strPQ, strBeta, strTwoToBeta, strHalf, strEnc0, strEnc1, libgFilename, libgFunction;
+	string strPQ, strBeta, strTwoToBeta, strHalf, strEnc0, strEnc1, libgFilename, libgFunction, strGen = "";
 
 	vector<string> v{explode(params,',')};
 	switch (v.size())
@@ -175,12 +175,24 @@ string calcNewParamsCS(string params)
 		case NUMBER_OF_CS_PARAMETERS:
 			strPQ = v[0];
 			strBeta = v[1];
-			strTwoToBeta = v[2];
-			strHalf = v[3];
-			strEnc0 = v[4];
-			strEnc1 = v[5];
-			libgFilename = v[6];
-			libgFunction = v[7];
+			//strTwoToBeta = v[2];
+			strHalf = v[2];
+			//strEnc0 = v[4];
+			//strEnc1 = v[5];
+			libgFilename = v[3];
+			libgFunction = v[4];
+			strGen = v[5];
+			break;
+		case (NUMBER_OF_CS_PARAMETERS - 1):
+			strPQ = v[0];
+			strBeta = v[1];
+			//strTwoToBeta = v[2];
+			strHalf = v[2];
+			//strEnc0 = v[4];
+			//strEnc1 = v[5];
+			libgFilename = v[3];
+			libgFunction = v[4];
+			//strGen = v[5];
 			break;
 		default:
 			return params;
@@ -210,12 +222,17 @@ string calcNewParamsCS(string params)
 		Unumber zero = sinfo.encrypt(Unumber(0));
 		Unumber one = sinfo.encrypt(Unumber(1));
 
+		trim(strGen);
+		if (!strGen.empty())
+		{
+			if (!strGen.compare("__GEN")) strGen = sinfo.access_g().str();
+			strGen = ",\"" + strGen + "\"";
+		}
+
 		vector<string> localHalfTable = sinfo.getHalfTable();
 		string strLocalHalfTable = "{" + vectorToString(localHalfTable) + "}";
 
-		string newParams = "\"" + n.str() + "\"," + std::to_string(beta) + ",\""
-			+ twoToBeta.str() + "\"," + strLocalHalfTable + ",\"" + zero.str() + "\",\"" + one.str() + "\","
-			+ libgFilename + "," + libgFunction; // + "," + libgInit;
+		string newParams = "\"" + n.str() + "\"," + std::to_string(beta) + "," + strLocalHalfTable + "," + libgFilename + "," + libgFunction + strGen; // + "," + libgInit;
 
 		return newParams;
 	}
