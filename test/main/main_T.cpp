@@ -79,46 +79,111 @@ int main()
 
 	/* SecureInt and Cryptosystem test area */
 
-	Cryptosystem cs("143",3,{"20128","2397","17944","15228"}, libgDir, "g");
-	SecureInt a("15981",cs), b("16257",cs), c[20];
+	Cryptosystem cs("143",3,{"18406","13237","5336","4475"}, libgDir, "g","430");
+	SecureInt a("4839",cs), b("4987",cs), c[100];
 
 	//aaa = Cryptosystem(__PQ()()()()__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, libgDir, "g");
 	//a = SecureInt(__N(11)__,aaa); b = SecureInt(__N(3)__,aaa);
+	int ai = 11;	
+	int bi = 3;
+
+	int i = 0;
+	c[0] = a+b;	cout << i++ << "\n";
+	c[1] = a-b;	cout << i++ << "\n";
+	c[2] = a==b;	cout << i++ << "\n";
+	c[3] = a!=b;	cout << i++ << "\n";
+	c[4] = -a;	cout << i++ << "\n";
+	c[5] = +a;	cout << i++ << "\n";
+	c[6] = a*b;	cout << i++ << "\n";
+	c[7] = a<<0;	cout << i++ << "\n";
+	c[8] = a<<1; 	cout << i++ << "\n";
+	c[9] = a<<2;	cout << i++ << "\n";
+	c[10] = a<<3;	cout << i++ << "\n";
+	c[11] = a<<4;	cout << i++ << "\n";
+	c[12] = a<<5;	cout << i++ << "\n";
+	c[13] = a<<6;	cout << i++ << "\n";
+	c[14] = a<<7;	cout << i++ << "\n";
+	c[15] = a<<8;	cout << i++ << "\n";
+	c[16] = a>>1; 	cout << i++ << "\n";
+	c[17] = a>>2;	cout << i++ << "\n";
+	c[18] = (a+b)*(a-b); cout << i++ << "\n";
+	c[19] = a+b*b;	cout << i++ << "\n";
+	c[20] = a<<b;	cout << i++ << "\n";
+	c[21] = a>>b;	cout << i++ << "\n";
+	c[22] = a>b;	cout << i++ << "\n";
+	c[23] = a<b;	cout << i++ << "\n";
+	c[24] = a>=b;	cout << i++ << "\n";
+	c[25] = a<=b;	cout << i++ << "\n";
 	
-	c[0] = a+b;	cout << "0\n";
-	c[1] = a-b;	cout << "1\n";
-	c[2] = a==b;	cout << "2\n";
-	c[3] = a!=b;	cout << "3\n";
-	c[4] = -a;	cout << "4\n";
-	c[5] = +a;	cout << "5\n";
-	c[6] = a*b;	cout << "6\n";
-	c[7] = a<<0;	cout << "7\n";
-	c[8] = a<<1; 	cout << "8\n";// equivalent to a * a * ... the number of a's is (param+1).
-	c[9] = a<<2;	cout << "9\n";
-	c[10] = a<<3;	cout << "10\n";
-	c[11] = a<<4;	cout << "11\n";
-	c[12] = a<<5;	cout << "12\n";
-	c[13] = a<<6;	cout << "13\n";
-	c[14] = a<<7;	cout << "14\n";
-	c[15] = a<<8;	cout << "15\n";
-	c[16] = a>>1; 	cout << "16\n";// equivalent to subsequent div2's of a. The number of div2's is param.
-	c[17] = a>>2;	cout << "17\n";
-	c[18] = (a+b)*(a-b);	cout << "18\n";
-	c[19] = a+b*b;	cout << "19\n";
-	
+	c[26] = a+ai;	cout << i++ << "\n";
+	c[27] = a-ai;	cout << i++ << "\n";
+	c[28] = a==ai;	cout << i++ << "\n";
+	c[29] = a!=ai;	cout << i++ << "\n";
+	c[30] = SecureInt(-ai,cs);	cout << i++ << "\n";
+	c[31] = SecureInt(+ai,cs);	cout << i++ << "\n";
+	c[32] = a*ai;	cout << i++ << "\n";
+	c[33] = a<<ai;	cout << i++ << "\n";
+	c[34] = a>>ai;	cout << i++ << "\n";
+	c[35] = a>ai;	cout << i++ << "\n";
+	c[36] = a<ai;	cout << i++ << "\n";
+	c[37] = a>=ai;	cout << i++ << "\n";
+	c[38] = a<=ai;	cout << i++ << "\n";
+
+	c[39] = a+bi;	cout << i++ << "\n";
+	c[40] = a-bi;	cout << i++ << "\n";
+	c[41] = a==bi;	cout << i++ << "\n";
+	c[42] = a!=bi;	cout << i++ << "\n";
+	c[43] = SecureInt(-bi,cs);	cout << i++ << "\n";
+	c[44] = SecureInt(+bi,cs);	cout << i++ << "\n";
+	c[45] = a*bi;	cout << i++ << "\n";
+	c[46] = a<<bi;	cout << i++ << "\n";
+	c[47] = a>>bi;	cout << i++ << "\n";
+	c[48] = a>bi;	cout << i++ << "\n";
+	c[49] = a<bi;	cout << i++ << "\n";
+	c[50] = a>=bi;	cout << i++ << "\n";
+	c[51] = a<=bi;	cout << i++ << "\n";
+
+	c[52] = ai+b;	cout << i++ << "\n";
+	c[53] = ai-b;	cout << i++ << "\n";
+	c[54] = ai==b;	cout << i++ << "\n";
+	c[55] = ai!=b;	cout << i++ << "\n";
+	c[56] = ai*b;	cout << i++ << "\n";
+	c[57] = ai<<b;	cout << i++ << "\n";
+	c[58] = ai>>b;	cout << i++ << "\n";
+	c[59] = ai>b;	cout << i++ << "\n";
+	c[60] = ai<b;	cout << i++ << "\n";
+	c[61] = ai>=b;	cout << i++ << "\n";
+	c[62] = ai<=b;	cout << i++ << "\n";
+
+	c[63] = --a;	cout << i++ << "\n";
+	c[64] = --b;	cout << i++ << "\n";
+	c[65] = ++a;	cout << i++ << "\n";
+	c[66] = ++b;	cout << i++ << "\n";
+
+	c[67] = a>>3;	cout << i++ << "\n";
+	c[68] = a>>4;	cout << i++ << "\n";
+	c[69] = a>>5;	cout << i++ << "\n";
+
 	/* Checking SecureInt results with SensitiveInformation */
 	
 	cout << "\nOutputs:\n";
 
-	Unumber R, udecC[20];
+	Unumber R, udecC[100];
 	
 	udecA = si.decrypt(a.getX(), &R);
 	udecB = si.decrypt(b.getX(), &R);
 	cout << "a\t"; printPair(udecA, a.getX());
 	cout << "b\t"; printPair(udecB, b.getX());
 
+	SecureInt t (15, cs);
+	Unumber udecT = si.decrypt(t.getX(), &R);
+	cout << "t\t"; printPair(udecT, t.getX());
+	t = 15==t;	
+	udecT = si.decrypt(t.getX(), &R);
+	cout << "t\t"; printPair(udecT, t.getX());
+
 	cout << "\n";
-	for (int i = 0; i <= 19; i++)
+	for (int i = 0; i <= 69; i++)
 	{
 		udecC[i] = si.decrypt(c[i].getX(), &R);
 		cout << i << "\t";

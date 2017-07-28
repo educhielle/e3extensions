@@ -33,8 +33,8 @@ void SecureInt::operator-= (const SecureInt & param)
 
 void SecureInt::operator-= (unsigned long long param)
 {
-	Unumber y = cryptosystem.encrypt(Unumber(-param));
-	x = x.mul(y, cryptosystem.getN2());
+	SecureInt y (param, cryptosystem);
+	*this += SecureInt::invert(y);
 }
 
 /* Encrypted multiplication */
@@ -118,18 +118,100 @@ void SecureInt::operator>>= (unsigned shift)
 
 /* Encrypted increment */
 /* Equivalent to a modular multiplication */
-void SecureInt::operator++ ()
+SecureInt SecureInt::operator++ ()
 {
 	x = x.mul(cryptosystem.getOne(), cryptosystem.getN2());
+	return SecureInt(*this);
 }
 
 /* Encrypted decrement */
 /* Equivalent to a inverse followed by modular multiplication */
-void SecureInt::operator-- ()
+SecureInt SecureInt::operator-- ()
 {
 	x = x.mul(cryptosystem.invert(cryptosystem.getOne()), cryptosystem.getN2());
+	return SecureInt (*this);
 }
 
+/* Addition */
+SecureInt operator+ (const SecureInt & n1, const SecureInt & n2)
+{
+	SecureInt r(n1); r += n2; return r;
+}
+
+SecureInt operator+ (SecureInt & n1, unsigned long long n2)
+{
+	SecureInt r(n1); r += n2; return r;
+}
+
+SecureInt operator+ (unsigned long long n2, SecureInt & n1)
+{
+	SecureInt r(n1); r += n2; return r;
+}
+
+/* Subtraction */
+SecureInt operator- (const SecureInt & n1, const SecureInt & n2)
+{
+	SecureInt r(n1); r -= n2; return r;
+}
+
+SecureInt operator- (SecureInt & n1, unsigned long long n2)
+{
+	SecureInt r(n1); r -= n2; return r;
+}
+
+SecureInt operator- (unsigned long long n1, SecureInt & n2)
+{
+	SecureInt r(n1,n2.cryptosystem); r -= n2; return r;
+}
+
+/* Multiplication */
+SecureInt operator* (const SecureInt & n1, const SecureInt & n2)
+{
+	SecureInt r(n1); r *= n2; return r;
+}
+
+SecureInt operator* (const SecureInt & n1, unsigned long long n2)
+{
+	SecureInt r(n1); r *= n2; return r;
+}
+
+SecureInt operator* (unsigned long long n2, const SecureInt & n1)
+{
+	SecureInt r(n1); r *= n2; return r;
+}
+
+
+/* Shift left */
+SecureInt operator<< (const SecureInt & n1, const SecureInt & shift)
+{
+	SecureInt r(n1); r <<= shift; return r;
+}
+
+SecureInt operator<< (const SecureInt & n1, unsigned shift)
+{
+	SecureInt r(n1); r <<= shift; return r;
+}
+
+SecureInt operator<< (unsigned long long n1, SecureInt & shift)
+{
+	SecureInt r(n1,shift.cryptosystem); r <<= shift; return r;
+}
+
+/* Shift right */
+SecureInt operator>> (const SecureInt & n1, const SecureInt & shift)
+{
+	SecureInt r(n1); r >>= shift; return r;
+}
+
+SecureInt operator>> (const SecureInt & n1, unsigned shift)
+{
+	SecureInt r(n1); r >>= shift; return r;
+}
+
+SecureInt operator>> (unsigned long long n1, SecureInt & shift)
+{
+	SecureInt r(n1,shift.cryptosystem); r >>= shift; return r;
+}
 
 /* Equal */
 /* Compare if two encrypted numbers are equal */
@@ -145,6 +227,18 @@ SecureInt operator== (const SecureInt & n1, const SecureInt & n2)
 	return equal;
 }
 
+SecureInt operator== (SecureInt & n1, unsigned long long n2)
+{
+	SecureInt y (n2,n1.cryptosystem);
+	return (n1==y);
+}
+
+SecureInt operator== (unsigned long long n1, SecureInt & n2)
+{
+	return (n2==n1);
+}
+
+
 /* Different */
 /* Compare if two encrypted numbers are different */
 /* Return encrypted one if true, and encrypted zero otherwise */
@@ -157,6 +251,17 @@ SecureInt operator!= (const SecureInt & n1, const SecureInt & n2)
 	SecureInt one (uone,n1.cryptosystem);
 	SecureInt r = SecureInt::G(n1-n2,one) + SecureInt::G(n2-n1,one);
 	return r;
+}
+
+SecureInt operator!= (SecureInt & n1, unsigned long long n2)
+{
+	SecureInt y (n2, n1.cryptosystem);
+	return (n1!=y);
+}
+
+SecureInt operator!= (unsigned long long n1, SecureInt & n2)
+{
+	return (n2!=n1);
 }
 
 /* Different */
@@ -173,6 +278,18 @@ SecureInt operator> (const SecureInt & n1, const SecureInt & n2)
 	return r;
 }
 
+SecureInt operator> (SecureInt & n1, unsigned long long n2)
+{
+	SecureInt y (n2, n1.cryptosystem);
+	return (n1>y);
+}
+
+SecureInt operator> (unsigned long long n1, SecureInt & n2)
+{
+	SecureInt y (n1, n2.cryptosystem);
+	return (y>n2);
+}
+
 /* Different */
 /* Compare if two encrypted numbers are different */
 /* Return encrypted one if true, and encrypted zero otherwise */
@@ -185,6 +302,18 @@ SecureInt operator< (const SecureInt & n1, const SecureInt & n2)
 	SecureInt one (uone,n1.cryptosystem);
 	SecureInt r = SecureInt::G(n2-n1,one);
 	return r;
+}
+
+SecureInt operator< (SecureInt & n1, unsigned long long n2)
+{
+	SecureInt y (n2, n1.cryptosystem);
+	return (n1<y);
+}
+
+SecureInt operator< (unsigned long long n1, SecureInt & n2)
+{
+	SecureInt y (n1, n2.cryptosystem);
+	return (y<n2);
 }
 
 /* Different */
@@ -201,6 +330,18 @@ SecureInt operator>= (const SecureInt & n1, const SecureInt & n2)
 	return r;
 }
 
+SecureInt operator>= (SecureInt & n1, unsigned long long n2)
+{
+	SecureInt y (n2, n1.cryptosystem);
+	return (n1>=y);
+}
+
+SecureInt operator>= (unsigned long long n1, SecureInt & n2)
+{
+	SecureInt y (n1, n2.cryptosystem);
+	return (y>=n2);
+}
+
 /* Different */
 /* Compare if two encrypted numbers are different */
 /* Return encrypted one if true, and encrypted zero otherwise */
@@ -213,6 +354,18 @@ SecureInt operator<= (const SecureInt & n1, const SecureInt & n2)
 	SecureInt one (uone,n1.cryptosystem);
 	SecureInt r = one - SecureInt::G(n1-n2,one);
 	return r;
+}
+
+SecureInt operator<= (SecureInt & n1, unsigned long long n2)
+{
+	SecureInt y (n2, n1.cryptosystem);
+	return (n1<=y);
+}
+
+SecureInt operator<= (unsigned long long n1, SecureInt & n2)
+{
+	SecureInt y (n1, n2.cryptosystem);
+	return (y<=n2);
 }
 
 
