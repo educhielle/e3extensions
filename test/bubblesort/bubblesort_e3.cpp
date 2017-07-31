@@ -1,7 +1,7 @@
 #include <iostream>
 #include "../../src/e3extensions/secureint.h"
 
-#define LEN 9
+#define LEN 6
 
 using namespace std;
 
@@ -24,10 +24,6 @@ int main()
 	a[3] = SecureInt(__E(0),cs);
 	a[4] = SecureInt(__E(1),cs);
 	a[5] = SecureInt(__E(15),cs);
-	a[6] = SecureInt(__E(4),cs);
-	a[7] = SecureInt(__E(11),cs);
-	a[8] = SecureInt(__E(9),cs);
-
 
 	bubbleSort(a, LEN);
 

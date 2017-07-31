@@ -15,15 +15,15 @@ void swap(SecureInt*, SecureInt*);
 // Driver program to test above functions
 int main()
 {
-	Cryptosystem cs("3381175157",8,{"9403332115005475983","623106787918890934","1742274322210811510","10041819638653604324","10830770215263503886","9847066545193601269","5802348043211249768","5292155961779416306","3814853377919019389"}, libgDir, gFunctionName);
+	Cryptosystem cs("47561",8,{"105013915","1900744466","1461832748","1314049406","114716550","149478744","1715912687","1202377745","959577923"}, libgDir, gFunctionName);
 	SecureInt a[LEN];
 
-	a[0] = SecureInt("1458607050771720464",cs);
-	a[1] = SecureInt("6045844526039827946",cs);
-	a[2] = SecureInt("1217785246750578901",cs);
-	a[3] = SecureInt("4162959222723810642",cs);
-	a[4] = SecureInt("6833149683995292511",cs);
-	a[5] = SecureInt("6154521063441679587",cs);
+	a[0] = SecureInt("1730427706",cs);
+	a[1] = SecureInt("721759845",cs);
+	a[2] = SecureInt("317409945",cs);
+	a[3] = SecureInt("1442239489",cs);
+	a[4] = SecureInt("1252168625",cs);
+	a[5] = SecureInt("12690262",cs);
 
 	bubbleSort(a, LEN);
 
