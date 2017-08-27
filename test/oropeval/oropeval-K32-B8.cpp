@@ -1,7 +1,8 @@
 #include <iostream>
 #include "../../src/e3extensions/secureint.h"
 
-#define IT 1000
+#define IT 10
+#define MOD (IT / 10)
 
 using namespace std;
 
@@ -10,15 +11,34 @@ string gFunctionName = "libg";
 
 int main()
 {
+	Cryptosystem cs("1174758241",8,{"829620066186068028","467819585157443354","1138311664203757676","409830433182141368","1365016720958258165","249295765421750394","768119667757654522","1221191537731868421","287979884607126973"}, libgDir, gFunctionName,"1043773534731125834");
+	SecureInt a ("501319365340231065",cs);
+	SecureInt b ("700748938373477418",cs);
+	SecureInt c;
+	unsigned bi = 1;
+
 	for (int i = 0; i < IT; i++)
 	{
-		Cryptosystem cs("2056433573",8,{"3482199610116663977","3733870410483639522","3036143293384893796","2017818732992210989","900317648814440814","2225450750084932411","1434489375091037316","2293099860825314596","4083866335535621122"}, libgDir, gFunctionName);
-/*
-		SecureInt a, b;
-		a = SecureInt(__E(7),cs);
-		b = SecureInt(__E(12),cs);
-*/
+		//a += b;
+		//a -= b;
+		a *= b;
+		//a <<= b;
+		//a <<= bi;
+		//a >>= b;
+		//a >>= bi;
+		//a = SecureInt(bi,cs);
+		//a = SecureInt::G(a,b);
+		//a = a == b;
+		//a = a != b;
+		//a = a > b;
+		//a = a < b;
+		//a = a >= b;
+		//a = a <= b;
+		
+		if ((i % MOD) == 0) cout << i << "\n";
+		//cout << i << "\n";
 	}
+	cout << a.str() << "\n";
 
 	return 0;
 }
