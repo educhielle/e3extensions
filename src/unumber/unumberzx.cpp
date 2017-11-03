@@ -2,8 +2,9 @@
 #include <istream>
 #include "unumberzx.h"
 
-#if HWACC == 4096
+//#if HWACC == 4096
 	#include "unumberzx4096asm.h"
+/*
 #elif HWACC == 2048
 	#include "unumberzx2048asm.h"
 #elif HWACC == 1024
@@ -13,6 +14,7 @@
 #else
 	#include "unumberzx2048asm.h"
 #endif
+*/
 
 const bool NP_DBG = false;
 
@@ -159,15 +161,15 @@ Unumber Unumber::mul(const Unumber & b, const Unumber & m) const
 	
 		if (mpz_cmp_ui(m.z.get_mpz_t(), 0)) mpz_export(mC, countp, order, size, endianess, nails, m.z.get_mpz_t());
 		else for (unsigned i = 0; i < length; i++) mC[i] = 0;
-
+/*
 		mter_e1(mA);
 		mter_e2(mB);
 		mter_e3(mC);
 
-		hw_modmul();
+		//hw_modmul();
 
 		mfer_e0(mD);
-
+*/
 		mpz_import(r.z.get_mpz_t(), length, order, sizeof(unsigned), endianess, nails, mD);
 	}
 
@@ -225,21 +227,36 @@ void Unumber::pow(Unumber e, const Unumber & mod)
 
 	if (mpz_cmp_ui(mod.z.get_mpz_t(), 0)) mpz_export(mC, countp, order, size, endianess, nails, mod.z.get_mpz_t());
 	else for (unsigned i = 0; i < length; i++) mC[i] = 0;
-
+/*
 	mter_e1(mA);
 	mter_e2(mB);
 	mter_e3(mC);
 
-	hw_modexp();
+	//hw_modexp();
 
 	mfer_e0(mD);
-
+*/
 	mpz_import(z.get_mpz_t(), length, order, sizeof(unsigned), endianess, nails, mD);
 
 	//std::cout << "Unumber::pow out\n";
 }
 
 void Unumber::swap(Unumber & n) { /*stats_swap++;*/ mpz_class t = z; z=n.z; n.z=t; }
+
+void Unumber::toArray(unsigned arr[])
+{
+	unsigned length = HW_NUMWORDS;
+	size_t *countp;
+	unsigned size = length * sizeof(unsigned);
+	if (mpz_cmp_ui(z.get_mpz_t(), 0)) mpz_export(arr, countp, ORDER, size, ENDIANESS, NAILS, z.get_mpz_t());
+	else for (unsigned i = 0; i < length; i++) arr[i] = 0;
+}
+
+void Unumber::fromArray(unsigned arr[])
+{
+	unsigned length = HW_NUMWORDS;
+	mpz_import(z.get_mpz_t(), length, ORDER, sizeof(unsigned), ENDIANESS, NAILS, arr);
+}
 
 void Unumber::exportArray(unsigned arr[], unsigned length, Unumber u)
 {
@@ -283,3 +300,61 @@ void Unumber::prita()
 	std::cout << "---\n";
 }
 */
+
+
+void Unumber::setKey(Unumber pri, Unumber pub, Unumber mod, unsigned esize, unsigned dsize)
+{
+	unsigned ctrl = 0, address = 12 << 11;
+
+	esize /= 512;
+	while (esize >>= 1) ctrl++;
+	//ctrl--;
+	ctrl <<= 8;
+
+	dsize /= 32;
+	while (dsize >>= 1) ctrl++;
+	//ctrl--;
+	ctrl <<= 8;
+/*
+	printf("address: %x\n", address);
+	printf("ctrl: %x\n", ctrl);
+*/
+	__asm__ ("l.mtspr %0,%1,0" : : "r"(address), "r"(ctrl));
+
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mC[HW_NUMWORDS];
+	pub.toArray(mA);
+	mod.toArray(mB);
+	pri.toArray(mC);
+
+	mter_e1(mA);
+	mter_e2(mB);
+	mter_e3(mC);
+	
+	__asm__(
+		"le.mtspr pub,ze1\n\t"
+		"le.mtspr mod,ze2\n\t"
+		"le.mtspr pri,ze3"
+	);
+}
+
+void Unumber::eadd(Unumber n1, Unumber n2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	n1.toArray(mA);
+	n2.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.eadd ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->toArray(mD);
+}
+
+void Unumber::enc()
+{
+	unsigned mA[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	mter_e1(mA);
+	__asm__("le.enc ze0,ze1");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}

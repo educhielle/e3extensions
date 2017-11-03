@@ -140,13 +140,15 @@ clean:
 
 compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
 	$(CXX) $(CXXFLAGS) $(IN) $(CSFLAGS) \
-	$(OBJ_E3EXTENSIONS)/cryptosystem.o $(OBJ_E3EXTENSIONS)/secureint.o \
+	$(OBJ_E3EXTENSIONS)/secureint.o \
 	$(OBJ_PREPROCESSOR)/big_random.o \
 	$(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o \
 	-o $(OUT) $(OPT) $(LDF) $(LIBGFLAGS)
-
+#$(OBJ_E3EXTENSIONS)/cryptosystem.o 
 
 compile-all: compile-unumber compile-sensitive-information compile-libg compile-e3extensions compile ## Recompile all dependencies and compile code. Usage: make compile-all IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
+
+compile-e3: compile-unumber compile-e3extensions compile ## Recompile all dependencies and compile code. Usage: make compile-all IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
 
 
 compile-debug:
@@ -179,7 +181,7 @@ compile-e3extensions: ## Compile e3extensions. Usage: make compile-e3extensions 
 #	check dir
 	[ -s "$(OBJ_E3EXTENSIONS)" ] || mkdir -p $(OBJ_E3EXTENSIONS)
 #	compile Cryptosystem
-	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/cryptosystem.cpp -o $(OBJ_E3EXTENSIONS)/cryptosystem.o $(OPT) $(LDF) $(LIBGFLAGS)
+#	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/cryptosystem.cpp -o $(OBJ_E3EXTENSIONS)/cryptosystem.o $(OPT) $(LDF) $(LIBGFLAGS)
 #	compile SecureInt
 	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/secureint.cpp -o $(OBJ_E3EXTENSIONS)/secureint.o $(OPT) $(LDF) $(LIBGFLAGS)
 

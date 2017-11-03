@@ -60,7 +60,7 @@ bool ma::invert(const Unumber & x, const Unumber & mod, Unumber * xm1)
     return true;
 #else
 	//std::cout << "ma::invert in\n";
-	unsigned length = Unumber::HW_NUMWORDS;
+/*	unsigned length = Unumber::HW_NUMWORDS;
 	unsigned mA[length], mB[length], mD[length];
 
 	Unumber::exportArray(mA, length, x);
@@ -73,7 +73,7 @@ bool ma::invert(const Unumber & x, const Unumber & mod, Unumber * xm1)
 
 	Unumber::mfer_e0(mD);
 
-	*xm1 = Unumber::importArray(mD, length);
+	*xm1 = Unumber::importArray(mD, length);*/
 	//std::cout << "ma::invert out\n";
 	return true;
 #endif
@@ -90,7 +90,7 @@ Unumber ma::gcd(const Unumber & x, const Unumber & y)
     return iuc.gcd().x;
 #else
 	//std::cout << "ma::gcd in\n";
-
+/*
 	unsigned length = Unumber::HW_NUMWORDS;
 	unsigned mA[length], mB[length], mD[length];
 
@@ -104,7 +104,8 @@ Unumber ma::gcd(const Unumber & x, const Unumber & y)
 
 	Unumber::mfer_e0(mD);
 
-	Unumber r = Unumber::importArray(mD, length);
+	Unumber r = Unumber::importArray(mD, length);*/
+	Unumber r;
 	//std::cout << "ma::gcd out\n";
 	return r;
 #endif

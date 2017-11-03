@@ -10,13 +10,6 @@
 #include "cryptosystem.h"
 #include <random>
 
-#ifdef STATIC_LIBG
-	#include "libg.h"
-/*	#include "../libg/libg.cpp"
-	#define QUOTEME(M)	#M
-	#define INCLUDE_FILE(M)	QUOTEME(M)
-	#include INCLUDE_FILE(STATIC_LIBG) */
-#endif
 /*
 int Cryptosystem::idCount = 0;
 vector<vector<Unumber>> Cryptosystem::halfTable;

@@ -8,10 +8,6 @@
 #ifndef __CRYPTOSYSTEM_H__
 #define __CRYPTOSYSTEM_H__
 
-#ifndef STATIC_LIBG
-	#include <dlfcn.h>
-#endif
-
 #include <iostream>
 #include "../unumber/unumberg.h"
 #include <vector>
@@ -24,45 +20,15 @@ using namespace std;
 	#define WORD_SIZE 32
 #endif
 
-/*
-#ifdef FAST_RANDOM
-	#define CS_LIMIT	100
-#endif
-*/
-
 class Cryptosystem
 {
-#ifndef STATIC_LIBG
-	typedef Unumber (*libG_t)(Unumber, Unumber);
-#endif
-
     /* Variables */
     private:
-	//int id;
-	//static int idCount;
 	vector<Unumber> halfTable;
-	Unumber n, n2, twoToBeta, zero, one;
-	unsigned beta, high_bit_posN; //, high_bit_posN2;
-	//Unumber rndN;
-	Unumber gen;
-
-	string libgFilename, libgFunction, libgInit;
-#ifndef STATIC_LIBG
-	void* libgHandle;
-	libG_t libg;
-#endif
-
-//#ifdef FAST_RANDOM
-	//static vector<Unumber> rndN;
-	Unumber r;
-//	static Unumber rndN[CS_LIMIT];
-//#endif
-
-//#define INVALID_ID -1
+	Unumber n, n2;
 	
     /* Constructors */
     public:
-	static int calango;
 	Cryptosystem() {}
 	Cryptosystem(const Cryptosystem &);
 	Cryptosystem(const string &, unsigned, const vector<string>, const string &, const string &, const string & gen = "0");
@@ -71,17 +37,12 @@ class Cryptosystem
 
     /* Private functions */
     private:
-	//int addLocalHalfTable(vector<string>);
-	void convertHalfTable(vector<string>);
-	void calcHalfTable();
 	Unumber congruence(Unumber, const Unumber &);
-	Unumber half(Unumber);
 	void init();
 
     /* Public functions */
     public:
 	void close();
-	//Unumber encrypt(const int) const;
 	Unumber encrypt(const Unumber &);
 	Unumber g(Unumber, Unumber) const;
 	unsigned getBeta() const;
@@ -94,7 +55,6 @@ class Cryptosystem
 	Unumber invert(Unumber) const;
 	Unumber invertibleRandom() const;
 	Unumber reencrypt(Unumber);
-	//void prita();
 };
 
 /************************

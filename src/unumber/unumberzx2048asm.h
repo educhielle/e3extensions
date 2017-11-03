@@ -539,7 +539,7 @@ void Unumber::mter_e3(unsigned m[]) {
 	__asm__ ("le3.mter ye3(62),%0" : : "r"(m[1]));
 	__asm__ ("le3.mter ye3(63),%0" : : "r"(m[0]));
 }
-
+/*
 void Unumber::hw_modmul()
 {
 	__asm__ ("le3.modmul ye0,ye1,ye2,ye3");	
@@ -564,4 +564,4 @@ void Unumber::hw_gfun()
 {
 	__asm__ ("le3.gfun ye0,ye1,ye2,ye3");
 }
-
+*/

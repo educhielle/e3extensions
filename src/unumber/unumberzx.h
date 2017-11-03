@@ -112,8 +112,20 @@ class Unumber
 	/* Assembly support */
 	static unsigned HW_NUMWORDS;
 
+	void toArray(unsigned[]);
+	void fromArray(unsigned[]);
+
 	static void exportArray(unsigned[], unsigned, Unumber);
 	static Unumber importArray(unsigned[], unsigned);
+
+	static void sw_e0(unsigned[]);
+	static void sw_e1(unsigned[]);
+	static void sw_e2(unsigned[]);
+	static void sw_e3(unsigned[]);
+	static void lw_e0(unsigned[]);
+	static void lw_e1(unsigned[]);
+	static void lw_e2(unsigned[]);
+	static void lw_e3(unsigned[]);
 
 	static void mfer_e0(unsigned[]);
 	static void mfer_e1(unsigned[]);
@@ -123,14 +135,17 @@ class Unumber
 	static void mter_e1(unsigned[]);
 	static void mter_e2(unsigned[]);
 	static void mter_e3(unsigned[]);
-
+/*
 	static void hw_modmul();
 	static void hw_modexp();
 
 	static void hw_gcd();
 	static void hw_inv();
 
-	static void hw_gfun();
+	static void hw_gfun();*/
+	static void setKey(Unumber, Unumber, Unumber, unsigned, unsigned);
+	void eadd(Unumber, Unumber);
+	void enc();
 };
 
 
