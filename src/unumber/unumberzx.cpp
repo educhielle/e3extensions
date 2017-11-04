@@ -337,16 +337,108 @@ void Unumber::setKey(Unumber pri, Unumber pub, Unumber mod, unsigned esize, unsi
 	);
 }
 
-void Unumber::eadd(Unumber n1, Unumber n2)
+void Unumber::eadd(Unumber param)
 {
 	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
-	n1.toArray(mA);
-	n2.toArray(mB);
+	this->toArray(mA);
+	param.toArray(mB);
 	mter_e1(mA);
 	mter_e2(mB);
 	__asm__("le.eadd ze0,ze1,ze2");
 	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::esub(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.esub ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::emuls(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.emuls ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::esll(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.esll ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::esra(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.esra ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::einc()
+{
+	unsigned mD[HW_NUMWORDS];
 	this->toArray(mD);
+	mter_e0(mD);
+	__asm__("le.einc ze0");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::edec()
+{
+	unsigned mD[HW_NUMWORDS];
+	this->toArray(mD);
+	mter_e0(mD);
+	__asm__("le.edec ze0");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::eeq(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.eeq ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::ene(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.ene ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
 }
 
 void Unumber::enc()

@@ -144,8 +144,16 @@ class Unumber
 
 	static void hw_gfun();*/
 	static void setKey(Unumber, Unumber, Unumber, unsigned, unsigned);
-	void eadd(Unumber, Unumber);
+	void eadd(Unumber);
+	void esub(Unumber);
+	void einc();
+	void edec();
+	void esll(Unumber);
+	void esra(Unumber);
+	void emuls(Unumber);
 	void enc();
+	void eeq(Unumber, Unumber);
+	void ene(Unumber, Unumber);
 };
 
 

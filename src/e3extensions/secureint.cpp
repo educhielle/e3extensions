@@ -14,44 +14,44 @@
 /* Encrypted addition */
 void SecureInt::operator+= (const SecureInt & param)
 {
-	x.eadd(x, param.x);
+	x.eadd(param.x);
 }
 
 /* Encrypted subtraction */
 void SecureInt::operator-= (const SecureInt & param)
 {
-	//x = cryptosystem.sub(x, param.x);
+	x.esub(param.x);
 }
 
 /* Encrypted multiplication */
 void SecureInt::operator*= (const SecureInt& param)
 {
-	//x = cryptosystem.mul(x, param.x);
+	x.emuls(param.x);
 }
 
 /* Shift left */
 void SecureInt::operator<<= (const SecureInt& param)
 {
-	//x = cryptosystem.shiftleft(x, param.x);
+	x.esll(param.x);
 }
 
 /* Shift right */
 void SecureInt::operator>>= (const SecureInt& param)
 {
-	//x = cryptosystem.shiftright(x, param.x);
+	x.esra(param.x);
 }
 
 /* Encrypted increment */
 SecureInt SecureInt::operator++ ()
 {
-	//x = x.inc(x);
+	x.einc();
 }
 
 /* Encrypted decrement */
 /* Equivalent to a inverse followed by modular multiplication */
 SecureInt SecureInt::operator-- ()
 {
-
+	x.edec();
 }
 
 /* Addition */
@@ -88,13 +88,18 @@ SecureInt operator>> (const SecureInt & n1, const SecureInt & shift)
 /* Compare if two encrypted numbers are equal */
 SecureInt operator== (const SecureInt & n1, const SecureInt & n2)
 {
+	Unumber cmp;
+	cmp.eeq(n1.x, n2.x);
+	return SecureInt(cmp);
 }
 
 /* Different */
 /* Compare if two encrypted numbers are different */
 SecureInt operator!= (const SecureInt & n1, const SecureInt & n2)
 {
-
+	Unumber cmp;
+	cmp.ene(n1.x, n2.x);
+	return SecureInt(cmp);
 }
 
 /* Different */
