@@ -151,9 +151,15 @@ class Unumber
 	void esll(Unumber);
 	void esra(Unumber);
 	void emuls(Unumber);
+	void elnot();
 	void enc();
 	void eeq(Unumber, Unumber);
 	void ene(Unumber, Unumber);
+	void egts(Unumber, Unumber);
+	void eges(Unumber, Unumber);
+	void elts(Unumber, Unumber);
+	void eles(Unumber, Unumber);
+	void ecmov(Unumber, Unumber);
 };
 
 

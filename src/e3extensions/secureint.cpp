@@ -54,6 +54,13 @@ SecureInt SecureInt::operator-- ()
 	x.edec();
 }
 
+SecureInt operator! (const SecureInt & n1)
+{
+	Unumber cmp (n1.x);
+	cmp.elnot();
+	return SecureInt(cmp);
+}
+
 /* Addition */
 SecureInt operator+ (const SecureInt & n1, const SecureInt & n2)
 {
@@ -106,20 +113,27 @@ SecureInt operator!= (const SecureInt & n1, const SecureInt & n2)
 /* Compare if two encrypted numbers are different */
 SecureInt operator> (const SecureInt & n1, const SecureInt & n2)
 {
-
+	Unumber cmp;
+	cmp.egts(n1.x, n2.x);
+	return SecureInt(cmp);
 }
 
 /* Different */
 /* Compare if two encrypted numbers are different */
 SecureInt operator< (const SecureInt & n1, const SecureInt & n2)
 {
-
+	Unumber cmp;
+	cmp.elts(n1.x, n2.x);
+	return SecureInt(cmp);
 }
 
 /* Different */
 /* Compare if two encrypted numbers are different */
 SecureInt operator>= (const SecureInt & n1, const SecureInt & n2)
 {
+	Unumber cmp;
+	cmp.eges(n1.x, n2.x);
+	return SecureInt(cmp);
 }
 
 /* Different */
@@ -127,6 +141,9 @@ SecureInt operator>= (const SecureInt & n1, const SecureInt & n2)
 /* Return encrypted one if true, and encrypted zero otherwise */
 SecureInt operator<= (const SecureInt & n1, const SecureInt & n2)
 {
+	Unumber cmp;
+	cmp.eles(n1.x, n2.x);
+	return SecureInt(cmp);
 }
 
 
@@ -149,6 +166,11 @@ SecureInt operator<= (const SecureInt & n1, const SecureInt & n2)
 Unumber SecureInt::getX() const
 {
 	return x;
+}
+
+SecureInt SecureInt::ternary(const SecureInt & n1, const SecureInt & n2)
+{
+	x.ecmov(n1.x, n2.x);
 }
 
 /* Return the cyphertext in string format */

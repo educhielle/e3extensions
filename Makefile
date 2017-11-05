@@ -100,7 +100,8 @@ CSFLAGS := $(OBJ_LIBG)/libg.o $(CSFLAGS)
 LIBGFLAGS := -DSTATIC_LIBG $(LIBGFLAGS)
 else
 # CSFLAGS := -L./lib -lg $(CSFLAGS)
-LIBGFLAGS := $(LIBGFLAGS) -ldl
+LIBGFLAGS := $(LIBGFLAGS)
+# -ldl
 endif
 
 # libg speed (0, 1, or 2). The greater, the fastest.
@@ -146,7 +147,7 @@ compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output
 	-o $(OUT) $(OPT) $(LDF) $(LIBGFLAGS)
 #$(OBJ_E3EXTENSIONS)/cryptosystem.o 
 
-compile-all: compile-unumber compile-sensitive-information compile-libg compile-e3extensions compile ## Recompile all dependencies and compile code. Usage: make compile-all IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
+compile-all: compile-unumber compile-sensitive-information compile-e3extensions compile ## Recompile all dependencies and compile code. Usage: make compile-all IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
 
 compile-e3: compile-unumber compile-e3extensions compile ## Recompile all dependencies and compile code. Usage: make compile-all IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
 
@@ -222,11 +223,11 @@ compile-preprocessor-all: compile-unumber compile-sensitive-information compile-
 
 compile-sensitive-information: ## Compile Sensitive Information class and auxiliary libraries. Usage: make compile-sensitive-information [ARCH=64] [GMP=1]
 #	check dir
-	[ -s "$(OBJ_PREPROCESSOR)" ] || mkdir -p $(OBJ_PREPROCESSOR)
+#	[ -s "$(OBJ_PREPROCESSOR)" ] || mkdir -p $(OBJ_PREPROCESSOR)
 #	compile big_random
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/big_random.cpp -o $(OBJ_PREPROCESSOR)/big_random.o $(OPT) $(LDF)
 #	compile SensitiveInformation
-	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/sensitive_information.cpp -o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OPT) $(LDF)
+#	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/sensitive_information.cpp -o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OPT) $(LDF)
 #	compile big_random
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/util.cpp -o $(OBJ_PREPROCESSOR)/util.o $(OPT) $(LDF)
 

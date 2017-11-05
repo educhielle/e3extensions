@@ -48,10 +48,14 @@ class SecureInt
 	void operator>>= (const SecureInt &);
 	//void operator>>= (unsigned);
 	SecureInt operator++ ();
+	//SecureInt operator++ (int);
 	SecureInt operator-- ();
+	//SecureInt operator-- (int);
 	
 	//friend SecureInt operator+ (const SecureInt & n1) { return n1; }
 	//friend SecureInt operator- (const SecureInt & n1) { return SecureInt::invert(n1); }
+
+	friend SecureInt operator! (const SecureInt &);
 
 	friend SecureInt operator+ (const SecureInt &, const SecureInt &);
 	//friend SecureInt operator+ (SecureInt &, unsigned long long);
@@ -104,6 +108,7 @@ class SecureInt
     public:
 	//Cryptosystem getCryptosystem() const;
 	Unumber getX() const;
+	SecureInt ternary(const SecureInt &, const SecureInt &);
 	string str(unsigned base=10) const;
 
     /* Private static functions */

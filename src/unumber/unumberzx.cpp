@@ -397,6 +397,16 @@ void Unumber::esra(Unumber param)
 	this->fromArray(mD);
 }
 
+void Unumber::elnot()
+{
+	unsigned mA[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	mter_e1(mA);
+	__asm__("le.elnot ze0,ze1");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
 void Unumber::einc()
 {
 	unsigned mD[HW_NUMWORDS];
@@ -437,6 +447,68 @@ void Unumber::ene(Unumber param1, Unumber param2)
 	mter_e1(mA);
 	mter_e2(mB);
 	__asm__("le.ene ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::egts(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.egts ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::eges(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.eges ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::elts(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.elts ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::eles(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.eles ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::ecmov(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mD);
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e0(mD);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.ecmov ze0,ze1,ze2");
 	mfer_e0(mD);
 	this->fromArray(mD);
 }

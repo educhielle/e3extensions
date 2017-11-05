@@ -1,9 +1,41 @@
-/* insertion sort ascending order */
 #include <iostream>
 #include "../../src/e3extensions/secureint.h"
 
 using namespace std;
- 
+
+void swap(SecureInt *x, SecureInt *y)
+{
+	SecureInt tmp = *x;
+	*x = *y;
+	*y = tmp;
+}
+
+void printArray(SecureInt array[], int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		cout << array[i].str() << " ";
+	}
+	cout << "\n";
+}
+
+void permute(SecureInt array[], int size, int l, int r)
+{
+	if (l == r)
+	{
+		printArray(array, size);
+	}
+	else
+	{
+		for (int i = l; i <= r; i++)
+		{
+			swap((array+l), (array+i)); // swap
+			permute(array, size, l+1, r);
+			swap((array+l), (array+i)); // restore the swap
+		}
+	}
+}
+
 int main(void)
 {
 	Unumber pri("7f244bce50c4bbb1f9c295a5ea5cf9adddd248c186b41805c1ef1dbc7de49b797bf97ad1b3434eebbf1e3f7891052e0cf6ea704038bc5c856aecd7e50b460541ff337786d65bdc7c087bcbcf5e2660ec685e10738e142584b5a0288ef753803784acd1cece0c9a4adf0bcdf56601552a707688eb555c933563fe77bcae51d2d2a6d745818cdc70b8ee76caad1cd34642597a6a5c68cdf10d9ba43e49cefa1c549d10497e0ce1eed7f2f03983dcaa6df126e7ca69c14b1534be1ed46bef1b4a0bd9c8c350c7700546ac76d6697afce2a295dda2b898e8b24cfb1fe4b16e1a288f5193d8492a6571546edd93178d9494d306c3f430cace335d0a938257836e4f40225d6f9c25bd385feef6d3fabf882a230607de55bb1520a65d7f3aa4fbf032dd5275651c9dae0b0a2209a02b37e4a7d14618c05c90ef8f0935e4a6897a1e6c8a56707a862e8c925d71279fa810d392793861d1c4330ae216ff4fb831096b0f7ac5cc4776cc311bcff646748b88422592483c7bc6ec991414abe0ec661dd5a5d845398a47f39f59e11c2da975f62dbd2ff19f6dfefa943f8e7b8a6e8edec00a3977f315ee5737ba1e1b5b04730f0cfe15f61caeeb7362a6720ad6c205e07645df4b295553ced06dd0e837085d5370082a3431e47146f46ad7a8099869b12be1904e148c0bc1905ee175855de8a9d624feb2d627d58c79062ed68baf27c8f303c", 16);
@@ -12,48 +44,13 @@ int main(void)
 
 	SecureInt::setKey(pri, pub, mod, 4096, 64);
 
-	int n = 10, i, j;
-	SecureInt array[n];
-	array[0] = SecureInt::encrypt(4);
+	SecureInt array[3];
+	array[0] = SecureInt::encrypt(1);
 	array[1] = SecureInt::encrypt(2);
-	array[2] = SecureInt::encrypt(5);
-	array[3] = SecureInt::encrypt(9);
-	array[4] = SecureInt::encrypt(1);
-	array[5] = SecureInt::encrypt(0);
-	array[6] = SecureInt::encrypt(4);
-	array[7] = SecureInt::encrypt(3);
-	array[8] = SecureInt::encrypt(9);
-	array[9] = SecureInt::encrypt(8);
+	array[2] = SecureInt::encrypt(3);
 
-	SecureInt zero = SecureInt::encrypt(0);
-
-	for (i = 1 ; i < n; i++)
-	{
-		j = i;
-		while (j != 0)
-		{
-			SecureInt x = array[j-1];
-			SecureInt y = array[j];
-
-			SecureInt xmy = x-y;
-			SecureInt ymx = y-x;
-			SecureInt diff = (xmy <= zero) * xmy + (ymx <= zero) * ymx;
-			SecureInt max = (xmy <= zero) * x + (ymx <= zero) * y;
-			max += (x == y) * x; // if x == y set max to x
-			SecureInt min = max - diff;
-
-			array[j-1] = min;
-			array[j] = max;
-			j--;
-		}
-	}
-
-	for (i = 0; i < n; i++)
-	{
-		cout << array[i].str() << " ";
-	}
-	cout << "\n";
-	
+	int n = sizeof(array) / sizeof(SecureInt);
+	permute(array, n, 0, n-1);
 	return 0;
 }
 
