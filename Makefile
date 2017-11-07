@@ -142,6 +142,7 @@ clean:
 compile: ## Compile code. Usage: make compile IN=path/to/code OUT=path/to/output [ARCH=64] [COMPILER=or1k-linux-musl-] [GMP=1] [STATIC_LIBG=1]
 	$(CXX) $(CXXFLAGS) $(IN) $(CSFLAGS) \
 	$(OBJ_E3EXTENSIONS)/secureint.o \
+	$(OBJ_E3EXTENSIONS)/securering.o \
 	$(OBJ_PREPROCESSOR)/big_random.o \
 	$(OBJ_UNUMBER)/unumberg.o $(OBJ_UNUMBER)/cunmber_4096_m.o $(OBJ_UNUMBER)/ma_invert_m.o \
 	-o $(OUT) $(OPT) $(LDF) $(LIBGFLAGS)
@@ -185,6 +186,7 @@ compile-e3extensions: ## Compile e3extensions. Usage: make compile-e3extensions 
 #	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/cryptosystem.cpp -o $(OBJ_E3EXTENSIONS)/cryptosystem.o $(OPT) $(LDF) $(LIBGFLAGS)
 #	compile SecureInt
 	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/secureint.cpp -o $(OBJ_E3EXTENSIONS)/secureint.o $(OPT) $(LDF) $(LIBGFLAGS)
+	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/securering.cpp -o $(OBJ_E3EXTENSIONS)/securering.o $(OPT) $(LDF) $(LIBGFLAGS)
 
 
 compile-libg: ## Usage: make compile-shared-libg [ARCH=64] [GMP=1] [STATIC_LIBG=1]

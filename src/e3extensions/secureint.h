@@ -47,8 +47,10 @@ class SecureInt
 	//void operator<<= (unsigned);
 	void operator>>= (const SecureInt &);
 	//void operator>>= (unsigned);
+	void operator^= (const SecureInt &);
+	void operator|= (const SecureInt &);
 	SecureInt operator++ ();
-	//SecureInt operator++ (int);
+	SecureInt operator++ (int);
 	SecureInt operator-- ();
 	//SecureInt operator-- (int);
 	
@@ -76,6 +78,10 @@ class SecureInt
 	friend SecureInt operator>> (const SecureInt &, const SecureInt &);
 	//friend SecureInt operator>> (const SecureInt &, unsigned);
 	//friend SecureInt operator>> (unsigned long long, SecureInt &);
+
+	friend SecureInt operator^ (const SecureInt &, const SecureInt &);
+
+	friend SecureInt operator| (const SecureInt &, const SecureInt &);
 
 	friend SecureInt operator== (const SecureInt &, const SecureInt &);
 	//friend SecureInt operator== (SecureInt &, unsigned long long);
@@ -108,8 +114,9 @@ class SecureInt
     public:
 	//Cryptosystem getCryptosystem() const;
 	Unumber getX() const;
-	SecureInt ternary(const SecureInt &, const SecureInt &);
+	void ror (const SecureInt &);
 	string str(unsigned base=10) const;
+	SecureInt ternary(const SecureInt &, const SecureInt &);
 
     /* Private static functions */
     private:
@@ -118,6 +125,7 @@ class SecureInt
     public:
 	static void setKey(Unumber, Unumber, Unumber, unsigned, unsigned);
 	static SecureInt encrypt(unsigned long long);
+	static SecureInt ror (const SecureInt &, const SecureInt &);
 };
 
 /************************

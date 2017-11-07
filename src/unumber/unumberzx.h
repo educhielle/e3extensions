@@ -146,6 +146,11 @@ class Unumber
 	static void setKey(Unumber, Unumber, Unumber, unsigned, unsigned);
 	void eadd(Unumber);
 	void esub(Unumber);
+	void eradd(Unumber);
+	void ersub(Unumber);
+	void exor(Unumber);
+	void eror(Unumber);
+	void eor(Unumber);
 	void einc();
 	void edec();
 	void esll(Unumber);

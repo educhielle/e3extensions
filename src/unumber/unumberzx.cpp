@@ -349,6 +349,19 @@ void Unumber::eadd(Unumber param)
 	this->fromArray(mD);
 }
 
+void Unumber::eradd(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.eradd ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+
 void Unumber::esub(Unumber param)
 {
 	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
@@ -357,6 +370,54 @@ void Unumber::esub(Unumber param)
 	mter_e1(mA);
 	mter_e2(mB);
 	__asm__("le.esub ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::ersub(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.ersub ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::exor(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.exor ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::eror(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.eror ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::eor(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.eor ze0,ze1,ze2");
 	mfer_e0(mD);
 	this->fromArray(mD);
 }

@@ -41,8 +41,32 @@ void SecureInt::operator>>= (const SecureInt& param)
 	x.esra(param.x);
 }
 
-/* Encrypted increment */
+/* Rotate right */
+void SecureInt::ror (const SecureInt& param)
+{
+	x.eror(param.x);
+}
+
+/* Exclusive or */
+void SecureInt::operator^= (const SecureInt& param)
+{
+	x.exor(param.x);
+}
+
+/* Bitwise or */
+void SecureInt::operator|= (const SecureInt& param)
+{
+	x.eor(param.x);
+}
+
+/* Encrypted increment (pre-fixed) */
 SecureInt SecureInt::operator++ ()
+{
+	x.einc();
+}
+
+/* Encrypted increment (post-fixed) */
+SecureInt SecureInt::operator++ (int)
 {
 	x.einc();
 }
@@ -89,6 +113,24 @@ SecureInt operator<< (const SecureInt & n1, const SecureInt & shift)
 SecureInt operator>> (const SecureInt & n1, const SecureInt & shift)
 {
 	SecureInt r(n1); r >>= shift; return r;
+}
+
+/* Rotate right */
+SecureInt SecureInt::ror (const SecureInt & n1, const SecureInt & shift)
+{
+	SecureInt r(n1); r.ror(shift); return r;
+}
+
+/* Exclusive or */
+SecureInt operator^ (const SecureInt & n1, const SecureInt & shift)
+{
+	SecureInt r(n1); r ^= shift; return r;
+}
+
+/* Bitwise or */
+SecureInt operator| (const SecureInt & n1, const SecureInt & shift)
+{
+	SecureInt r(n1); r |= shift; return r;
 }
 
 /* Equal */
@@ -145,7 +187,6 @@ SecureInt operator<= (const SecureInt & n1, const SecureInt & n2)
 	cmp.eles(n1.x, n2.x);
 	return SecureInt(cmp);
 }
-
 
 /************************************
  *     PRIVATE OBJECT FUNCTIONS     *
