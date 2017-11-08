@@ -30,10 +30,8 @@ void speck_expand(SecureInt K[KEY_LEN], SecureInt S[ROUNDS])
 	SecureInt ei = E0;
 	for (int i = 0; i < ROUNDS - 1; i++, ei+=E1)
 	{
-		printf("i: %u\n", i);
 		R(a[i % (KEY_LEN - 1)], b, ei);
 		S[i + 1] = b;
-		printf("out\n");
 	}
 }
 
@@ -64,6 +62,7 @@ int main(void)
 		cout << exp[i].str() << "\n";
 	}
 
+	asm("l.debug");
 	return EXIT_SUCCESS;
 }
 
