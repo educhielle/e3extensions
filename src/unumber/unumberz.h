@@ -24,6 +24,8 @@ class Unumber
         static void init_mod_value();
 
     public:
+	static mpz_t n, n2, g, phi, mi, one;
+	static unsigned ees, eds;
         Unumber(unsigned long long x);
         Unumber();
 
@@ -103,6 +105,35 @@ class Unumber
         friend std::istream & operator>>(std::istream & os, Unumber & n);
 
         string raw(unsigned sz) const;
+
+	static void setKey(Unumber, Unumber, Unumber, unsigned, unsigned);
+	void eadd(Unumber);
+	void esub(Unumber);
+	void eradd(Unumber);
+	void ersub(Unumber);
+	void exor(Unumber);
+	void eror(Unumber);
+	void eor(Unumber);
+	void einc();
+	void edec();
+	void esll(Unumber);
+	void esra(Unumber);
+	void emuls(Unumber);
+	void elnot();
+	void enc();
+	void eeq(Unumber, Unumber);
+	void ene(Unumber, Unumber);
+	void egts(Unumber, Unumber);
+	void eges(Unumber, Unumber);
+	void elts(Unumber, Unumber);
+	void eles(Unumber, Unumber);
+	void ecmov(Unumber, Unumber);
+
+	private:
+	static void decrypt(mpz_t, const mpz_t);
+	static void encrypt(mpz_t, const mpz_t);
+	static void e3_random(mpz_t, mpz_t);
+	static void e3_randomp2(mpz_t, unsigned);
 };
 
 
@@ -110,4 +141,5 @@ inline Unumber operator>>(Unumber a, unsigned b) { a >>= b; return a; }
 inline Unumber operator<<(Unumber a, unsigned b) { a <<= b; return a; }
 
 #endif
+
 
