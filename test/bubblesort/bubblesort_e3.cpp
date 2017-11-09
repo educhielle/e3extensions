@@ -31,6 +31,7 @@ int main()
 	cout << "Sorted array is:  ";
 	printArray(a, LEN);
 
+	asm("l.debug");
 	return 0;
 }
 

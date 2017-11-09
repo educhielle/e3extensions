@@ -3,8 +3,8 @@
 
 using namespace std;
 
-#define MAX_NUM 10
-//#define NUM 5
+#define MAX_NUM 50
+#define NUM 5
 
 int main()
 {
@@ -14,7 +14,7 @@ int main()
 
 	SecureInt::setKey(pri, pub, mod, 4096, 64);
 
-	SecureInt num = SecureInt::encrypt(5);
+	SecureInt num = SecureInt::encrypt(NUM);
 	SecureInt fact = SecureInt::encrypt(1);
 	SecureInt i = SecureInt::encrypt(1);
 	SecureInt result = SecureInt::encrypt(0);
@@ -27,6 +27,7 @@ int main()
 	} while (++counter < MAX_NUM);
 	cout << "fact( " << num.str() << " ) = " << result.str() << "\n";
 
+	asm("l.debug");
 	return 0;
 }
 

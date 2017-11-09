@@ -51,6 +51,8 @@ int main(void)
 
 	int n = sizeof(array) / sizeof(SecureInt);
 	permute(array, n, 0, n-1);
+
+	asm("l.debug");
 	return 0;
 }
 

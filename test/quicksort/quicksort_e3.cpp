@@ -42,6 +42,7 @@ int main()
 		cout << a[i].str() << "\n";
 	cout << "\n";
 
+	asm("l.debug");
 	return 0;
 }
 

@@ -49,6 +49,7 @@ int main()
 		cout << "\n";
 	}
 
+	asm("l.debug");
 	return 0;
 }
 

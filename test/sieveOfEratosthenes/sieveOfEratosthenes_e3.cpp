@@ -35,14 +35,13 @@ void sieveOfEratosthenes(int n)
 	{
 		cout << (pe * prime[p]).str() << "\n";
 	}
-
-	cout << "fin\n";
 }
 
 int main(void)
 {
-	int n = 30;
+	int n = 100;
 	sieveOfEratosthenes(n);
 
+	asm("l.debug");
 	return 0;
 }

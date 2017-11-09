@@ -192,7 +192,7 @@ void Unumber::encrypt(mpz_t c, const mpz_t m)
 
 void Unumber::enc()
 {
-	printf("enc in\n");
+	//printf("enc in\n");
 	mpz_t m,c,r,gcd;
 	mpz_init_set(m, z.get_mpz_t());
 	mpz_init(c);
@@ -209,12 +209,12 @@ void Unumber::enc()
 	mpz_mul(c, c, r);
 	mpz_mod(c, c, Unumber::n2);
 	mpz_set(z.get_mpz_t(), c);
-	printf("enc out\n");
+	//printf("enc out\n");
 }
 
 void Unumber::setKey(Unumber pri, Unumber pub, Unumber mod, unsigned esize, unsigned dsize)
 {
-	printf("Setting key...\n");
+	//printf("Setting key...\n");
 	mpz_t mask;
 	mpz_init_set_ui(mask, 1);
 	mpz_mul_2exp(mask, mask, esize/2);
@@ -238,7 +238,7 @@ void Unumber::setKey(Unumber pri, Unumber pub, Unumber mod, unsigned esize, unsi
 
 	ees = esize;
 	eds = dsize;
-	printf("Setting key...done\n");
+	//printf("Setting key...done\n");
 }
 
 void Unumber::eadd(Unumber param)
@@ -283,27 +283,27 @@ void Unumber::ersub(Unumber param)
 
 void Unumber::exor(Unumber param)
 {
-	printf("exor in\n");
+	//printf("exor in\n");
 	mpz_t n1, n2;
 	mpz_init(n1);
 	mpz_init(n2);
 	decrypt(n1, z.get_mpz_t());
 	decrypt(n2, param.z.get_mpz_t());
-	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
 	mpz_xor(n1, n1, n2);
 	encrypt(z.get_mpz_t(), n1);
-	printf("exor out\n");
+	//printf("exor out\n");
 }
 
 void Unumber::eror(Unumber param)
 {
-	printf("eror in\n");
+	//printf("eror in\n");
 	mpz_t n1, n2;
 	mpz_init(n1);
 	mpz_init(n2);
 	decrypt(n1, z.get_mpz_t());
 	decrypt(n2, param.z.get_mpz_t());
-	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
 
 	unsigned shift = mpz_get_ui(n2);
 
@@ -319,56 +319,56 @@ void Unumber::eror(Unumber param)
 	mpz_ior(n1, n1, n2);
 
 	encrypt(z.get_mpz_t(), n1);
-	printf("eror out\n");
+	//printf("eror out\n");
 }
 
 void Unumber::eor(Unumber param)
 {
-	printf("eor in\n");
+	//printf("eor in\n");
 	mpz_t n1, n2;
 	mpz_init(n1);
 	mpz_init(n2);
 	decrypt(n1, z.get_mpz_t());
 	decrypt(n2, param.z.get_mpz_t());
-	gmp_printf("%Zd\t%Zd\n", n1, n2);
+	//gmp_printf("%Zd\t%Zd\n", n1, n2);
 	mpz_ior(n1, n1, n2);
 	encrypt(z.get_mpz_t(), n1);
-	printf("eor out\n");
+	//printf("eor out\n");
 }
 
 void Unumber::emuls(Unumber param)
 {
-	printf("emuls in\n");
+	//printf("emuls in\n");
 	mpz_t n1,n2;
 	mpz_init(n1);
 	mpz_init(n2);
 	decrypt(n1, z.get_mpz_t());
 	decrypt(n2, param.z.get_mpz_t());
-	gmp_printf("%Zd\t%Zd\n", n1, n2);
+	//gmp_printf("%Zd\t%Zd\n", n1, n2);
 	mpz_mul(n1, n1, n2);
 	mpz_mod(n1, n1, n);
 	encrypt(z.get_mpz_t(), n1);
-	printf("emuls out\n");
+	//printf("emuls out\n");
 }
 
 void Unumber::esll(Unumber param)
 {
-	printf("esll in\n");
+	//printf("esll in\n");
 	mpz_t n1,n2;
 	mpz_init(n1);
 	mpz_init(n2);
 	decrypt(n1, z.get_mpz_t());
 	decrypt(n2, param.z.get_mpz_t());
-	gmp_printf("%Zd\t%Zd\n", n1, n2);
+	//gmp_printf("%Zd\t%Zd\n", n1, n2);
 	mpz_mul_2exp(n1, n1, mpz_get_ui(n2));
 	mpz_mod(n1, n1, n);
 	encrypt(z.get_mpz_t(), n1);
-	printf("esll out\n");
+	//printf("esll out\n");
 }
 
 void Unumber::esra(Unumber param)
 {
-	printf("esra in\n");
+	//printf("esra in\n");
 	mpz_t n1,n2;
 	mpz_init(n1);
 	mpz_init(n2);
@@ -384,24 +384,24 @@ void Unumber::esra(Unumber param)
 	unsigned shift = mpz_get_ui(n2);
 	mpz_tdiv_q_2exp(n1, n1, shift);
 
-	gmp_printf("%Zd\t%Zd\n", n1, n2);
+	//gmp_printf("%Zd\t%Zd\n", n1, n2);
 	mpz_mul_2exp(n1, n1, mpz_get_ui(n2));
 	mpz_mod(n1, n1, n);
 	encrypt(z.get_mpz_t(), n1);
-	printf("esra out\n");
+	//printf("esra out\n");
 }
 
 void Unumber::elnot()
 {
-	printf("elnot in\n");
+	//printf("elnot in\n");
 	mpz_t n1;
 	mpz_init(n1);
 	decrypt(n1, z.get_mpz_t());
-	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
 	unsigned cmp = mpz_cmp_ui(n1, 0) == 0;
 	mpz_set_ui(n1, cmp);
 	encrypt(z.get_mpz_t(), n1);
-	printf("elnot out\n");
+	//printf("elnot out\n");
 }
 
 void Unumber::einc()
@@ -421,105 +421,105 @@ void Unumber::edec()
 
 void Unumber::eeq(Unumber param1, Unumber param2)
 {
-	printf("eeq in\n");
+	//printf("eeq in\n");
 	mpz_t n1,n2;
 	mpz_init(n1);
 	mpz_init(n2);
 	decrypt(n1, param1.z.get_mpz_t());
 	decrypt(n2, param2.z.get_mpz_t());
-	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
 	unsigned cmp = mpz_cmp(n1, n2) == 0;
 	mpz_set_ui(n1, cmp);
 	encrypt(z.get_mpz_t(), n1);
-	printf("eeq out\n");
+	//printf("eeq out\n");
 }
 
 void Unumber::ene(Unumber param1, Unumber param2)
 {
-	printf("ene in\n");
+	//printf("ene in\n");
 	mpz_t n1,n2;
 	mpz_init(n1);
 	mpz_init(n2);
 	decrypt(n1, param1.z.get_mpz_t());
 	decrypt(n2, param2.z.get_mpz_t());
-	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
 	unsigned cmp = mpz_cmp(n1, n2) != 0;
 	mpz_set_ui(n1, cmp);
 	encrypt(z.get_mpz_t(), n1);
-	printf("ene out\n");
+	//printf("ene out\n");
 }
 
 void Unumber::egts(Unumber param1, Unumber param2)
 {
-	printf("egts in\n");
+	//printf("egts in\n");
 	mpz_t n1,n2;
 	mpz_init(n1);
 	mpz_init(n2);
 	decrypt(n1, param1.z.get_mpz_t());
 	decrypt(n2, param2.z.get_mpz_t());
-	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
 	unsigned cmp = mpz_cmp(n1, n2) > 0;
 	mpz_set_ui(n1, cmp);
 	encrypt(z.get_mpz_t(), n1);
-	printf("egts out\n");
+	//printf("egts out\n");
 }
 
 void Unumber::eges(Unumber param1, Unumber param2)
 {
-	printf("eges in\n");
+	//printf("eges in\n");
 	mpz_t n1,n2;
 	mpz_init(n1);
 	mpz_init(n2);
 	decrypt(n1, param1.z.get_mpz_t());
 	decrypt(n2, param2.z.get_mpz_t());
-	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
 	unsigned cmp = mpz_cmp(n1, n2) >= 0;
 	mpz_set_ui(n1, cmp);
 	encrypt(z.get_mpz_t(), n1);
-	printf("eges out\n");
+	//printf("eges out\n");
 }
 
 void Unumber::elts(Unumber param1, Unumber param2)
 {
-	printf("elts in\n");
+	//printf("elts in\n");
 	mpz_t n1,n2;
 	mpz_init(n1);
 	mpz_init(n2);
 	decrypt(n1, param1.z.get_mpz_t());
 	decrypt(n2, param2.z.get_mpz_t());
-	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
 	unsigned cmp = mpz_cmp(n1, n2) < 0;
 	mpz_set_ui(n1, cmp);
 	encrypt(z.get_mpz_t(), n1);
-	printf("elts out\n");
+	//printf("elts out\n");
 }
 
 void Unumber::eles(Unumber param1, Unumber param2)
 {
-	printf("eles in\n");
+	//printf("eles in\n");
 	mpz_t n1,n2;
 	mpz_init(n1);
 	mpz_init(n2);
 	decrypt(n1, param1.z.get_mpz_t());
 	decrypt(n2, param2.z.get_mpz_t());
-	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
 	unsigned cmp = mpz_cmp(n1, n2) <= 0;
 	mpz_set_ui(n1, cmp);
 	encrypt(z.get_mpz_t(), n1);
-	printf("eles out\n");
+	//printf("eles out\n");
 }
 
 void Unumber::ecmov(Unumber param1, Unumber param2)
 {
-	printf("ecmov in\n");
+	//printf("ecmov in\n");
 	mpz_t n1;
 	mpz_init(n1);
 	decrypt(n1, z.get_mpz_t());
-	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
 	unsigned cmp = mpz_cmp_ui(n1, 0) == 0;
 	if (cmp) mpz_set(z.get_mpz_t(), param1.z.get_mpz_t());
 	else  mpz_set(z.get_mpz_t(), param2.z.get_mpz_t());
-	printf("ecmov out\n");
+	//printf("ecmov out\n");
 }
 
 void Unumber::e3_random(mpz_t r, mpz_t limit)

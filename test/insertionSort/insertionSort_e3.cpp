@@ -54,6 +54,7 @@ int main(void)
 	}
 	cout << "\n";
 	
+	asm("l.debug");
 	return 0;
 }
 
