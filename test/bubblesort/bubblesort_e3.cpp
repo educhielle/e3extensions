@@ -25,6 +25,8 @@ int main()
 	a[3] = SecureInt::encrypt(0);
 	a[4] = SecureInt::encrypt(1);
 	a[5] = SecureInt::encrypt(15);
+
+	asm("l.debug");
 	
 	bubbleSort(a, LEN);
 

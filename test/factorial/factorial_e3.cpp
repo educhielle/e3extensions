@@ -19,6 +19,8 @@ int main()
 	SecureInt i = SecureInt::encrypt(1);
 	SecureInt result = SecureInt::encrypt(0);
 	
+	asm("l.debug");
+
 	int counter = 0;
 	do {
 		fact *= i;
