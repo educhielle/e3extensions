@@ -41,7 +41,10 @@ int main(void)
 	array[0] = SecureInt::encrypt(1);
 	array[1] = SecureInt::encrypt(2);
 
+	asm("l.debug");
+
 	cout << "hash : " << jenkins_one_at_a_time_hash(array, length).str() << "\n";
+
 	asm("l.debug");
 	return 0;
 }

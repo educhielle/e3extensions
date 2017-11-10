@@ -34,6 +34,8 @@ int main()
 	b[2][1] = SecureInt::encrypt(4);
 	b[2][2] = SecureInt::encrypt(5);
 
+	asm("l.debug");
+
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 3; j++)

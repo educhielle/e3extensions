@@ -27,6 +27,8 @@ int main(void)
 
 	SecureInt zero = SecureInt::encrypt(0);
 
+	asm("l.debug");
+
 	for (i = 1 ; i < n; i++)
 	{
 		j = i;
@@ -37,8 +39,11 @@ int main(void)
 
 			SecureInt xmy = x-y;
 			SecureInt ymx = y-x;
+			// SecureInt cond = xmy <= zero;
 			SecureInt diff = (xmy <= zero) * xmy + (ymx <= zero) * ymx;
+			// SecureInt diff cond.ternary(xmy, ymx);
 			SecureInt max = (xmy <= zero) * x + (ymx <= zero) * y;
+			//SecureInt max cond.ternary(x, y);
 			max += (x == y) * x; // if x == y set max to x
 			SecureInt min = max - diff;
 

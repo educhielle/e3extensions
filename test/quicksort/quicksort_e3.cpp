@@ -29,6 +29,8 @@ int main()
 	a[7] = SecureInt::encrypt(11);
 	a[8] = SecureInt::encrypt(9);
 
+	asm("l.debug");
+
 	int i;
 	cout << "Unsorted array is:\n";
 	for(i = 0; i < LEN; ++i)
@@ -81,7 +83,9 @@ void swap(SecureInt *a, SecureInt *b, SecureInt cond)
 {
 	SecureInt not_cond = !cond;
 	SecureInt aux = cond * *a + not_cond * *b;
+	// SecureInt aux = cond.ternary(*a, *b);
 	*a = not_cond * *a + cond * *b;
+	// *a = not_cond.ternary(*a, *b);
 	*b = aux;
 }
 

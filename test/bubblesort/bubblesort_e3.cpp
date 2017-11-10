@@ -49,8 +49,9 @@ void bubbleSort(SecureInt arr[], int n)
 		for (j = 0; j < n-i-1; j++)
 		{
 			cond1 = arr[j] <= arr[j+1];
-			cond2 = arr[j+1] < arr[j];
-			smaller = cond1 * arr[j] + cond2 * arr[j+1];
+			//cond2 = arr[j+1] < arr[j]; // remove if ternary
+			//smaller = cond1 * arr[j] + cond2 * arr[j+1];
+			smaller = cond1.ternary(arr[j], arr[j+1]);
 			greater = arr[j+1] + arr[j] - smaller;
 			arr[j] = smaller;
 			arr[j+1] = greater;

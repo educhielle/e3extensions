@@ -55,6 +55,8 @@ int main(void)
 	key[2] = SecureInt::encrypt(4368);
 	key[3] = SecureInt::encrypt(6424);
 
+	asm("l.debug");
+
 	speck_expand(key, exp);
 
 	for (int i = 0; i < ROUNDS; ++i)
