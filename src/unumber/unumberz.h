@@ -128,6 +128,7 @@ class Unumber
 	void elts(Unumber, Unumber);
 	void eles(Unumber, Unumber);
 	void ecmov(Unumber, Unumber);
+	void emacs(Unumber, Unumber);
 
 	private:
 	static void decrypt(mpz_t, const mpz_t);

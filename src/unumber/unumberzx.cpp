@@ -574,6 +574,20 @@ void Unumber::ecmov(Unumber param1, Unumber param2)
 	this->fromArray(mD);
 }
 
+void Unumber::emacs(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mD);
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e0(mD);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.emacs ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
 void Unumber::enc()
 {
 	unsigned mA[HW_NUMWORDS], mD[HW_NUMWORDS];

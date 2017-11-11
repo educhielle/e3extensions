@@ -116,6 +116,7 @@ class SecureInt
 	Unumber getX() const;
 	void ror (const SecureInt &);
 	string str(unsigned base=10) const;
+	SecureInt mac(const SecureInt &, const SecureInt &);
 	SecureInt ternary(const SecureInt &, const SecureInt &);
 
     /* Private static functions */

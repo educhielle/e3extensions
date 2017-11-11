@@ -522,6 +522,24 @@ void Unumber::ecmov(Unumber param1, Unumber param2)
 	//printf("ecmov out\n");
 }
 
+void Unumber::emacs(Unumber param1, Unumber param2)
+{
+	//printf("emacs in\n");
+	mpz_t n0,n1,n2;
+	mpz_init(n0);
+	mpz_init(n1);
+	mpz_init(n2);
+	decrypt(n0, z.get_mpz_t());
+	decrypt(n1, param1.z.get_mpz_t());
+	decrypt(n2, param2.z.get_mpz_t());
+	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	mpz_mul(n1, n1, n2);
+	mpz_mod(n1, n1, n);
+	mpz_add(n0, n0, n1);
+	encrypt(z.get_mpz_t(), n0);
+	//printf("emacs out\n");
+}
+
 void Unumber::e3_random(mpz_t r, mpz_t limit)
 {
 	gmp_randstate_t state;

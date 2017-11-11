@@ -209,6 +209,11 @@ Unumber SecureInt::getX() const
 	return x;
 }
 
+SecureInt SecureInt::mac(const SecureInt & n1, const SecureInt & n2)
+{
+	x.emacs(n1.x, n2.x);
+}
+
 SecureInt SecureInt::ternary(const SecureInt & n1, const SecureInt & n2)
 {
 	x.ecmov(n1.x, n2.x);

@@ -41,7 +41,11 @@ int main()
 		for (int j = 0; j < 3; j++)
 		{
 			c[i][j] = zero;
-			for (int k = 0; k < 3; k++) c[i][j] += a[i][k] * b[k][j];
+			for (int k = 0; k < 3; k++)
+			{
+				//c[i][j] += a[i][k] * b[k][j];
+				c[i][j].emacs(a[i][k], b[k][j]);
+			}
 		}
 	}
 
