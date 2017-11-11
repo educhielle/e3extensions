@@ -41,7 +41,7 @@ void quickSort( int a[], int l, int r)
 int partition( int a[], int l, int r) {
 	int pivot = a[r];
 	int i = l - 1;
-	
+	printf("partition l: %d\tr: %d\n", l, r);
 	for (int j = l; j < r; j++)
 	{
 		if (a[j] < pivot) swap(&a[++i], &a[j]);
@@ -54,6 +54,7 @@ int partition( int a[], int l, int r) {
 
 void swap(int *a, int *b)
 {
+	printf("::: %d\t%d\n", *a, *b);
 	int aux = *a;
 	*a = *b;
 	*b = aux;
