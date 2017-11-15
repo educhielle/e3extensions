@@ -130,6 +130,28 @@ class Unumber
 	void ecmov(Unumber, Unumber);
 	void emacs(Unumber, Unumber);
 
+	void add(Unumber);
+	void sub(Unumber);
+	void radd(Unumber);
+	void rsub(Unumber);
+	void pxor(Unumber);
+	void ror(Unumber);
+	void por(Unumber);
+	void inc();
+	void dec();
+	void sll(Unumber);
+	void sra(Unumber);
+	void muls(Unumber);
+	void lnot();
+	void eq(Unumber, Unumber);
+	void ne(Unumber, Unumber);
+	void gts(Unumber, Unumber);
+	void ges(Unumber, Unumber);
+	void lts(Unumber, Unumber);
+	void les(Unumber, Unumber);
+	void cmov(Unumber, Unumber);
+	void macs(Unumber, Unumber);
+
 	private:
 	static void decrypt(mpz_t, const mpz_t);
 	static void encrypt(mpz_t, const mpz_t);

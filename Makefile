@@ -109,6 +109,12 @@ ifdef LIBG_SPEED
 LIBGFLAGS := -DLIBG_SPEED=$(LIBG_SPEED) $(LIBGFLAGS)
 endif
 
+ifdef BIGINT
+SECUREINT := bigint
+else
+SECUREINT := secureint
+endif
+
 # GMP CROSS COMPILATION #
 
 # GMP CROSS COMPILATION FLAGS
@@ -185,7 +191,7 @@ compile-e3extensions: ## Compile e3extensions. Usage: make compile-e3extensions 
 #	compile Cryptosystem
 #	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/cryptosystem.cpp -o $(OBJ_E3EXTENSIONS)/cryptosystem.o $(OPT) $(LDF) $(LIBGFLAGS)
 #	compile SecureInt
-	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/secureint.cpp -o $(OBJ_E3EXTENSIONS)/secureint.o $(OPT) $(LDF) $(LIBGFLAGS)
+	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/$(SECUREINT).cpp -o $(OBJ_E3EXTENSIONS)/$(SECUREINT).o $(OPT) $(LDF) $(LIBGFLAGS)
 	$(CXX) -c $(CXXFLAGS) $(SRC_E3EXTENSIONS)/securering.cpp -o $(OBJ_E3EXTENSIONS)/securering.o $(OPT) $(LDF) $(LIBGFLAGS)
 
 

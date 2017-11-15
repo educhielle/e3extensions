@@ -511,15 +511,15 @@ void Unumber::eles(Unumber param1, Unumber param2)
 
 void Unumber::ecmov(Unumber param1, Unumber param2)
 {
-	//printf("ecmov in\n");
+	printf("ecmov in\n");
 	mpz_t n1;
 	mpz_init(n1);
 	decrypt(n1, z.get_mpz_t());
-	////gmp_printf("%Zd\t%Zd\n", n1, n2);
+	//gmp_printf("%Zd\t%Zd\n", n1, n2);
 	unsigned cmp = mpz_cmp_ui(n1, 0) == 0;
 	if (cmp) mpz_set(z.get_mpz_t(), param1.z.get_mpz_t());
 	else  mpz_set(z.get_mpz_t(), param2.z.get_mpz_t());
-	//printf("ecmov out\n");
+	printf("ecmov out\n");
 }
 
 void Unumber::emacs(Unumber param1, Unumber param2)
@@ -556,4 +556,257 @@ void Unumber::e3_randomp2(mpz_t r, unsigned limit)
 	gmp_randseed_ui(state, rand());
 	mpz_init(r);
 	mpz_urandomb(r, state, limit);
+}
+
+void Unumber::add(Unumber param)
+{
+	mpz_add(z.get_mpz_t(), z.get_mpz_t(), param.z.get_mpz_t());
+}
+
+
+void Unumber::sub(Unumber param)
+{
+	mpz_sub(z.get_mpz_t(), z.get_mpz_t(), param.z.get_mpz_t());
+}
+
+void Unumber::pxor(Unumber param)
+{
+	mpz_xor(z.get_mpz_t(), z.get_mpz_t(), param.z.get_mpz_t());
+}
+
+void Unumber::ror(Unumber param)
+{
+	//printf("eror in\n");
+	mpz_t n1, n2;
+	mpz_init_set(n1, z.get_mpz_t());
+	mpz_init_set(n2, param.z.get_mpz_t());
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
+
+	unsigned shift = mpz_get_ui(n2);
+
+	mpz_t mask;
+	mpz_init_set_ui(mask, 1);
+	mpz_mul_2exp(mask, mask, shift);
+	mpz_sub_ui(mask, mask, 1);
+	mpz_and(n2, n1, mask);
+	mpz_mul_2exp(n2, n2, eds-shift);
+
+	mpz_tdiv_q_2exp(n1, n1, shift);
+
+	mpz_ior(n1, n1, n2);
+	mpz_set(z.get_mpz_t(), n1);
+	//printf("eror out\n");
+}
+
+void Unumber::por(Unumber param)
+{
+	//printf("eor in\n");
+	mpz_t n1, n2;
+	mpz_init(n1);
+	mpz_init(n2);
+	mpz_set(n1, z.get_mpz_t());
+	mpz_set(n2, param.z.get_mpz_t());
+	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	mpz_ior(n1, n1, n2);
+	mpz_set(z.get_mpz_t(), n1);
+	//printf("eor out\n");
+}
+
+void Unumber::muls(Unumber param)
+{
+	//printf("emuls in\n");
+	mpz_t n1,n2;
+	mpz_init(n1);
+	mpz_init(n2);
+	decrypt(n1, z.get_mpz_t());
+	decrypt(n2, param.z.get_mpz_t());
+	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	mpz_mul(n1, n1, n2);
+	mpz_mod(n1, n1, n);
+	encrypt(z.get_mpz_t(), n1);
+	//printf("emuls out\n");
+}
+
+void Unumber::sll(Unumber param)
+{
+	//printf("esll in\n");
+	mpz_t n1,n2;
+	mpz_init(n1);
+	mpz_init(n2);
+	mpz_set(n1, z.get_mpz_t());
+	mpz_set(n2, param.z.get_mpz_t());
+	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	mpz_mul_2exp(n1, n1, mpz_get_ui(n2));
+	mpz_mod(n1, n1, n);
+	mpz_set(z.get_mpz_t(), n1);
+	//printf("esll out\n");
+}
+
+void Unumber::sra(Unumber param)
+{
+	//printf("esra in\n");
+	mpz_t n1,n2;
+	mpz_init(n1);
+	mpz_init(n2);
+	mpz_set(n1, z.get_mpz_t());
+	mpz_set(n2, param.z.get_mpz_t());
+/*
+	mpz_t mask;
+	mpt_init_set_ui(mask, 1);
+	mpz_mul_2exp(mask, mask, eds-1);
+	mpz_and(mask, mask, n1);
+	unsigned sign = mpz_cmp_ui(mask, 0) != 0;
+*/
+	unsigned shift = mpz_get_ui(n2);
+	mpz_tdiv_q_2exp(n1, n1, shift);
+
+	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	mpz_mul_2exp(n1, n1, mpz_get_ui(n2));
+	mpz_mod(n1, n1, n);
+	mpz_set(z.get_mpz_t(), n1);
+	//printf("esra out\n");
+}
+
+void Unumber::lnot()
+{
+	//printf("elnot in\n");
+	mpz_t n1;
+	mpz_init(n1);
+	mpz_set(n1, z.get_mpz_t());
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
+	unsigned cmp = mpz_cmp_ui(n1, 0) == 0;
+	mpz_set_ui(n1, cmp);
+	mpz_set(z.get_mpz_t(), n1);
+	//printf("elnot out\n");
+}
+
+void Unumber::inc()
+{
+	mpz_add_ui(z.get_mpz_t(), z.get_mpz_t(), 1);
+}
+
+void Unumber::dec()
+{
+	mpz_sub_ui(z.get_mpz_t(), z.get_mpz_t(), 1);
+}
+
+void Unumber::eq(Unumber param1, Unumber param2)
+{
+	//printf("eeq in\n");
+	mpz_t n1,n2;
+	mpz_init(n1);
+	mpz_init(n2);
+	decrypt(n1, param1.z.get_mpz_t());
+	decrypt(n2, param2.z.get_mpz_t());
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
+	unsigned cmp = mpz_cmp(n1, n2) == 0;
+	mpz_set_ui(n1, cmp);
+	encrypt(z.get_mpz_t(), n1);
+	//printf("eeq out\n");
+}
+
+void Unumber::ne(Unumber param1, Unumber param2)
+{
+	//printf("ene in\n");
+	mpz_t n1,n2;
+	mpz_init(n1);
+	mpz_init(n2);
+	mpz_set(n1, param1.z.get_mpz_t());
+	mpz_set(n2, param2.z.get_mpz_t());
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
+	unsigned cmp = mpz_cmp(n1, n2) != 0;
+	mpz_set_ui(n1, cmp);
+	mpz_set(z.get_mpz_t(), n1);
+	//printf("ene out\n");
+}
+
+void Unumber::gts(Unumber param1, Unumber param2)
+{
+	//printf("egts in\n");
+	mpz_t n1,n2;
+	mpz_init(n1);
+	mpz_init(n2);
+	mpz_set(n1, param1.z.get_mpz_t());
+	mpz_set(n2, param2.z.get_mpz_t());
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
+	unsigned cmp = mpz_cmp(n1, n2) > 0;
+	mpz_set_ui(n1, cmp);
+	mpz_set(z.get_mpz_t(), n1);
+	//printf("egts out\n");
+}
+
+void Unumber::ges(Unumber param1, Unumber param2)
+{
+	//printf("eges in\n");
+	mpz_t n1,n2;
+	mpz_init(n1);
+	mpz_init(n2);
+	mpz_set(n1, param1.z.get_mpz_t());
+	mpz_set(n2, param2.z.get_mpz_t());
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
+	unsigned cmp = mpz_cmp(n1, n2) >= 0;
+	mpz_set_ui(n1, cmp);
+	mpz_set(z.get_mpz_t(), n1);
+	//printf("eges out\n");
+}
+
+void Unumber::lts(Unumber param1, Unumber param2)
+{
+	//printf("elts in\n");
+	mpz_t n1,n2;
+	mpz_init(n1);
+	mpz_init(n2);
+	mpz_set(n1, param1.z.get_mpz_t());
+	mpz_set(n2, param2.z.get_mpz_t());
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
+	unsigned cmp = mpz_cmp(n1, n2) < 0;
+	mpz_set_ui(n1, cmp);
+	mpz_set(z.get_mpz_t(), n1);
+	//printf("elts out\n");
+}
+
+void Unumber::les(Unumber param1, Unumber param2)
+{
+	//printf("eles in\n");
+	mpz_t n1,n2;
+	mpz_init(n1);
+	mpz_init(n2);
+	mpz_set(n1, param1.z.get_mpz_t());
+	mpz_set(n2, param2.z.get_mpz_t());
+	////gmp_printf("%Zd\t%Zd\n", n1, n2);
+	unsigned cmp = mpz_cmp(n1, n2) <= 0;
+	mpz_set_ui(n1, cmp);
+	mpz_set(z.get_mpz_t(), n1);
+	//printf("eles out\n");
+}
+
+void Unumber::cmov(Unumber param1, Unumber param2)
+{
+	//printf("ecmov in\n");
+	mpz_t n1;
+	mpz_init(n1);
+	mpz_set(n1, z.get_mpz_t());
+	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	unsigned cmp = mpz_cmp_ui(n1, 0) == 0;
+	if (cmp) mpz_set(z.get_mpz_t(), param1.z.get_mpz_t());
+	//else  mpz_set(z.get_mpz_t(), param2.z.get_mpz_t());
+	printf("ecmov out\n");
+}
+
+void Unumber::macs(Unumber param1, Unumber param2)
+{
+	//printf("emacs in\n");
+	mpz_t n0,n1,n2;
+	mpz_init(n0);
+	mpz_init(n1);
+	mpz_init(n2);
+	mpz_set(n0, z.get_mpz_t());
+	mpz_set(n1, param1.z.get_mpz_t());
+	mpz_set(n2, param2.z.get_mpz_t());
+	//gmp_printf("%Zd\t%Zd\n", n1, n2);
+	mpz_mul(n1, n1, n2);
+	mpz_mod(n1, n1, n);
+	mpz_add(n0, n0, n1);
+	mpz_set(z.get_mpz_t(), n0);
+	//printf("emacs out\n");
 }
