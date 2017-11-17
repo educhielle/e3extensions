@@ -597,3 +597,268 @@ void Unumber::enc()
 	mfer_e0(mD);
 	this->fromArray(mD);
 }
+
+
+/**********************/
+
+
+void Unumber::add(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.add ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::sub(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.sub ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::pxor(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.xor ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::ror(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.ror ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::por(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.or ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::muls(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.muls ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::sll(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.sll ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::sra(Unumber param)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	param.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.sra ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::lnot()
+{
+	unsigned mA[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mA);
+	mter_e1(mA);
+	__asm__("le.lnot ze0,ze1");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::inc()
+{
+	unsigned mD[HW_NUMWORDS];
+	this->toArray(mD);
+	mter_e0(mD);
+	__asm__("le.inc ze0");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::dec()
+{
+	unsigned mD[HW_NUMWORDS];
+	this->toArray(mD);
+	mter_e0(mD);
+	__asm__("le.dec ze0");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::eq(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.eq ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::ne(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.ne ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::gts(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.gts ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::ges(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.ges ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::lts(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.lts ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::les(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.les ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::cmov(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mD);
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e0(mD);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.cmov ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::macs(Unumber param1, Unumber param2)
+{
+	unsigned mA[HW_NUMWORDS], mB[HW_NUMWORDS], mD[HW_NUMWORDS];
+	this->toArray(mD);
+	param1.toArray(mA);
+	param2.toArray(mB);
+	mter_e0(mD);
+	mter_e1(mA);
+	mter_e2(mB);
+	__asm__("le.macs ze0,ze1,ze2");
+	mfer_e0(mD);
+	this->fromArray(mD);
+}
+
+void Unumber::randomp2(unsigned limit)
+{
+	mpz_t r;
+	gmp_randstate_t state;
+	gmp_randinit_default(state);
+	gmp_randseed_ui(state, rand());
+	mpz_init(r);
+	mpz_urandomb(r, state, limit);
+	mpz_set(z.get_mpz_t(), r);
+	//gmp_printf("%Zd %u\n", r, limit);
+}
+
+void Unumber::setControl(unsigned control)
+{
+	unsigned esize = control;
+	unsigned dsize = control;
+	unsigned ctrl = 0, address = 12 << 11;
+
+	esize /= 512;
+	while (esize >>= 1) ctrl++;
+	//ctrl--;
+	ctrl <<= 8;
+
+	dsize /= 32;
+	while (dsize >>= 1) ctrl++;
+	//ctrl--;
+	ctrl <<= 8;
+/*
+	printf("address: %x\n", address);
+	printf("ctrl: %x\n", ctrl);
+*/
+	__asm__ ("l.mtspr %0,%1,0" : : "r"(address), "r"(ctrl));
+}
+

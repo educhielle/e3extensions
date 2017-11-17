@@ -144,6 +144,8 @@ class Unumber
 
 	static void hw_gfun();*/
 	static void setKey(Unumber, Unumber, Unumber, unsigned, unsigned);
+	static void setControl(unsigned);
+
 	void eadd(Unumber);
 	void esub(Unumber);
 	void eradd(Unumber);
@@ -166,6 +168,29 @@ class Unumber
 	void eles(Unumber, Unumber);
 	void ecmov(Unumber, Unumber);
 	void emacs(Unumber, Unumber);
+
+	void add(Unumber);
+	void sub(Unumber);
+	void radd(Unumber);
+	void rsub(Unumber);
+	void pxor(Unumber);
+	void ror(Unumber);
+	void por(Unumber);
+	void inc();
+	void dec();
+	void sll(Unumber);
+	void sra(Unumber);
+	void muls(Unumber);
+	void lnot();
+	void eq(Unumber, Unumber);
+	void ne(Unumber, Unumber);
+	void gts(Unumber, Unumber);
+	void ges(Unumber, Unumber);
+	void lts(Unumber, Unumber);
+	void les(Unumber, Unumber);
+	void cmov(Unumber, Unumber);
+	void macs(Unumber, Unumber);
+	void randomp2(unsigned);
 };
 
 

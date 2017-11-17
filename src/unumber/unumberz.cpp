@@ -1,6 +1,7 @@
 #include <iostream>
 #include <istream>
 #include "unumberz.h"
+#include <stdlib.h>
 
 const bool NP_DBG = false;
 
@@ -810,3 +811,37 @@ void Unumber::macs(Unumber param1, Unumber param2)
 	mpz_set(z.get_mpz_t(), n0);
 	//printf("emacs out\n");
 }
+
+void Unumber::randomp2(unsigned limit)
+{
+	mpz_t r;
+	gmp_randstate_t state;
+	gmp_randinit_default(state);
+	gmp_randseed_ui(state, rand());
+	mpz_init(r);
+	mpz_urandomb(r, state, limit);
+	mpz_set(z.get_mpz_t(), r);	
+}
+
+void Unumber::setControl(unsigned control)
+{
+	unsigned esize = control;
+	unsigned dsize = control;
+	unsigned ctrl = 0, address = 12 << 11;
+
+	esize /= 512;
+	while (esize >>= 1) ctrl++;
+	//ctrl--;
+	ctrl <<= 8;
+
+	dsize /= 32;
+	while (dsize >>= 1) ctrl++;
+	//ctrl--;
+	ctrl <<= 8;
+/*
+	printf("address: %x\n", address);
+	printf("ctrl: %x\n", ctrl);
+*/
+	__asm__ ("l.mtspr %0,%1,0" : : "r"(address), "r"(ctrl));
+}
+

@@ -125,7 +125,9 @@ class SecureInt
     /* Public static functions */
     public:
 	static void setKey(Unumber, Unumber, Unumber, unsigned, unsigned);
+	static void setControl(unsigned);
 	static SecureInt encrypt(unsigned long long);
+	static SecureInt randomp2(unsigned);
 	static SecureInt ror (const SecureInt &, const SecureInt &);
 };
 

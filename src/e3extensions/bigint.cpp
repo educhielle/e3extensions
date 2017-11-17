@@ -240,9 +240,22 @@ void SecureInt::setKey(Unumber pri, Unumber pub, Unumber mod, unsigned esize, un
 	Unumber::setKey(pri, pub, mod, esize, dsize);
 }
 
+void SecureInt::setControl(unsigned control)
+{
+	Unumber::setControl(control);
+}
+
 SecureInt SecureInt::encrypt(unsigned long long m)
 {
 	Unumber x(m);
 	x.enc();
 	return SecureInt(x);
 }
+
+SecureInt SecureInt::randomp2(unsigned l)
+{
+	Unumber x;
+	x.randomp2(l);
+	return SecureInt(x);
+}
+

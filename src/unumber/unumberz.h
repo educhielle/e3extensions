@@ -107,6 +107,8 @@ class Unumber
         string raw(unsigned sz) const;
 
 	static void setKey(Unumber, Unumber, Unumber, unsigned, unsigned);
+	static void setControl(unsigned);
+
 	void eadd(Unumber);
 	void esub(Unumber);
 	void eradd(Unumber);
@@ -151,6 +153,7 @@ class Unumber
 	void les(Unumber, Unumber);
 	void cmov(Unumber, Unumber);
 	void macs(Unumber, Unumber);
+	void randomp2(unsigned);
 
 	private:
 	static void decrypt(mpz_t, const mpz_t);
