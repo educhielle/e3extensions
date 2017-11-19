@@ -27,9 +27,10 @@ void sieveOfEratosthenes(int n) {
 }
 
 int main(void) {
+    asm("l.debug");
     int n = 100;
 
     sieveOfEratosthenes(n);
-
+    asm("l.debug");
     return 0;
 }

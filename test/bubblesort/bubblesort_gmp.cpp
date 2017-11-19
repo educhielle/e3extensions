@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <gmp.h>
 
-#define SIZE 4096
+#define SIZE 32
 #define LEN 6
 
 using namespace std;

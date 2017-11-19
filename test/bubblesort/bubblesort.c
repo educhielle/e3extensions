@@ -31,11 +31,14 @@ void printArray(int arr[], int size)
 // Driver program to test above functions
 int main()
 {
+    asm("l.debug");
     int arr[] = {64, 34, 25, 12, 22, 11, 90};
     int n = sizeof(arr)/sizeof(arr[0]);
     bubbleSort(arr, n);
-    printf("Sorted array: n");
+    printf("Sorted array: ");
     printArray(arr, n);
+    printf("\n");
+    asm("l.debug");
     return 0;
 }
 

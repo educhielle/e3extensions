@@ -28,13 +28,13 @@ uint32_t jenkins_ll(const uint8_t* key, size_t length) {
         temp = hash << 10;
         hash += temp;
         temp = hash >> 6;
-        printf("%zu %zu %zu\n", hash, temp, hash^temp);
+        printf("%u %u %u\n", hash, temp, hash^temp);
         hash ^= temp;
     } while (i != length);
     temp = hash << 3;
     hash += temp;
     temp = hash >> 11;
-    printf("%zu %zu %zu\n", hash, temp, hash^temp);
+    printf("%u %u %u\n", hash, temp, hash^temp);
     hash ^= temp;
     temp = hash << 15;
     hash += temp;
@@ -42,14 +42,15 @@ uint32_t jenkins_ll(const uint8_t* key, size_t length) {
 }
 
 int main(void) {
+    asm("l.debug");
     size_t length = 2;
-    uint8_t* array = malloc(length * sizeof(uint8_t));
+    uint8_t array[length]; // = malloc(length * sizeof(uint8_t));
     for (int i = 0 ; i < length ; i++) {
         array[i] = i + 1;
     }
 
     // assert(jenkins_one_at_a_time_hash(array, length) == jenkins_ll(array, length));
-    printf("hash : %zu\n", jenkins_ll(array, length));
-
+    printf("hash : %u\n", jenkins_ll(array, length));
+    asm("l.debug");
     return 0;
 }

@@ -17,6 +17,7 @@ int gfun(int x, int y) {
 #if 1
 
 int main(void) {
+    asm("l.debug");
     int n = 10, i, j;
     int array[10] = { 4, 2, 5, 9, 1, 0, 4, 3, 9, 8 };
 
@@ -40,6 +41,7 @@ int main(void) {
     for (i = 0; i < n; i++)
         printf("%d ", array[i]);
     printf("\n");
+    asm("l.debug");
     return 0;
 }
 

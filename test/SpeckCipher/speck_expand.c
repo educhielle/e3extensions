@@ -9,7 +9,7 @@
 #define ROL(x, r) ((x << r) | (x >> ((sizeof(uint16_t) * 8) - r)))
 #define R(x, y, k) (x = ROR(x, 7), x += y, x ^= k, y = ROL(y, 2), y ^= x)
 
-void speck_expand(uint16_t const K[static KEY_LEN], uint16_t S[static ROUNDS]) {
+void speck_expand(uint16_t const K[KEY_LEN], uint16_t S[ROUNDS]) {
     uint16_t b = K[0];
     uint16_t a[KEY_LEN - 1];
     for (int i = 0; i < KEY_LEN - 1 ; i++) {
@@ -23,13 +23,15 @@ void speck_expand(uint16_t const K[static KEY_LEN], uint16_t S[static ROUNDS]) {
 }
 
 int main(void) {
+    asm("l.debug");
     const uint16_t key[4] = { 256, 2312, 4368, 6424 };
     uint16_t exp[ROUNDS];
     speck_expand(key, exp);
 
     for (int i = 0; i < ROUNDS; ++i) {
-        printf("%zu ", exp[i]);
+        printf("%u ", exp[i]);
     }
     printf("\n");
+    asm("l.debug");
     return EXIT_SUCCESS;
 }
