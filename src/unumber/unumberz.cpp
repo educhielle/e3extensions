@@ -842,6 +842,6 @@ void Unumber::setControl(unsigned control)
 	printf("address: %x\n", address);
 	printf("ctrl: %x\n", ctrl);
 */
-	__asm__ ("l.mtspr %0,%1,0" : : "r"(address), "r"(ctrl));
+//	__asm__ ("l.mtspr %0,%1,0" : : "r"(address), "r"(ctrl));
 }
 

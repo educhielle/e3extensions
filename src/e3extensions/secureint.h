@@ -34,6 +34,7 @@ class SecureInt
 	SecureInt(unsigned long long, Cryptosystem &);*/
 	SecureInt(const Unumber);
 	SecureInt(const string &);
+	SecureInt(const string &, unsigned);
 
     /* Operators */
     public:
@@ -207,6 +208,12 @@ inline
 SecureInt::SecureInt(const string & s)
 {
 	this->x = Unumber(s);
+}
+
+inline
+SecureInt::SecureInt(const string & s, unsigned b)
+{
+	this->x = Unumber(s,b);
 }
 
 #endif
