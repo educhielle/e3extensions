@@ -2,35 +2,17 @@
 //#include "../../src/e3extensions/secureint.h"
 #include "../../src/e3extensions/bigint.h"
 
+#define SIZE 32
+#define LEN 6
+
 using namespace std;
 
-/********************************************************
-** Create a boolean array "prime[0..n]" and initialize
-** all entries it as true. A value in prime[i] will
-** finally be false if i is Not a prime, else true.
-********************************************************/
-
-SecureInt zero, one, pe;
-
-void sieveOfEratosthenes(int n)
-{
-	SecureInt prime[n+1];
-	for (int i = 0 ; i < n+1 ; i++) 
-        	prime[i] = one;
-
-	for (int p = 2; p*p < n+1 ; p++)
-	{
-		for (int i = 2*p; i < n+1 ; i += p)	// Update all multiples of p
-			prime[i] = zero;
-	}
-
-	for (int p = 2; p < n+1; p++, pe+=one) // Print all prime numbers
-	{
-		cout << (pe * prime[p]).str() << "\n";
-	}
-}
-
-int main(void)
+void bubbleSort(SecureInt[], int);
+void printArray(SecureInt[], int);
+void swap(SecureInt*, SecureInt*);
+ 
+// Driver program to test above functions
+int main()
 {
 	/* key 16 *
 	Unumber pri("27101a97", 16);
@@ -74,7 +56,7 @@ int main(void)
 
 	SecureInt::setKey(pri, pub, mod, 1024, 1024);
 
-	/* key 1024 */
+	/* key 1024 *
 	Unumber pri
 ("5c4a4820a6c0f7554d5a04f96f6eda6087ed29d62351ebb5e0672a82f7929567443405b69bfc4d6cb86c0ab311cc0ae135b2576b4eafae41da00814e8d1b960ad1ed2adaf60f968d7a18bb0d6d638db25477237744019311769b81acff01f36b01ff4dc6a07f83e1ccedecd98afdb41a49a833897cf8f8c8fbd0fa2e2da5a3f84cd2530cbf4be645c4077461b180a491c55f41c796d7321417095ae84166df7f1170dae57141a8ce91ca9a5982342654ebe2503eca9f4d436688a6e8da8f9424769677d8029d3343107d6cefbab2aab4d2a84f0218df1ae4b5f9b6df380acaff5b3997ace18cf28df636e16c8eb376dc1706d947872ff79f562c540cdd109188", 16);
 	Unumber pub("5c4a4820a6c0f7554d5a04f96f6eda6087ed29d62351ebb5e0672a82f7929567443405b69bfc4d6cb86c0ab311cc0ae135b2576b4eafae41da00814e8d1b960c06578d61b62f21eebe868993a68d937cd7046d9258a5ce002ea1f9147844709acddce06256a841e64273167dd045c529182f7df4f2721217413d66fe617f7e2b5a447648b296ac9e2234f0a7ece6a96fd758cbb771573b14f0f6d13393654b5a932d967055df05691de1a8f5c9096a30a9b01f8f264aa1ab3182c37910912ece47576ee071654a376a60781e89a2e6b04b06062a14e2557ce8608bc96717aa2ca4e46123310b156aed32fa0210c6ad5768ca0d413f7178cc0e81ff6c323ca285", 16);
@@ -87,19 +69,79 @@ int main(void)
 	Unumber pub("7f244bce50c4bbb1f9c295a5ea5cf9adddd248c186b41805c1ef1dbc7de49b797bf97ad1b3434eebbf1e3f7891052e0cf6ea704038bc5c856aecd7e50b460541ff337786d65bdc7c087bcbcf5e2660ec685e10738e142584b5a0288ef753803784acd1cece0c9a4adf0bcdf56601552a707688eb555c933563fe77bcae51d2db9a120159dbad83c4a652213a9ccbc47e97efee120aeac8b1377ebf046e6bc649e4052e726c69ae6880551088caa0385228130b2dca52e23a4fecd6879a32a90f206eebbcc968bb5af353becd0d9d3f4abeb24469e32c61387b875b290241fb8c0f6d02048cf1519bc7302d5be215a5bfef389ae8225fc841615a4f5ac10bf31043593744843822e3befb6f81b12982f172216ea995c5e59c6bcb13b9547237745fe8901491fe83d16e008a67d87826e0189deb7e54353e29d0495c940072e5fc59e49778440543afe1d675d44b5509b2bfe4ed2339d71f615cbc542f0fde50c3759f1826970a3f0d35bc308fbd34765e2afcdff741d37ba436d1e8419855ccafb4247a50c8ac6ae1cd6968f5d6404101c672b38bae662e0826a52d2168ec6901b6e2cf7d0968f3aeac2bc826d11c8ae0010ff6df95a99b698ea0e09a8bb6c4c8c07e8a1b3bdebd45269f74880bdf2c4dabce6373a3ec6ce18f0c5b7113e7dcc3a1d74f7245c97ac8d50aa50fccb213e0829b2050f63c2056c6ca974d004253b", 16);
 	Unumber mod("3f25085c1c9c7328bbf13679dc47c652d4d3245f7e320bcbe9a199a31571ad6545004cb83a14cc61b5e580892838c17bc83ba24b27d22ab825f52fb19e694d155a14e306bf23c0e5598104153560b1bf8e599feba521129c1cd43e1aac93ad82ce0c3a01e43470c03cd035d65a6d1bb344e3dada151eaba9c167cb2290a93745f24ade4d92a5bbf271b7ee9f327671a5e5202e043208d001512d452ee9d613e43fcbafcbe152cbb95c460b785f7c4e55e2d9d69e3239f1a0186dd763a38902cae0ecf74f09df40c33481fb55cd3939dbcce6656891513ee3dc867c8a853c2639b988283a801e75855a88266ce7d1241ca9b22689e60fd76bdda69b357a4dae3ed68087b4a576a5233dfa96ef663d3c9eb24f486b29a2c9c77d9a3abec21d371e77916b0c06e5c4ec7643f3b2119e99d97237d07b90a73ba6ff431413dbbfc6778ed5af98d863802f16c36674acbda5f6c9d613612595beb8a329ae11f721d92b018085e0678dfe8a4dba3478cbd0bfdf766999db16972900f6fce4d8fad39c71866d2ab062870b6cc286ef5003f3595b6a74327776e1c75cdb5ba616fe876494843750b97627e0e9f75275a3fb5d90018fbb70473143d4e9971fea92559348576e5c4ff276958b375d1da370461b3dae09137b12b5aae5e5d8a62fe42a74910eb83a0e98e9d443c7a845051a7a21929d2e99ea26046e5c0ab53dcc4cea2761", 16);
 
-	SecureInt::setKey(pri, pub, mod, 4096, 64);
+	SecureInt::setKey(pri, pub, mod, 4096, 4096);
+
+	/**
+
+	SecureInt a[LEN];
+	a[0] = SecureInt::encrypt(7);
+	a[1] = SecureInt::encrypt(12);
+	a[2] = SecureInt::encrypt(2);
+	a[3] = SecureInt::encrypt(0);
+	a[4] = SecureInt::encrypt(1);
+	a[5] = SecureInt::encrypt(15);
+
+	/**/
+	SecureInt::setControl(SIZE);
+
+	SecureInt a[LEN];
+	a[0] = SecureInt::randomp2(SIZE);
+	a[1] = SecureInt::randomp2(SIZE);
+	a[2] = SecureInt::randomp2(SIZE);
+	a[3] = SecureInt::randomp2(SIZE);
+	a[4] = SecureInt::randomp2(SIZE);
+	a[5] = SecureInt::randomp2(SIZE);
+
+	printArray(a, LEN);
 
 	/**/
 
-	zero = SecureInt::encrypt(0);
-	one = SecureInt::encrypt(1);
-	pe = SecureInt::encrypt(2);
-
 	asm("l.debug");
+	
+	bubbleSort(a, LEN);
 
-	int n = 100;
-	sieveOfEratosthenes(n);
+	cout << "Sorted array is:  ";
+	printArray(a, LEN);
 
 	asm("l.debug");
 	return 0;
 }
+
+// A function to implement bubble sort
+void bubbleSort(SecureInt arr[], int n)
+{
+	int i, j;
+	SecureInt cond1, cond2, smaller, greater;
+
+	for (i = 0; i < n-1; i++)
+	{
+		// Last i elements are already in place   
+		for (j = 0; j < n-i-1; j++)
+		{
+			cond1 = arr[j] <= arr[j+1];
+			cond2 = arr[j+1] < arr[j]; // remove if ternary
+			smaller = cond1 * arr[j] + cond2 * arr[j+1];
+			//smaller = cond1.ternary(arr[j], arr[j+1]);
+			greater = arr[j+1] + arr[j] - smaller;
+			arr[j] = smaller;
+			arr[j+1] = greater;
+		}
+	}
+}
+
+
+/* Function to print an array */
+void printArray(SecureInt arr[], int size)
+{
+	for (int i=0; i < size; i++) cout << arr[i].str() << " ";
+	cout << "\n";
+}
+
+
+void swap(SecureInt *xp, SecureInt *yp)
+{
+	SecureInt temp = *xp;
+	*xp = *yp;
+	*yp = temp;
+}
+

@@ -235,7 +235,7 @@ compile-sensitive-information: ## Compile Sensitive Information class and auxili
 #	compile big_random
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/big_random.cpp -o $(OBJ_PREPROCESSOR)/big_random.o $(OPT) $(LDF)
 #	compile SensitiveInformation
-#	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/sensitive_information.cpp -o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OPT) $(LDF)
+	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/sensitive_information.cpp -o $(OBJ_PREPROCESSOR)/sensitive_information.o $(OPT) $(LDF)
 #	compile big_random
 	$(CXX) -c $(CXXFLAGS) $(SRC_PREPROCESSOR)/util.cpp -o $(OBJ_PREPROCESSOR)/util.o $(OPT) $(LDF)
 
@@ -265,7 +265,7 @@ decrypt: ## Decrypt file. Usage: make decrypt IN=path/to/inputfile OUT=path/to/o
 install: clean compile-unumber compile-sensitive-information compile-preprocessor compile-decrypt compile-shared-libg compile-static-libg compile-e3extensions ## Install all basic components. Usage: make install [ARCH=64] [GMP=1]
 
 magic:
-	make preprocess IN=$(IN) OUT=$(PREPROC_FILE) KEY_SIZE=$(KEY_SIZE) BETA=$(BETA)
+	# make preprocess IN=$(IN) OUT=$(PREPROC_FILE) KEY_SIZE=$(KEY_SIZE) BETA=$(BETA)
 	make compile-all IN=$(PREPROC_FILE) OUT=$(basename $(BINARY_FILE))-GMP$(suffix $(BINARY_FILE)) FAST_RANDOM=1 GMP=1 STATIC_LIBG=1 STATIC_LIBGCC=1 STATIC_LIBSTDCPP=1 STATIC=1
 	make compile-all IN=$(PREPROC_FILE) OUT=$(basename $(BINARY_FILE))-H512$(suffix $(BINARY_FILE)) FAST_RANDOM=1 GMP=1 STATIC_LIBG=1 STATIC_LIBGCC=1 STATIC_LIBSTDCPP=1 STATIC=1 HWACC=512
 	make compile-all IN=$(PREPROC_FILE) OUT=$(basename $(BINARY_FILE))-H1024$(suffix $(BINARY_FILE)) FAST_RANDOM=1 GMP=1 STATIC_LIBG=1 STATIC_LIBGCC=1 STATIC_LIBSTDCPP=1 STATIC=1 HWACC=1024

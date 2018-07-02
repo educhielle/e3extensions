@@ -1,3 +1,4 @@
+
 /*******************************************
 * New York University in Abu Dhabi (NYUAD) *
 * MoMAlab                                  *
@@ -26,6 +27,7 @@ class SecureInt
     public:
 	SecureInt() {}
 	SecureInt(const SecureInt &);
+	SecureInt(SecureInt &&);
 /*	SecureInt(const Unumber, const Cryptosystem &);
 	SecureInt(const string &, const Cryptosystem &);
 	SecureInt(const string &, unsigned, const Cryptosystem &);
@@ -140,6 +142,14 @@ SecureInt::SecureInt(const SecureInt & param)
 	this->x = param.x;
 	//this->cryptosystem = param.cryptosystem;
 }
+
+inline
+SecureInt::SecureInt(SecureInt && param)
+{
+	this->x = std::move(param.x);
+	//this->cryptosystem = param.cryptosystem;
+}
+
 /*
 inline
 SecureInt::SecureInt(const Unumber x, const Cryptosystem & cryptosystem)
