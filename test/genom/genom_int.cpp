@@ -3,12 +3,14 @@
 #include <fstream>
 #include <vector>
 
-#include "../../src/e3extensions/bigint.h"
+// #include "../../src/e3extensions/bigint.h"
 #include <sstream>
 
 using namespace std;
 
+using SecureInt = int;
 using Estring = std::vector<SecureInt>;
+
 
 SecureInt zero, one;
 // SecureInt ersz, essz;
@@ -64,7 +66,7 @@ SecureInt encChar(char c)
         case 'g': i=2; break;
         case 't': i=3;
     }
-    return SecureInt::encrypt(i);
+    return i; //SecureInt::encrypt(i);
 }
 
 int main(int argc, char * argv[])
@@ -72,7 +74,7 @@ int main(int argc, char * argv[])
     // vector<string> l { "TGGAACGTGTA", "CTGACGAACAA", "CCTGTGTACGA", "AAACTGTCGAT", "AACCTGACGAA", "AACTGTGTAAC", "AACTGTGAACA", "AACTCTGACGA", "CCTGCTGACGA", "AAAAAAAAAAA" };
     vector<string> l { "CTG", "TGA" };
 
-    /* key 16 */
+    /* key 16 *
     Unumber pri("27101a97", 16);
     Unumber pub("28332285", 16);
     Unumber mod("64ffa29", 16);
@@ -131,8 +133,8 @@ int main(int argc, char * argv[])
 
     /**/
 
-    zero = SecureInt::encrypt(0);
-    one = SecureInt::encrypt(1);
+    zero = 0; //SecureInt::encrypt(0);
+    one = 1; //SecureInt::encrypt(1);
 
     Estring e_reads[l.size()];
     for ( unsigned i=0; i<l.size(); i++ )
@@ -154,7 +156,7 @@ int main(int argc, char * argv[])
     for (auto i : e_reads)
     {
         SecureInt found = find(e_ref, i);
-        cout << ++j << " is found at: " << found.str() << endl;
+        cout << ++j << " is found at: " << found << endl;
     }
 
     asm("l.debug");
