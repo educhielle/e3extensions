@@ -2,7 +2,10 @@ extern const char * BIGNUM_NAME;
 
 #include "cunum_def_4096.hh"
 
-#if defined(GMP) && defined(HWACC)
+#if defined(GMP) && defined(COPHEE)
+#include "unumberz_cophee.h"
+
+#elif defined(GMP) && defined(HWACC)
 #include "unumberzx.h"
 
 #elif defined(GMP)
@@ -33,4 +36,3 @@ extern const char * BIGNUM_NAME;
 
 #include "ma_invert_m.h"
 */
-

@@ -34,8 +34,8 @@ int Cryptosystem::addLocalHalfTable(vector<string> localHalfTable)
 	if (localHalfTable.empty()) return INVALID_ID;
 	/*{
 		if (gen == 0) throw "Half table can only be empty if the generator is valid.";
-		else 
-	
+		else
+
 
 	if (localHalfTable.size() <= beta
 
@@ -121,7 +121,7 @@ Unumber Cryptosystem::half(Unumber x)
 		y = g(y,y);
 		my = g(my,my);
 		y = y.mul(my,n2);
-		
+
 		// y = G(|y|,~1)
 		y = g(y,one);
 
@@ -145,6 +145,9 @@ Unumber Cryptosystem::half(Unumber x)
 /* Linking external G function */
 void Cryptosystem::init()
 {
+#ifdef COPHEE
+	Unumber::initCophee();
+#endif
 	n2 = n * n;
 
 	high_bit_posN = 0;
@@ -161,9 +164,9 @@ void Cryptosystem::init()
 	/* loading external G function */
 #ifndef STATIC_LIBG
 	using std::cerr;
- 
+
 	// Find library and associate to handle
-	
+
 	libgHandle = dlopen(libgFilename.c_str(), RTLD_NOW);
 	if (!libgHandle)
 	{
@@ -309,7 +312,7 @@ Unumber Cryptosystem::invertibleRandom() const
 #else
 	std::mt19937 mt(rd());
 #endif
-	
+
 	Unumber number(0);
 	while (true)
 	{
@@ -368,4 +371,3 @@ void Cryptosystem::prita()
 	std::cout << "G calls: " << stats_g_counter << "\n";
 }
 */
-

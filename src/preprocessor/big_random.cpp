@@ -16,18 +16,29 @@ Unumber invertibleRandom(const Unumber & from, const Unumber & n)
 	{
 		number = random(from, n);
 	} while (ma::gcd(number, n) != 1);
-	
+
 	return number;
 }
+
+// Unumber invertibleRandomSW(const Unumber & from, const Unumber & n)
+// {
+// 	Unumber number;
+// 	do
+// 	{
+// 		number = random(from, n);
+// 	} while (ma::gcdsw(number, n) != 1);
+//
+// 	return number;
+// }
 
 /* Miller-Rabin prime test */
 bool millerRabin(Unumber p, int iteration=64)
 {
 	if ((p < 2) || (p != 2 && p % 2 == 0)) return false;
-	
+
 	Unumber s = p - 1;
     	while (s % 2 == 0) s /= 2;
-	
+
 	for (int i = 0; i < iteration; i++)
 	{
 		Unumber mod = random(2, p-1) % (p - 1) + 1, temp = s;
@@ -72,7 +83,7 @@ Unumber prime(Unumber from, Unumber to)
 	{
 		p = oddRandom(from, to);
 	} while (!millerRabin(p));
-	
+
 	return p;
 }
 
@@ -90,7 +101,7 @@ Unumber random(const Unumber & from, const Unumber & n)
 #else
 	std::mt19937 mt(rd());
 #endif
-	
+
 	Unumber number(0);
 	while (true)
 	{

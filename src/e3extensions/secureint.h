@@ -45,7 +45,7 @@ class SecureInt
 	void operator>>= (unsigned);
 	SecureInt operator++ ();
 	SecureInt operator-- ();
-	
+
 	friend SecureInt operator+ (const SecureInt & n1) { return n1; }
 	friend SecureInt operator- (const SecureInt & n1) { return SecureInt::invert(n1); }
 
@@ -92,7 +92,7 @@ class SecureInt
 	friend SecureInt operator<= (const SecureInt &, const SecureInt &);
 	friend SecureInt operator<= (SecureInt &, unsigned long long);
 	friend SecureInt operator<= (unsigned long long, SecureInt &);
-	
+
     /* Private object functions */
     private:
 	SecureInt div2();
@@ -109,7 +109,9 @@ class SecureInt
 	string str(unsigned base=10) const;
 
     /* Private static functions */
-    private:
+    public: // changed from private
+    static SecureInt pow(const SecureInt &, const SecureInt &, const SecureInt &);
+    static SecureInt gcd(const SecureInt &, const SecureInt &);
 	static SecureInt invert(const SecureInt &);
 
     /* Public static functions */
@@ -192,4 +194,3 @@ SecureInt::SecureInt(long long param, Cryptosystem & cryptosystem)
 }
 
 #endif
-

@@ -118,6 +118,7 @@ void Unumber::divABRQ(const Unumber & d, Unumber * r, Unumber * q) const
 
 Unumber Unumber::mul(const Unumber & b, const Unumber & m) const
 {
+    std::cout << "m " << std::flush;
     Unumber r;
     mpz_mul(r.z.get_mpz_t(), z.get_mpz_t(), b.z.get_mpz_t());
     mpz_mod(r.z.get_mpz_t(), r.z.get_mpz_t(), m.z.get_mpz_t());
@@ -139,7 +140,7 @@ std::istream & operator>>(std::istream & is, Unumber & n)
 {
     std::string s; is >> s;
 
-    if(!s.empty() && !!is ) 
+    if(!s.empty() && !!is )
     {
         Unumber u(s, Unumber::Decimal);
         n.swap(u);
@@ -150,5 +151,6 @@ std::istream & operator>>(std::istream & is, Unumber & n)
 
 void Unumber::pow(Unumber e, const Unumber & mod)
 {
+    std::cout << "e " << std::flush;
     mpz_powm(z.get_mpz_t(), z.get_mpz_t(), e.z.get_mpz_t(), mod.z.get_mpz_t());
 }

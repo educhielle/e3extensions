@@ -10,8 +10,7 @@ string gFunctionName = "libg";
 int main()
 {
 	cout << "Creating Cryptosystem\n";
-	// Cryptosystem cs(__PQ()()()()__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, libgDir, gFunctionName);
-	Cryptosystem cs(__PQ()()()(), __BETA, __HALFTABLE, libgDir, gFunctionName);
+	Cryptosystem cs(__PQ()()()()__, __BETA__, __2TOBETA__, __ENC0__, __ENC1__, libgDir, gFunctionName);
 	cout << "Instantiating SecureInts\n";
 	SecureInt a(__N(1)__,cs), b(__N(15)__,cs), c(__N(10)__,cs), d(__N(7)__,cs);
 	cout << "Performing mathematical equation (it may take a while)\n";
@@ -24,3 +23,4 @@ int main()
 
 	return 0;
 }
+

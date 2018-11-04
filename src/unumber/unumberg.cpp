@@ -6,6 +6,7 @@ const char * BIGNUM_NAME = "UNUM";
 
 #else // begin GMP
 
+#ifndef COPHEE
 #ifndef HWACC
 
 #include "cunum_def_4096.hh"
@@ -15,6 +16,12 @@ const char * BIGNUM_NAME = "UNUM";
 
 #include "cunum_def_4096.hh"
 #include "unumberzx.cpp"
+
+#endif
+#else
+
+#include "cunum_def_4096.hh"
+#include "unumberz_cophee.cpp"
 
 #endif
 
@@ -31,5 +38,3 @@ const char * BIGNUM_NAME = "GMP";
 #endif
 
 #endif // end GMP
-
-

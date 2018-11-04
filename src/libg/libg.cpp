@@ -37,21 +37,30 @@ Unumber n2 = n*n;
 Unumber rN(0);
 #endif
 
+// #ifdef COPHEE
+// const size_t LENGTH = 64; //2048/32;
+// uint32_t vx[LENGTH];
+// uint32_t vy[LENGTH];
+// #endif
+
 /* G function */
 /* if the unencryption of x is less or equal zero
  * 	return the encryption of zero
- * else return the reencryption of y */	
+ * else return the reencryption of y */
 Unumber libg(Unumber x, Unumber y)
 {
-	if (!loaded) loadCryptosystemParams(); // Used if libg is a shared object
+	// std::cout << "G " << std::flush;
+	if (!loaded) loadCryptosystemParams();
+
 
 /* Software libg */
+#ifndef COPHEE
 #ifndef HWACC
 
 /* Software libg */
 //#ifndef STATIC_LIBG
 //#endif
-
+	std::cout << "G ";
 	Unumber ox = Unumber(x);
 	ox.pow(fkf, n2);
 
@@ -83,6 +92,18 @@ Unumber libg(Unumber x, Unumber y)
 
 	//std::cout << "libg out\n";
 	return r;
+#endif
+/* CoPHEE */
+#else
+	// std::cout << "CoPHEE\n";
+	// Unumber::exportArray(vx, LENGTH, x);
+	// Unumber::exportArray(vy, LENGTH, y)
+
+	// auto vr = Unumber::hw_gfun(vx, vy);
+
+	// Unumber r = Unumber::importArray(vr, length);
+	// return r;
+	return Unumber::hw_gfun(x, y);
 #endif
 }
 
@@ -176,7 +197,7 @@ void loadCryptosystemParams()
 	xp1 = Unumber(strXp1);
 	xp2 = Unumber(strXp2);
 	n2 = n*n;
-	
+
 	loaded = true;
 }
 //#endif
@@ -202,4 +223,3 @@ Unumber reencrypt(const Unumber & x)
 
 	return y;
 }
-

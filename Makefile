@@ -89,6 +89,11 @@ ifdef HWACC
 OPT := -DHWACC=$(HWACC) $(OPT)
 endif
 
+# CoPHEE
+ifdef COPHEE
+OPT := -DCOPHEE=$(COPHEE) $(OPT)
+endif
+
 # Fast Random
 ifeq ($(FAST_RANDOM),1)
 OPT := -DFAST_RANDOM $(OPT)
@@ -192,7 +197,7 @@ ifdef STATIC_LIBG # static libg
 #	compile
 	$(CXX) -c $(CXXFLAGS) $(SRC_LIBG)/libg.cpp -o $(OBJ_LIBG)/libg.o $(OPT) $(LDF) $(LIBGFLAGS)
 #	create static library
-	$(AR) $(ARFLAGS) $(LIB)/libg.a $(OBJ_LIBG)/libg.o $(OBJ_PREPROCESSOR)/big_random.o 	
+	$(AR) $(ARFLAGS) $(LIB)/libg.a $(OBJ_LIBG)/libg.o $(OBJ_PREPROCESSOR)/big_random.o
 else # shared libg
 #	compile
 	$(CXX) $(CXXFLAGS) -c $(SRC_LIBG)/libg.cpp -o $(OBJ_LIBG)/libg.o $(OPT) $(LDF)
@@ -286,4 +291,3 @@ preprocess: ## Preprocess code. Usage: make preprocessor IN=path/to/code OUT=pat
 run: ## Run program. Usage: make run IN=path/to/file [OUT=output.txt] [SAVE_TIME=1]
 	cp -f $(LIB)/libg.so $(FILE_DIR)
 	cd $(FILE_DIR); time ./$(FILENAME) $(RUN_OUT) $(TIME_OUT)
-

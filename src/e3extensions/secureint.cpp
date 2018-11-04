@@ -67,7 +67,7 @@ void SecureInt::operator*= (const SecureInt& param)
 		// x = z
 		*this = z;
 	}
-	
+
 	*this = sum;
 }
 
@@ -392,13 +392,13 @@ SecureInt SecureInt::div2()
 	// Beta
 	//Unumber beta = cryptosystem.getBeta() + 1;
 	unsigned beta = cryptosystem.getBeta();
-	
+
 	// for Beta times do
 	while (beta-- > 0)
 	{
 		// p2 = Half(p2)
 		//p2 = p2.half2();
-		p2 = SecureInt(cryptosystem.getPowerOfTwo(beta), cryptosystem);		
+		p2 = SecureInt(cryptosystem.getPowerOfTwo(beta), cryptosystem);
 
 		// y = sum + p2
 		y = sum + p2;
@@ -409,7 +409,7 @@ SecureInt SecureInt::div2()
 		// sum = sum + G(~1-y,p2)
 		sum = sum + G(one-y,p2);
 	}
-	
+
 	return sum;
 }
 
@@ -428,10 +428,10 @@ SecureInt SecureInt::half2()
 	SecureInt one (uone, cryptosystem);
 	SecureInt zero (uzero, cryptosystem);
 	SecureInt y, my;
-	
+
 	// Beta times
 	unsigned beta = cryptosystem.getBeta() + 1;
-	
+
 	while (--beta > 0)
 	{
 		// y = p2 + p2 - x
@@ -453,7 +453,7 @@ SecureInt SecureInt::half2()
 		// p2 = p2 + p2
 		p2 = p2 + p2;
 	}
-	
+
 	return sum;
 }
 
@@ -525,6 +525,20 @@ SecureInt SecureInt::invert(const SecureInt & param)
 	return SecureInt(inv, param.cryptosystem);
 }
 
+SecureInt SecureInt::gcd(const SecureInt & a, const SecureInt & b)
+{
+	Unumber r;
+	r = ma::gcd(a.x, b.x);
+	return SecureInt(r, a.cryptosystem);
+}
+
+SecureInt SecureInt::pow(const SecureInt & b, const SecureInt & e, const SecureInt & m)
+{
+	Unumber r = b.x;
+	r.pow(e.x, m.x);
+	return SecureInt(r, b.cryptosystem);
+}
+
 
 /***********************************
  *     PUBLIC STATIC FUNCTIONS     *
@@ -542,4 +556,3 @@ SecureInt SecureInt::G(const SecureInt & n1, const SecureInt & n2)
 	Unumber gres = n1.cryptosystem.g(n1.x, n2.x);
 	return SecureInt(gres, n1.cryptosystem);
 }
-

@@ -46,7 +46,12 @@ typedef UnumberContractor UC;
 
 bool ma::invert(const Unumber & x, const Unumber & mod, Unumber * xm1)
 {
+#if COPHEE == 2
+	*xm1 = Unumber::hw_inv(x, mod);
+    return true;
+#else
 #ifndef HWACC
+    std::cout << "I " << std::flush;
 //	std::cout << "ma::invert 0\n";
     UC ucx(x);
     UC ucmod(mod);
@@ -59,7 +64,7 @@ bool ma::invert(const Unumber & x, const Unumber & mod, Unumber * xm1)
 //	std::cout << "ma::invert 4\n";
     return true;
 #else
-	//std::cout << "ma::invert in\n";
+	// std::cout << "ma::invert in\n";
 	unsigned length = Unumber::HW_NUMWORDS;
 	unsigned mA[length], mB[length], mD[length];
 
@@ -77,11 +82,16 @@ bool ma::invert(const Unumber & x, const Unumber & mod, Unumber * xm1)
 	//std::cout << "ma::invert out\n";
 	return true;
 #endif
+#endif
 }
 
 Unumber ma::gcd(const Unumber & x, const Unumber & y)
 {
+#if COPHEE == 2
+    return Unumber::hw_gcd(x, x);
+#else
 #ifndef HWACC
+    // std::cout << "i " << std::flush;
     UC ucx(x);
     UC ucy(y);
 
@@ -89,7 +99,7 @@ Unumber ma::gcd(const Unumber & x, const Unumber & y)
 
     return iuc.gcd().x;
 #else
-	//std::cout << "ma::gcd in\n";
+	std::cout << "i \n";
 
 	unsigned length = Unumber::HW_NUMWORDS;
 	unsigned mA[length], mB[length], mD[length];
@@ -108,6 +118,18 @@ Unumber ma::gcd(const Unumber & x, const Unumber & y)
 	//std::cout << "ma::gcd out\n";
 	return r;
 #endif
+#endif
 }
+
+// Unumber ma::gcdsw(const Unumber & x, const Unumber & y)
+// {
+//     UC ucx(x);
+//     UC ucy(y);
+//
+//     Meuclid<UC> iuc(ucx, ucy, ucy);
+//
+//     return iuc.gcd().x;
+// }
+
 
 #include "meuclid.inc"

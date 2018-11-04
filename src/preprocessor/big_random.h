@@ -17,10 +17,10 @@
 #endif
 
 Unumber invertibleRandom(const Unumber &, const Unumber &);
+// Unumber invertibleRandomSW(const Unumber &, const Unumber &);
 bool millerRabin(const Unumber &, int);
 Unumber oddRandom(const Unumber &, const Unumber &);
 Unumber prime(Unumber from, Unumber to);
 Unumber random(const Unumber &, const Unumber &);
 
 #endif
-
