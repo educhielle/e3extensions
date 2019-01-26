@@ -18,6 +18,8 @@ unsigned long long timeGfun = 0, countGfun = 0;
 unsigned long long timeInv = 0, countInv = 0;
 // unsigned long long discount = 0, countDiscount = 0;
 int arduinoHandler;
+bool usingArduino = false;
+bool fastUART = false;
 unsigned interruptCounter = 0;
 
 unsigned* mod_mul (unsigned argA[64], unsigned argB[64], unsigned port_descriptor);
@@ -318,8 +320,9 @@ inline unsigned* mod_mul (unsigned argA[64], unsigned argB[64], unsigned port_de
 
 	Timer2 tmrOp;
 	countMul++;
-	readArduino();
-	// sleep (1); // replace by loop reading interrupt
+
+	if (usingArduino) readArduino();
+	else sleep (1); // replace by loop reading interrupt
 	// usleep(1000);
 	timeMul += tmrOp.get();
 
@@ -347,8 +350,8 @@ inline unsigned* mod_exp (unsigned argA[64], unsigned argB[64], unsigned port_de
 
 	Timer2 tmrOp;
 	countExp++;
-	readArduino();
-	// sleep (1); // replace by loop reading interrupt
+	if (usingArduino) readArduino();
+	else sleep (1); // replace by loop reading interrupt
 	// usleep(1000);
 	timeExp += tmrOp.get();
 
@@ -377,8 +380,8 @@ inline unsigned* mod_inv (unsigned argA[64], unsigned argB[64], unsigned port_de
 
 	Timer2 tmrOp;
 	countInv++;
-	readArduino();
-	// sleep (1); // replace by loop reading interrupt
+	if (usingArduino) readArduino();
+	else sleep (1); // replace by loop reading interrupt
 	// usleep(1000);
 	timeInv += tmrOp.get();
 
@@ -413,10 +416,8 @@ inline unsigned* gfunc (unsigned argA[64], unsigned argB[64], unsigned port_desc
 
 	Timer2 tmrOp;
 	countGfun++;
-	readArduino();
-	// std::cout << "|||_" << readArduino() << "_|||\n";
-	// usleep(100000);
-	// sleep (1); // replace by loop reading interrupt
+	if (usingArduino) readArduino();
+	else sleep (1); // replace by loop reading interrupt
 	timeGfun += tmrOp.get();							 ;
 
 	Timer2 tmrRead1;
@@ -448,18 +449,21 @@ inline int initialize_chip ( int pd )
 
 int init_port()
 {
-	auto fd = init_port_number(9600);
+	unsigned baud = 9600;
+	auto fd = init_port_number(baud);
 	printf("%08x\n",read_serial(0x400200CC,fd));
-	initArduino();
-	// return fd;
-	unsigned baud = 921600; //115200;
-	unsigned divider = 24000000 / baud;
-	write_serial(GPCFG_UARTM_BAUD_CTL, divider, fd);
-	// write_serial(GPCFG_UARTM_BAUD_CTL, 0x0000001A, fd);
-	sleep(2);
-	close(fd);
-	sleep(1);
-	fd = init_port_number(baud);
-	printf("%08x\n",read_serial(0x400200CC,fd));
+	if (usingArduino) initArduino();
+	if (fastUART)
+	{
+		unsigned baud = 921600; //115200;
+		unsigned divider = 24000000 / baud;
+		write_serial(GPCFG_UARTM_BAUD_CTL, divider, fd);
+		// write_serial(GPCFG_UARTM_BAUD_CTL, 0x0000001A, fd);
+		sleep(2);
+		close(fd);
+		sleep(1);
+		fd = init_port_number(baud);
+		printf("%08x\n",read_serial(0x400200CC,fd));
+	}
 	return fd;
 }

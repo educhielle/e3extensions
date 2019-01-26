@@ -191,8 +191,8 @@ int* mod_mul (int argA[64], int argB[64], int port_descriptor)
 	result = read_serial_2x  (GPCFG_ARGA_ADDR0, port_descriptor) 		 ;
 	write_serial    (GPCFG_CLCTLP_ADDR, 0x00000001, port_descriptor) ;
 
-	// sleep (1);
-	usleep(1000);
+	sleep (1);
+	// usleep(1000);
 
 	result = read_serial_2x  (GPCFG_MUL_ADDR0, port_descriptor) 		 ;
 
@@ -255,8 +255,8 @@ int* gfunc (int argA[64], int argB[64], int port_descriptor)
 	write_serial_2x (GPCFG_ARGB_ADDR0, argB, port_descriptor) 	 ;
 	write_serial    (GPCFG_CLCTLP_ADDR, 0x00000008, port_descriptor) ;
 
-	// sleep (1)							 ;
-	usleep(100000);
+	sleep (1)							 ;
+	// usleep(100000);
 
 	result = read_serial_2x  (GPCFG_RES_ADDR0, port_descriptor)      ;
 
@@ -285,6 +285,7 @@ int initialize_chip ( pd )
 int main ()
 {
 	int pd = init_port() ;
+	printf("%08x\n",read_serial(0x400200CC,pd));
 	int* result 	;
 	int length = 64;
 	int argA[length], argB[length];
@@ -293,8 +294,8 @@ int main ()
 		argA[i] = 0;
 		argB[i] = 0;
 	}
-	argA[63]=5;
-	argB[63]=4;
+	argA[0]=5;
+	argB[0]=4;
 
 	printf("Initializing the chip\n") ;
 	initialize_chip (pd) ;
@@ -307,9 +308,9 @@ int main ()
 	// result = mod_inv(argA,cleq_NSQ,pd) ;
 	// result = mod_inv(argB,cleq_NSQ,pd) ;
 	result = gfunc(argA,argB,pd) ;
-	printf("end of gfun\n");
-	for ( int i=0; i<length; i++ ) printf("%08x ", result[i]);
-	printf("\n");
+	//printf("end of gfun\n");
+	//for ( int i=0; i<length; i++ ) printf("%08x ", result[i]);
+	//printf("\n");
 
 	close(pd) ;
 	return 0 ;
