@@ -20,7 +20,7 @@ int main ()
 
 	result = mod_mul(argA,argB,pd) ;
 	printf("end of mul\n");
-	for ( unsigned i=length-1; i>=0; i-- ) printf("%08x ", result[i]);
+	for ( int i=length-1; i>=0; i-- ) printf("%08x ", result[i]);
 	printf("\n");
 	// result = mod_inv(argA,cleq_NSQ,pd) ;
 	// result = mod_inv(argB,cleq_NSQ,pd) ;

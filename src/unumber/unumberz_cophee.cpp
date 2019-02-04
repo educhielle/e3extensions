@@ -218,7 +218,6 @@ void Unumber::initCophee()
 		semicolon[i] = text.find(";", semicolon[i-1]) + 1;
 	}
 	//int newLine = text.find("\n") + 1;
-
 	//string strP   = text.substr(semicolon[0], semicolon[1]-semicolon[0]-1);
 	//string strQ   = text.substr(semicolon[1], semicolon[2]-semicolon[1]-1);
 	//string strK   = text.substr(semicolon[2], semicolon[3]-semicolon[2]-1);
@@ -242,13 +241,11 @@ void Unumber::initCophee()
 	Unumber n2 = Unumber::gmpmul(n, n);
     Unumber rand0 = invertibleRandom(n);
     Unumber rand1 = invertibleRandom(n);
-
     Unumber::exportArray(cleq_N, 32, n);
     Unumber::exportArray(cleq_NSQ, 64, n);
     Unumber::exportArray(cleq_fkf, 64, fkf);
     Unumber::exportArray(cleq_rand0, 32, rand0);
     Unumber::exportArray(cleq_rand1, 32, rand1);
-
     Unumber::pd = init_port() ;
 	// initArduino();
 	Unumber::resetCounters();
@@ -268,7 +265,6 @@ Unumber Unumber::invertibleRandom(const Unumber & n)
 #else
 	std::mt19937 mt(rd());
 #endif
-
 	Unumber number(0);
 	while (true)
 	{

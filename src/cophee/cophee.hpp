@@ -19,7 +19,7 @@ unsigned long long timeInv = 0, countInv = 0;
 // unsigned long long discount = 0, countDiscount = 0;
 int arduinoHandler;
 bool usingArduino = false;
-bool fastUART = false;
+bool fastUART = true;
 unsigned interruptCounter = 0;
 
 unsigned* mod_mul (unsigned argA[64], unsigned argB[64], unsigned port_descriptor);
